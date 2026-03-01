@@ -4,23 +4,64 @@
 {% block extra_head %}
 <style>
     .metadata { margin: 0.1rem 0; }
+
+    /* Layout grid */
+    .product-detail-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+    }
+
+    /* Mobile specific adjustments */
+    @media (max-width: 768px) {
+        .product-detail-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .product-info-section {
+            order: 2;
+        }
+        .product-image-section {
+            order: 1;
+        }
+        .mobile-title {
+            display: block !important;
+            order: 0;
+            margin-bottom: 1rem;
+        }
+        .desktop-title {
+            display: none;
+        }
+    }
+
+    .mobile-title {
+        display: none;
+    }
 </style>
 {% endblock %}
 
 {% block content %}
-    <div style="display: flex; gap: 2rem;">
-        <div style="flex: 1;">
+    <div class="product-detail-container">
+        <!-- Title for Mobile (Top) -->
+        <h1 class="mobile-title">{{ product.name }}</h1>
+
+        <!-- Image Section -->
+        <div class="product-image-section">
             {% if product.main_photo %}
-                <img src="{{ product.main_photo }}" alt="{{ product.name }}" style="max-width: 100%;">
+                <img src="{{ product.main_photo }}" alt="{{ product.name }}" class="main-image" style="max-width: 100%;">
             {% endif %}
-            <div class="gallery" style="display: flex; gap: 1rem; margin-top: 1rem;">
+            <div class="gallery" style="display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap;">
                 {% for image in product.images.all %}
-                    <img src="{{ image.url }}" alt="{{ product.name }}" style="max-height: 100px; cursor: pointer;" onclick="document.querySelector('.main-image').src=this.src">
+                    <img src="{{ image.url }}" alt="{{ product.name }}" style="max-height: 80px; cursor: pointer; border: 1px solid #eee;" onclick="document.querySelector('.main-image').src=this.src">
                 {% endfor %}
             </div>
         </div>
-        <div style="flex: 1;">
-            <h1>{{ product.name }}</h1>
+
+        <!-- Info Section -->
+        <div class="product-info-section">
+            <h1 class="desktop-title" style="margin-top: 0;">{{ product.name }}</h1>
+
             {% if product.brand %}
                 <p class="metadata">{% translate "Brand" %}: {{ product.brand.name }}</p>
             {% endif %}
@@ -30,28 +71,32 @@
             {% if product.product_type %}
                 <p class="metadata">{% translate "Type" %}: {{ product.product_type.name }}</p>
             {% endif %}
-            <p class="price">CHF {{ product.price_in_chf|floatformat:2 }}</p>
-            <div class="description">
+
+            <p class="price" style="font-size: 1.5rem; margin: 1.5rem 0;">CHF {{ product.price_in_chf|floatformat:2 }}</p>
+
+            <div class="description" style="margin-bottom: 2rem;">
                 {{ product.description|linebreaks }}
             </div>
 
-            <p>
+            <div style="background: #f9f9f9; padding: 1.5rem; border-radius: 4px;">
                 {% if product.is_in_stock %}
-                    <span style="color: green;">{% translate "In Stock" %}</span> ({{ product.stock_quantity }})
-                    <div class="add-to-cart">
-                        <input type="number" id="qty" value="1" min="1" max="{{ product.stock_quantity }}" style="width: 50px;">
-                        <button class="btn" onclick="addToCart('{{ product.stripe_price_id }}', parseInt(document.getElementById('qty').value), {{ product.stock_quantity }})">
+                    <p style="margin-top: 0;">
+                        <span style="color: green; font-weight: bold;">{% translate "In Stock" %}</span> ({{ product.stock_quantity }} {% translate "available" %})
+                    </p>
+                    <div class="add-to-cart" style="display: flex; gap: 1rem; align-items: center;">
+                        <input type="number" id="qty" value="1" min="1" max="{{ product.stock_quantity }}" style="width: 60px; padding: 0.5rem;">
+                        <button class="btn" onclick="addToCart('{{ product.stripe_price_id }}', parseInt(document.getElementById('qty').value), {{ product.stock_quantity }})" style="flex: 1;">
                             {% translate "Add to Cart" %}
                         </button>
                     </div>
                 {% else %}
-                    <span style="color: red;">{% translate "Out of Stock" %}</span>
+                    <p style="margin: 0; color: red; font-weight: bold;">{% translate "Out of Stock" %}</p>
                 {% endif %}
-            </p>
 
-            <button class="btn" id="checkout-btn" style="margin-top: 1rem; background: green;">
-                {% translate "Checkout Now" %}
-            </button>
+                <button class="btn" id="checkout-btn" style="margin-top: 1rem; background: #28a745; width: 100%; display: block;">
+                    {% translate "Checkout Now" %}
+                </button>
+            </div>
         </div>
     </div>
 {% endblock %}
@@ -65,7 +110,7 @@
 
         if (currentQty + qty > maxStock) {
             alert("{% translate 'Cannot add more than available stock!' %}");
-            return; // Error out and do nothing
+            return;
         } else {
             if (existing) {
                 existing.qty += qty;

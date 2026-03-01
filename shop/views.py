@@ -14,6 +14,14 @@ class CartView(TemplateView):
     template_name = "shop/cart.html"
 
 
+class PrivacyPolicyView(TemplateView):
+    template_name = "shop/privacy_policy.html"
+
+
+class TermsConditionsView(TemplateView):
+    template_name = "shop/terms_conditions.html"
+
+
 class ProductInfoView(View):
     """
     Helper view to get product details for the cart UI

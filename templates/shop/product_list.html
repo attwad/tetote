@@ -3,37 +3,37 @@
 
 {% block content %}
     <div class="filters">
-        <form method="get" style="display: flex; gap: 1rem;">
-            <div>
-                <label for="brand">{% translate "Brand" %}:</label>
-                <select name="brand" id="brand" onchange="this.form.submit()">
+        <form method="get" style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 140px;">
+                <label for="brand" style="display: block; font-size: 0.9rem;">{% translate "Brand" %}:</label>
+                <select name="brand" id="brand" onchange="this.form.submit()" style="width: 100%;">
                     <option value="">{% translate "All Brands" %}</option>
                     {% for brand in brands %}
                         <option value="{{ brand.slug }}" {% if request.GET.brand == brand.slug %}selected{% endif %}>{{ brand.name }}</option>
                     {% endfor %}
                 </select>
             </div>
-            <div>
-                <label for="yakikata">{% translate "Yakikata" %}:</label>
-                <select name="yakikata" id="yakikata" onchange="this.form.submit()">
+            <div style="flex: 1; min-width: 140px;">
+                <label for="yakikata" style="display: block; font-size: 0.9rem;">{% translate "Yakikata" %}:</label>
+                <select name="yakikata" id="yakikata" onchange="this.form.submit()" style="width: 100%;">
                     <option value="">{% translate "All Yakikatas" %}</option>
                     {% for y in yakikatas %}
                         <option value="{{ y.slug }}" {% if request.GET.yakikata == y.slug %}selected{% endif %}>{{ y.name }}</option>
                     {% endfor %}
                 </select>
             </div>
-            <div>
-                <label for="type">{% translate "Type" %}:</label>
-                <select name="type" id="type" onchange="this.form.submit()">
+            <div style="flex: 1; min-width: 140px;">
+                <label for="type" style="display: block; font-size: 0.9rem;">{% translate "Type" %}:</label>
+                <select name="type" id="type" onchange="this.form.submit()" style="width: 100%;">
                     <option value="">{% translate "All Types" %}</option>
                     {% for t in product_types %}
                         <option value="{{ t.slug }}" {% if request.GET.type == t.slug %}selected{% endif %}>{{ t.name }}</option>
                     {% endfor %}
                 </select>
             </div>
-            <div>
-                <label for="stock">{% translate "Stock" %}:</label>
-                <select name="stock" id="stock" onchange="this.form.submit()">
+            <div style="flex: 1; min-width: 140px;">
+                <label for="stock" style="display: block; font-size: 0.9rem;">{% translate "Stock" %}:</label>
+                <select name="stock" id="stock" onchange="this.form.submit()" style="width: 100%;">
                     <option value="">{% translate "All Products" %}</option>
                     <option value="in_stock" {% if request.GET.stock == "in_stock" %}selected{% endif %}>{% translate "In Stock Only" %}</option>
                 </select>

@@ -44,6 +44,14 @@
 
     <footer>
         <p>&copy; {% now "Y" %} Tetote. All rights reserved.</p>
+        <div style="font-size: 0.85rem; margin-top: 0.5rem; color: #666;">
+            <a href="{% url 'shop:privacy_policy' %}" style="color: #666; margin: 0 0.5rem;">{% translate "Privacy Policy" %}</a> |
+            <a href="{% url 'shop:terms' %}" style="color: #666; margin: 0 0.5rem;">{% translate "Terms and Conditions" %}</a>
+        </div>
+        <div style="margin-top: 1rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.85rem; color: #666;">
+            <span>{% translate "Payments secured by" %}</span>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg" alt="Stripe" style="height: 15px; opacity: 0.7; vertical-align: middle;">
+        </div>
     </footer>
 
     <script>
