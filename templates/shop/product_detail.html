@@ -1,6 +1,12 @@
 {% extends "base.html" %}
 {% load i18n %}
 
+{% block extra_head %}
+<style>
+    .metadata { margin: 0.1rem 0; }
+</style>
+{% endblock %}
+
 {% block content %}
     <div style="display: flex; gap: 2rem;">
         <div style="flex: 1;">
@@ -16,7 +22,13 @@
         <div style="flex: 1;">
             <h1>{{ product.name }}</h1>
             {% if product.brand %}
-                <p class="brand">{% translate "Brand" %}: {{ product.brand.name }}</p>
+                <p class="metadata">{% translate "Brand" %}: {{ product.brand.name }}</p>
+            {% endif %}
+            {% if product.yakikata %}
+                <p class="metadata">{% translate "Yakikata" %}: {{ product.yakikata.name }}</p>
+            {% endif %}
+            {% if product.product_type %}
+                <p class="metadata">{% translate "Type" %}: {{ product.product_type.name }}</p>
             {% endif %}
             <p class="price">CHF {{ product.price_in_chf|floatformat:2 }}</p>
             <div class="description">
