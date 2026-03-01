@@ -1,0 +1,17 @@
+[project]
+name = "tetote"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "coverage>=7.13.4",
+    "django>=6.0",
+    "django-environ>=0.13.0",
+    "django-markdownx>=4.0.9",
+    "django-modeltranslation>=0.19.19",
+    "stripe>=14.4.0",
+]
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.5.1",
+]

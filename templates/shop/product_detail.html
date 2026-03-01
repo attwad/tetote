@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+    <div style="display: flex; gap: 2rem;">
+        <div style="flex: 1;">
+            {% if product.main_photo %}
+                <img src="{{ product.main_photo }}" alt="{{ product.name }}" style="max-width: 100%;">
+            {% endif %}
+            <div class="gallery" style="display: flex; gap: 1rem; margin-top: 1rem;">
+                {% for image in product.images.all %}
+                    <img src="{{ image.url }}" alt="{{ product.name }}" style="max-height: 100px; cursor: pointer;" onclick="document.querySelector('.main-image').src=this.src">
+                {% endfor %}
+            </div>
+        </div>
+        <div style="flex: 1;">
+            <h1>{{ product.name }}</h1>
+            {% if product.brand %}
+                <p class="brand">{% translate "Brand" %}: {{ product.brand.name }}</p>
+            {% endif %}
+            <p class="price">CHF {{ product.price_in_chf|floatformat:2 }}</p>
+            <div class="description">
+                {{ product.description|linebreaks }}
+            </div>
+
+            <p>
+                {% if product.is_in_stock %}
+                    <span style="color: green;">{% translate "In Stock" %}</span> ({{ product.stock_quantity }})
+                    <div class="add-to-cart">
+                        <input type="number" id="qty" value="1" min="1" max="{{ product.stock_quantity }}" style="width: 50px;">
+                        <button class="btn" onclick="addToCart('{{ product.stripe_price_id }}', parseInt(document.getElementById('qty').value))">
+                            {% translate "Add to Cart" %}
+                        </button>
+                    </div>
+                {% else %}
+                    <span style="color: red;">{% translate "Out of Stock" %}</span>
+                {% endif %}
+            </p>
+
+            <button class="btn" id="checkout-btn" style="margin-top: 1rem; background: green;">
+                {% translate "Checkout Now" %}
+            </button>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function addToCart(priceId, qty) {
+        let cart = getCart();
+        const existing = cart.find(item => item.price_id === priceId);
+        if (existing) {
+            existing.qty += qty;
+        } else {
+            cart.push({ price_id: priceId, qty: qty });
+        }
+        saveCart(cart);
+        alert("{% translate 'Added to cart!' %}");
+    }
+
+    document.getElementById('checkout-btn').onclick = async function() {
+        const cart = getCart();
+        if (cart.length === 0) {
+            alert("{% translate 'Your cart is empty!' %}");
+            return;
+        }
+
+        const response = await fetch("{% url 'shop:create_checkout_session' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+            body: JSON.stringify({ items: cart })
+        });
+
+        const session = await response.json();
+        if (session.url) {
+            window.location.href = session.url;
+        } else {
+            alert(session.error);
+        }
+    };
+</script>
+{% endblock %}

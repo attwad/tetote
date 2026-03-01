@@ -1,0 +1,66 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Tetote - Django & Stripe{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cormorant Garamond', serif; margin: 0; padding: 0; font-size: 1.1rem; }
+        select, input, button, textarea { font-family: 'Cormorant Garamond', serif; font-size: 1rem; }
+        header { background: #333; color: white; padding: 1rem; display: flex; justify-content: space-between; align-items: center; }
+        nav a { color: white; margin-left: 1rem; text-decoration: none; }
+        main { padding: 2rem; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 2rem; }
+        .product-card { padding: 1rem; }
+        .product-card img { max-width: 100%; height: auto; }
+        .price { font-weight: bold; font-size: 1.2rem; }
+        footer { background: #eee; padding: 1rem; text-align: center; margin-top: 2rem; }
+        .filters { margin-bottom: 2rem; }
+        .btn { padding: 0.5rem 1rem; background: #007bff; color: white; border: none; cursor: pointer; text-decoration: none; }
+        .cart-icon { position: relative; }
+        #cart-count { background: red; color: white; border-radius: 50%; padding: 0.2rem 0.5rem; font-size: 0.8rem; position: absolute; top: -10px; right: -10px; }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="{% url 'shop:product_list' %}" style="color: white; font-size: 1.5rem; font-weight: bold;">Tetote</a>
+        </div>
+        <nav>
+            <a href="{% url 'shop:product_list' %}">{% translate "Shop" %}</a>
+            <a href="{% url 'blog:post_list' %}">{% translate "Blog" %}</a>
+            <a href="#" class="cart-icon">{% translate "Cart" %} <span id="cart-count">0</span></a>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; {% now "Y" %} Tetote. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function getCart() {
+            return JSON.parse(localStorage.getItem('cart') || '[]');
+        }
+        function saveCart(cart) {
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartUI();
+        }
+        function updateCartUI() {
+            const cart = getCart();
+            const count = cart.reduce((acc, item) => acc + item.qty, 0);
+            document.getElementById('cart-count').textContent = count;
+        }
+        updateCartUI();
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
