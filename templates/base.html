@@ -23,6 +23,48 @@
         .btn { padding: 0.5rem 1rem; background: #007bff; color: white; border: none; cursor: pointer; text-decoration: none; }
         .cart-icon { position: relative; }
         #cart-count { background: red; color: white; border-radius: 50%; padding: 0.2rem 0.5rem; font-size: 0.8rem; position: absolute; top: -10px; right: -10px; }
+
+        /* Toast Styles */
+        #toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .toast {
+            min-width: 250px;
+            padding: 1rem;
+            border-radius: 4px;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: slideIn 0.3s ease-out;
+            font-size: 0.95rem;
+        }
+        .toast.info { background-color: #333; }
+        .toast.error { background-color: #d9534f; }
+        .toast-close {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1.2rem;
+            margin-left: 1rem;
+            line-height: 1;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
     </style>
     {% block extra_head %}{% endblock %}
 </head>
@@ -54,8 +96,31 @@
         </div>
     </footer>
 
+    <div id="toast-container"></div>
+
     <script>
+        function showToast(message, type = 'info', duration = 3000) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+
+            toast.innerHTML = `
+                <span>${message}</span>
+                <button class="toast-close" onclick="this.parentElement.remove()">&times;</button>
+            `;
+
+            container.appendChild(toast);
+
+            if (duration > 0) {
+                setTimeout(() => {
+                    toast.style.animation = 'fadeOut 0.5s ease-out forwards';
+                    toast.addEventListener('animationend', () => toast.remove());
+                }, duration);
+            }
+        }
+
         function getCart() {
+
             return JSON.parse(localStorage.getItem('cart') || '[]');
         }
         function saveCart(cart) {
@@ -65,7 +130,9 @@
         function updateCartUI() {
             const cart = getCart();
             const count = cart.length; // Count unique entries (price_ids)
-            document.getElementById('cart-count').textContent = count;
+            const badge = document.getElementById('cart-count');
+            badge.textContent = count;
+            badge.style.display = count > 0 ? 'inline-block' : 'none';
         }
         updateCartUI();
     </script>

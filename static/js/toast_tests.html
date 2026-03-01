@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Toast Library Tests</title>
+    <style>
+        /* Minimum styles for testing */
+        #toast-container { position: fixed; bottom: 20px; right: 20px; }
+        .toast { padding: 10px; margin: 5px; }
+        .toast.info { background: grey; }
+        .toast.error { background: red; }
+    </style>
+</head>
+<body>
+    <div id="toast-container"></div>
+    <h1>Toast Library Unit Tests</h1>
+    <div id="results"></div>
+
+    <script>
+        // The Library Code
+        function showToast(message, type = 'info', duration = 3000) {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `<span>${message}</span><button class="toast-close">&times;</button>`;
+            container.appendChild(toast);
+
+            if (duration > 0) {
+                setTimeout(() => { toast.remove(); }, duration);
+            }
+            return toast;
+        }
+
+        // Test Helper
+        function assert(condition, message) {
+            const div = document.createElement('div');
+            div.style.color = condition ? 'green' : 'red';
+            div.textContent = (condition ? 'PASS: ' : 'FAIL: ') + message;
+            document.getElementById('results').appendChild(div);
+            if (!condition) throw new Error(message);
+        }
+
+        // Tests
+        async function runTests() {
+            const container = document.getElementById('toast-container');
+
+            // Test 1: Creation
+            const t1 = showToast('Test Message');
+            assert(container.contains(t1), 'Toast should be added to container');
+            assert(t1.querySelector('span').textContent === 'Test Message', 'Toast should contain correct message');
+            t1.remove();
+
+            // Test 2: Types
+            const t2 = showToast('Error', 'error');
+            assert(t2.classList.contains('error'), 'Error toast should have error class');
+            t2.remove();
+
+            // Test 3: Auto-dismiss
+            const t3 = showToast('Fast', 'info', 100);
+            assert(container.contains(t3), 'Toast should exist initially');
+            await new Promise(r => setTimeout(r, 150));
+            assert(!container.contains(t3), 'Toast should be removed after duration');
+
+            console.log('All tests passed!');
+        }
+
+        runTests();
+    </script>
+</body>
+</html>

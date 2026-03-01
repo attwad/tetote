@@ -207,7 +207,7 @@
         let currentQty = existing ? existing.qty : 0;
 
         if (currentQty + qty > maxStock) {
-            alert("{% translate 'Cannot add more than available stock!' %}");
+            showToast("{% translate 'Cannot add more than available stock!' %}", 'error');
             return;
         } else {
             if (existing) {
@@ -215,7 +215,7 @@
             } else {
                 cart.push({ price_id: priceId, qty: qty });
             }
-            alert("{% translate 'Added to cart!' %}");
+            showToast("{% translate 'Added to cart!' %}", 'info');
         }
         saveCart(cart);
     }
@@ -223,7 +223,7 @@
     document.getElementById('checkout-btn').onclick = async function() {
         const cart = getCart();
         if (cart.length === 0) {
-            alert("{% translate 'Your cart is empty!' %}");
+            showToast("{% translate 'Your cart is empty!' %}", 'error');
             return;
         }
 
@@ -240,7 +240,7 @@
         if (session.url) {
             window.location.href = session.url;
         } else {
-            alert(session.error);
+            showToast(session.error, 'error');
         }
     };
 </script>

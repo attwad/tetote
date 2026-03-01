@@ -81,7 +81,14 @@
                 </td>
                 <td>CHF ${info.price.toFixed(2)}</td>
                 <td>CHF ${itemTotal.toFixed(2)}</td>
-                <td><button onclick="removeItem('${item.price_id}')" style="background: none; border: none; color: red; cursor: pointer;">&times;</button></td>
+                <td>
+                    <button onclick="removeItem('${item.price_id}')"
+                            style="background: #eee; border: none; color: #333; cursor: pointer; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: 0.2s; line-height: 1; padding-bottom: 3px;"
+                            onmouseover="this.style.background='#d9534f'; this.style.color='white'"
+                            onmouseout="this.style.background='#eee'; this.style.color='#333'">
+                        &times;
+                    </button>
+                </td>
             `;
             container.appendChild(row);
         });
@@ -95,7 +102,7 @@
         if (item) {
             newQty = parseInt(newQty);
             if (newQty > maxStock) {
-                alert("{% translate 'Not enough stock!' %}");
+                showToast("{% translate 'Not enough stock!' %}", 'error');
                 loadCart(); // Refresh to original value
                 return;
             }
@@ -134,7 +141,7 @@
         if (session.url) {
             window.location.href = session.url;
         } else {
-            alert(session.error);
+            showToast(session.error, 'error');
         }
     };
 
