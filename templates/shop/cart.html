@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n %}{% load static %}
 
 {% block title %}{% translate "Your Cart" %} - Tetote{% endblock %}
 
@@ -36,7 +36,15 @@
 {% endblock %}
 
 {% block extra_js %}
-<script>
+<script type="module">
+    import { getCart, saveCart, showToast } from "{% static 'js/shop.js' %}";
+
+    // Expose to window for inline onchange/onclick handlers
+    window.updateQty = updateQty;
+    window.removeItem = removeItem;
+    window.clearCart = clearCart;
+    window.loadCart = loadCart;
+
     async function loadCart() {
         const cart = getCart();
         const container = document.getElementById('cart-items');

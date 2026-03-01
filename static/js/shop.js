@@ -39,6 +39,6 @@ export function updateCartUI() {
     const badge = document.getElementById('cart-count');
     if (badge) {
         badge.textContent = count > 0 ? ` (${count})` : "";
-        badge.style.display = 'inline';
+        badge.style.display = 'inline-block';
     }
 }

@@ -96,7 +96,10 @@
         #cart-count {
             color: var(--text-muted);
             margin-left: 0.1rem;
+            display: inline-block;
+            min-width: 1.5rem; /* Reserve space for " (X)" */
         }
+
         /* Toast Styles Refined */
         #toast-container { position: fixed; bottom: 30px; right: 30px; z-index: 1000; display: flex; flex-direction: column; gap: 12px; }
         .toast {

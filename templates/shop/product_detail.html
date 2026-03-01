@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n %}{% load static %}
 
 {% block extra_head %}
 <style>
@@ -167,7 +167,13 @@
 
 {% block extra_js %}
 <script src="https://unpkg.com/embla-carousel/embla-carousel.umd.js"></script>
-<script>
+<script type="module">
+    import { getCart, saveCart, showToast } from "{% static 'js/shop.js' %}";
+
+    // Expose to window for inline onclick handlers
+    window.addToCart = addToCart;
+    window.openModal = openModal;
+
     // Initialize Embla
     const emblaNode = document.getElementById('product-carousel');
     const options = { loop: true };
