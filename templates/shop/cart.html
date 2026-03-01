@@ -93,11 +93,12 @@
                 <td>CHF ${itemTotal.toFixed(2)}</td>
                 <td>
                     <button onclick="removeItem('${item.price_id}')"
-                            style="background: #eee; border: none; color: #333; cursor: pointer; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: 0.2s; line-height: 1; padding-bottom: 3px;"
+                            style="background: #eee; border: none; color: #333; cursor: pointer; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: 0.2s; line-height: 30px;"
                             onmouseover="this.style.background='#d9534f'; this.style.color='white'"
                             onmouseout="this.style.background='#eee'; this.style.color='#333'">
-                        &times;
+                        <span style="transform: translateY(-2px);">&times;</span>
                     </button>
+                </td>
                 </td>
             `;
             container.appendChild(row);
