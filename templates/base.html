@@ -9,54 +9,119 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Cormorant Garamond', serif; margin: 0; padding: 0; font-size: 1.1rem; }
-        select, input, button, textarea { font-family: 'Cormorant Garamond', serif; font-size: 1rem; }
-        header { background: #333; color: white; padding: 1rem; display: flex; justify-content: space-between; align-items: center; }
-        nav a { color: white; margin-left: 1rem; text-decoration: none; }
-        main { padding: 2rem; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 2rem; }
-        .product-card { padding: 1rem; }
-        .product-card img { max-width: 100%; height: auto; border-radius: 8px; }
-        .price { font-weight: bold; font-size: 1.2rem; }
-        footer { background: #eee; padding: 1rem; text-align: center; margin-top: 2rem; }
-        .filters { margin-bottom: 2rem; }
-        .btn { padding: 0.5rem 1rem; background: #007bff; color: white; border: none; cursor: pointer; text-decoration: none; }
-        .cart-icon { position: relative; }
-        #cart-count { background: red; color: white; border-radius: 50%; padding: 0.2rem 0.5rem; font-size: 0.8rem; position: absolute; top: -10px; right: -10px; }
-
-        /* Toast Styles */
-        #toast-container {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+        :root {
+            --bg-color: #fdfcfb;
+            --text-main: #2c2c2c;
+            --text-muted: #6b6b6b;
+            --accent-color: #4a5d4e; /* Muted Olive Earth Tone */
+            --accent-hover: #3a4a3d;
+            --border-light: #eceae7;
+            --header-bg: #ffffff;
         }
-        .toast {
-            min-width: 250px;
-            padding: 1rem;
-            border-radius: 4px;
-            color: white;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+
+        body {
+            font-family: 'Cormorant Garamond', serif;
+            margin: 0;
+            padding: 0;
+            font-size: 1.15rem;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        select, input, button, textarea {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            border: 1px solid var(--border-light);
+            background: white;
+            padding: 0.4rem;
+        }
+
+        header {
+            background: var(--header-bg);
+            color: var(--text-main);
+            padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            animation: slideIn 0.3s ease-out;
-            font-size: 0.95rem;
+            border-bottom: 1px solid var(--border-light);
         }
-        .toast.info { background-color: #333; }
-        .toast.error { background-color: #d9534f; }
-        .toast-close {
-            background: none;
-            border: none;
+
+        header a { color: var(--text-main); text-decoration: none; transition: opacity 0.2s; }
+        header a:hover { opacity: 0.7; }
+        .logo a { color: var(--text-main) !important; font-size: 1.4rem !important; }
+
+        nav a { margin-left: 1.5rem; font-weight: 500; letter-spacing: 0.05rem; }
+
+        main { padding: 2rem; max-width: 1400px; margin: 0 auto; min-height: 70vh; }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 2rem; }
+
+        .product-card { padding: 0; transition: transform 0.3s ease; }
+        .product-card img { max-width: 100%; height: auto; border-radius: 2px; filter: grayscale(10%) contrast(95%); }
+        .product-card h3 { margin: 1rem 0 0.2rem 0; font-size: 1.4rem; font-weight: 500; }
+
+        .price { font-size: 1.1rem; color: var(--text-main); margin-top: 0.5rem; }
+
+        footer {
+            background: white;
+            padding: 1.5rem 2rem;
+            margin-top: 4rem;
+            border-top: 1px solid var(--border-light);
+            font-size: 0.85rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .footer-left, .footer-center, .footer-right { display: flex; align-items: center; gap: 1rem; }
+
+        .filters { margin-bottom: 3rem; border-bottom: 1px solid var(--border-light); padding-bottom: 1.5rem; }
+
+        .btn {
+            padding: 0.7rem 1.5rem;
+            background: var(--accent-color);
             color: white;
+            border: none;
             cursor: pointer;
-            font-size: 1.2rem;
-            margin-left: 1rem;
-            line-height: 1;
+            text-decoration: none;
+            transition: all 0.3s;
+            letter-spacing: 0.05rem;
+            display: inline-block;
         }
+        .btn:hover { background: var(--accent-hover); }
+
+        .cart-icon { position: relative; }
+        #cart-count {
+            background: var(--accent-color);
+            color: white;
+            border-radius: 50%;
+            padding: 0.1rem 0.4rem;
+            font-size: 0.7rem;
+            position: absolute;
+            top: -8px;
+            right: -12px;
+        }
+
+        /* Toast Styles Refined */
+        #toast-container { position: fixed; bottom: 30px; right: 30px; z-index: 1000; display: flex; flex-direction: column; gap: 12px; }
+        .toast {
+            min-width: 280px;
+            padding: 1.2rem;
+            background: white;
+            color: var(--text-main);
+            border: 1px solid var(--border-light);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            font-size: 1rem;
+        }
+        .toast.error { border-left: 4px solid #c9a09a; }
+        .toast.info { border-left: 4px solid var(--accent-color); }
+        .toast-close { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.4rem; }
         @keyframes slideIn {
             from { transform: translateX(100%); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
@@ -85,14 +150,16 @@
     </main>
 
     <footer>
-        <p>&copy; {% now "Y" %} Tetote. All rights reserved.</p>
-        <div style="font-size: 0.85rem; margin-top: 0.5rem; color: #666;">
-            <a href="{% url 'shop:privacy_policy' %}" style="color: #666; margin: 0 0.5rem;">{% translate "Privacy Policy" %}</a> |
-            <a href="{% url 'shop:terms' %}" style="color: #666; margin: 0 0.5rem;">{% translate "Terms and Conditions" %}</a>
+        <div class="footer-left">
+            <span>&copy; {% now "Y" %} {% translate "Tetote. All rights reserved." %}</span>
         </div>
-        <div style="margin-top: 1rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.85rem; color: #666;">
-            <span>{% translate "Payments secured by" %}</span>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg" alt="Stripe" style="height: 15px; opacity: 0.7; vertical-align: middle;">
+        <div class="footer-center">
+            <a href="{% url 'shop:privacy_policy' %}" style="color: #666;">{% translate "Privacy Policy" %}</a>
+            <a href="{% url 'shop:terms' %}" style="color: #666;">{% translate "Terms and Conditions" %}</a>
+        </div>
+        <div class="footer-right">
+            <span style="margin-right: 1.5rem;">{% translate "Made with ❤️ in 🇨🇭" %}</span>
+            <span>{% translate "Payments secured by Stripe" %}</span>
         </div>
     </footer>
 

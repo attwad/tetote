@@ -132,25 +132,26 @@
                 {{ product.description|linebreaks }}
             </div>
 
-            <div style="background: #f9f9f9; padding: 1.5rem; border-radius: 4px;">
+            <div style="background: #ffffff; border: 1px solid var(--border-light); padding: 1.5rem; border-radius: 2px;">
                 {% if product.is_in_stock %}
-                    <p style="margin-top: 0;">
-                        <span style="color: green; font-weight: bold;">{% translate "In Stock" %}</span> ({{ product.stock_quantity }} {% translate "available" %})
+                    <p style="margin-top: 0; font-size: 1rem;">
+                        <span style="color: #4a5d4e; font-weight: 500;">{% translate "In Stock" %}</span> ({{ product.stock_quantity }} {% translate "available" %})
                     </p>
                     <div class="add-to-cart" style="display: flex; gap: 1rem; align-items: center;">
-                        <input type="number" id="qty" value="1" min="1" max="{{ product.stock_quantity }}" style="width: 60px; padding: 0.5rem;">
+                        <input type="number" id="qty" value="1" min="1" max="{{ product.stock_quantity }}" style="width: 60px; padding: 0.5rem; border: 1px solid var(--border-light);">
                         <button class="btn" onclick="addToCart('{{ product.stripe_price_id }}', parseInt(document.getElementById('qty').value), {{ product.stock_quantity }})" style="flex: 1;">
                             {% translate "Add to Cart" %}
                         </button>
                     </div>
                 {% else %}
-                    <p style="margin: 0; color: red; font-weight: bold;">{% translate "Out of Stock" %}</p>
+                    <p style="margin: 0; color: #9a7b76; font-weight: 500;">{% translate "Out of Stock" %}</p>
                 {% endif %}
 
-                <button class="btn" id="checkout-btn" style="margin-top: 1rem; background: #28a745; width: 100%; display: block;">
+                <button class="btn" id="checkout-btn" style="margin-top: 1rem; background: var(--text-main); width: 100%; display: block;">
                     {% translate "Checkout Now" %}
                 </button>
             </div>
+
         </div>
     </div>
 
