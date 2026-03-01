@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "Your Cart" %} - Tetote{% endblock %}
+
+{% block content %}
+    <h1>{% translate "Your Cart" %}</h1>
+
+    <div id="cart-container">
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 2rem;">
+            <thead>
+                <tr style="border-bottom: 1px solid #ddd; text-align: left;">
+                    <th>{% translate "Product" %}</th>
+                    <th>{% translate "Quantity" %}</th>
+                    <th>{% translate "Price" %}</th>
+                    <th>{% translate "Total" %}</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="cart-items">
+                <!-- Loaded via JS -->
+            </tbody>
+        </table>
+
+        <div style="text-align: right;">
+            <p style="font-size: 1.5rem;">{% translate "Total" %}: <span id="cart-total">CHF 0.00</span></p>
+            <button class="btn" onclick="clearCart()" style="background: #666; margin-right: 1rem;">{% translate "Clear Cart" %}</button>
+            <button class="btn" id="checkout-btn" style="background: green;">{% translate "Checkout" %}</button>
+        </div>
+    </div>
+
+    <div id="empty-cart" style="display: none; text-align: center; padding: 3rem;">
+        <p>{% translate "Your cart is empty." %}</p>
+        <a href="{% url 'shop:product_list' %}" class="btn">{% translate "Go Shopping" %}</a>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    async function loadCart() {
+        const cart = getCart();
+        const container = document.getElementById('cart-items');
+        const emptyDiv = document.getElementById('empty-cart');
+        const cartDiv = document.getElementById('cart-container');
+
+        if (cart.length === 0) {
+            cartDiv.style.display = 'none';
+            emptyDiv.style.display = 'block';
+            return;
+        }
+
+        // Fetch product details for the price IDs we have
+        const priceIds = cart.map(item => item.price_id);
+        const params = new URLSearchParams();
+        priceIds.forEach(id => params.append('price_ids[]', id));
+
+        const response = await fetch(`{% url 'shop:product_info' %}?${params.toString()}`);
+        const data = await response.json();
+        const productInfo = data.products;
+
+        let total = 0;
+        container.innerHTML = '';
+
+        cart.forEach(item => {
+            const info = productInfo.find(p => p.price_id === item.price_id);
+            if (!info) return;
+
+            const itemTotal = info.price * item.qty;
+            total += itemTotal;
+
+            const row = document.createElement('tr');
+            row.style.borderBottom = '1px solid #eee';
+            row.innerHTML = `
+                <td style="padding: 1rem 0; display: flex; align-items: center; gap: 1rem;">
+                    <img src="${info.image}" style="width: 50px; height: 50px; object-fit: cover;">
+                    <a href="${info.url}" style="text-decoration: none; color: #333;">${info.name}</a>
+                </td>
+                <td>
+                    <input type="number" value="${item.qty}" min="1" max="${info.stock}" style="width: 50px;"
+                           onchange="updateQty('${item.price_id}', this.value, ${info.stock})">
+                </td>
+                <td>CHF ${info.price.toFixed(2)}</td>
+                <td>CHF ${itemTotal.toFixed(2)}</td>
+                <td><button onclick="removeItem('${item.price_id}')" style="background: none; border: none; color: red; cursor: pointer;">&times;</button></td>
+            `;
+            container.appendChild(row);
+        });
+
+        document.getElementById('cart-total').textContent = `CHF ${total.toFixed(2)}`;
+    }
+
+    function updateQty(priceId, newQty, maxStock) {
+        let cart = getCart();
+        const item = cart.find(i => i.price_id === priceId);
+        if (item) {
+            newQty = parseInt(newQty);
+            if (newQty > maxStock) {
+                alert("{% translate 'Not enough stock!' %}");
+                loadCart(); // Refresh to original value
+                return;
+            }
+            item.qty = newQty;
+            saveCart(cart);
+            loadCart();
+        }
+    }
+
+    function removeItem(priceId) {
+        let cart = getCart();
+        cart = cart.filter(i => i.price_id !== priceId);
+        saveCart(cart);
+        loadCart();
+    }
+
+    function clearCart() {
+        if (confirm("{% translate 'Are you sure you want to clear your cart?' %}")) {
+            saveCart([]);
+            loadCart();
+        }
+    }
+
+    document.getElementById('checkout-btn').onclick = async function() {
+        const cart = getCart();
+        const response = await fetch("{% url 'shop:create_checkout_session' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+            body: JSON.stringify({ items: cart })
+        });
+
+        const session = await response.json();
+        if (session.url) {
+            window.location.href = session.url;
+        } else {
+            alert(session.error);
+        }
+    };
+
+    loadCart();
+</script>
+{% endblock %}

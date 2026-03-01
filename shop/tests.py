@@ -103,6 +103,82 @@ class ShopViewTests(TestCase):
         self.assertContains(response, "Brand Product")
         self.assertNotContains(response, "Unbranded Product")
 
+    def test_product_list_filter_yakikata(self):
+        y = Yakikata.objects.create(name="Special", slug="special")
+        Product.objects.create(
+            stripe_product_id="prod_y",
+            stripe_price_id="price_y",
+            name="Yakikata Product",
+            slug="y-prod",
+            price=100,
+            stock_quantity=1,
+            yakikata=y,
+            public=True,
+        )
+        url = reverse("shop:product_list") + "?yakikata=special"
+        response = self.client.get(url)
+        self.assertContains(response, "Yakikata Product")
+        self.assertNotContains(response, "Brand Product")
+
+    def test_product_list_filter_type(self):
+        t = ProductType.objects.create(name="Bowl", slug="bowl")
+        Product.objects.create(
+            stripe_product_id="prod_t",
+            stripe_price_id="price_t",
+            name="Type Product",
+            slug="t-prod",
+            price=100,
+            stock_quantity=1,
+            product_type=t,
+            public=True,
+        )
+        url = reverse("shop:product_list") + "?type=bowl"
+        response = self.client.get(url)
+        self.assertContains(response, "Type Product")
+        self.assertNotContains(response, "Brand Product")
+
+    def test_product_detail_private(self):
+        Product.objects.create(
+            stripe_product_id="prod_private",
+            stripe_price_id="price_p",
+            name="Private",
+            slug="private",
+            price=100,
+            stock_quantity=1,
+            public=False,
+        )
+        url = reverse("shop:product_detail", kwargs={"product_slug": "private"})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
+
+
+class CartViewTests(TestCase):
+    def setUp(self):
+        self.product = Product.objects.create(
+            stripe_product_id="prod_cart",
+            stripe_price_id="price_cart",
+            name="Cart Product",
+            slug="cart-product",
+            price=1000,
+            stock_quantity=10,
+            public=True,
+        )
+
+    def test_cart_page_view(self):
+        url = reverse("shop:cart")
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "shop/cart.html")
+
+    def test_product_info_api(self):
+        url = reverse("shop:product_info") + "?price_ids[]=price_cart"
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        data = response.json()["products"]
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0]["name"], "Cart Product")
+        self.assertEqual(data[0]["stock"], 10)
+
 
 class CheckoutViewTests(TestCase):
     def setUp(self):

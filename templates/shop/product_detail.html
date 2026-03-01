@@ -28,7 +28,7 @@
                     <span style="color: green;">{% translate "In Stock" %}</span> ({{ product.stock_quantity }})
                     <div class="add-to-cart">
                         <input type="number" id="qty" value="1" min="1" max="{{ product.stock_quantity }}" style="width: 50px;">
-                        <button class="btn" onclick="addToCart('{{ product.stripe_price_id }}', parseInt(document.getElementById('qty').value))">
+                        <button class="btn" onclick="addToCart('{{ product.stripe_price_id }}', parseInt(document.getElementById('qty').value), {{ product.stock_quantity }})">
                             {% translate "Add to Cart" %}
                         </button>
                     </div>
@@ -46,16 +46,23 @@
 
 {% block extra_js %}
 <script>
-    function addToCart(priceId, qty) {
+    function addToCart(priceId, qty, maxStock) {
         let cart = getCart();
         const existing = cart.find(item => item.price_id === priceId);
-        if (existing) {
-            existing.qty += qty;
+        let currentQty = existing ? existing.qty : 0;
+
+        if (currentQty + qty > maxStock) {
+            alert("{% translate 'Cannot add more than available stock!' %}");
+            return; // Error out and do nothing
         } else {
-            cart.push({ price_id: priceId, qty: qty });
+            if (existing) {
+                existing.qty += qty;
+            } else {
+                cart.push({ price_id: priceId, qty: qty });
+            }
+            alert("{% translate 'Added to cart!' %}");
         }
         saveCart(cart);
-        alert("{% translate 'Added to cart!' %}");
     }
 
     document.getElementById('checkout-btn').onclick = async function() {

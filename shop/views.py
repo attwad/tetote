@@ -1,13 +1,42 @@
 import stripe
 import json
 from django.conf import settings
-from django.views.generic import ListView, DetailView, View
+from django.views.generic import ListView, DetailView, View, TemplateView
 from django.http import JsonResponse
 from django.urls import reverse
 from django.db import transaction
 from .models import Product, Brand, Yakikata, ProductType
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
+
+
+class CartView(TemplateView):
+    template_name = "shop/cart.html"
+
+
+class ProductInfoView(View):
+    """
+    Helper view to get product details for the cart UI
+    """
+
+    def get(self, request, *args, **kwargs):
+        price_ids = request.GET.getlist("price_ids[]")
+        products = Product.objects.filter(stripe_price_id__in=price_ids)
+        data = []
+        for p in products:
+            data.append(
+                {
+                    "price_id": p.stripe_price_id,
+                    "name": p.name,
+                    "price": p.price_in_chf,
+                    "image": p.main_photo,
+                    "stock": p.stock_quantity,
+                    "url": reverse(
+                        "shop:product_detail", kwargs={"product_slug": p.slug}
+                    ),
+                }
+            )
+        return JsonResponse({"products": data})
 
 
 class ProductListView(ListView):
