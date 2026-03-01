@@ -24,6 +24,34 @@ class StripeIntegrationTest(TestCase):
         self.assertEqual(product.images.count(), 1)
         self.assertEqual(product.images.first().url, "http://test.com/img1.jpg")
 
+    def test_sync_product_does_not_overwrite_price(self):
+        # Create product with existing price
+        Product.objects.create(
+            stripe_product_id="prod_overwrite_test",
+            stripe_price_id="price_fixed",
+            name="Original",
+            stripe_name="Original",
+            slug="original",
+            price=9900,
+            stock_quantity=5,
+        )
+
+        # Update product (no price info in payload)
+        product_data = {
+            "id": "prod_overwrite_test",
+            "name": "Updated Name",
+            "images": ["http://test.com/new.jpg"],
+            "created": 1700000000,
+        }
+
+        sync_product(product_data)
+
+        product = Product.objects.get(stripe_product_id="prod_overwrite_test")
+        self.assertEqual(product.stripe_name, "Updated Name")
+        # Price must remain unchanged
+        self.assertEqual(product.price, 9900)
+        self.assertEqual(product.stripe_price_id, "price_fixed")
+
     def test_sync_price(self):
         Product.objects.create(
             stripe_product_id="prod_test",

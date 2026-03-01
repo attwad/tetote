@@ -43,38 +43,40 @@ def stripe_webhook(request):
 def sync_product(product_data):
     """
     Syncs a single product from Stripe.
+    Only updates fields present in the Stripe Product object.
     """
     product_id = product_data["id"]
-    metadata = product_data.get("metadata", {})
 
     # Extract images
     images = product_data.get("images", [])
     main_photo = images[0] if images else ""
 
-    # Generate slug from Name if not in metadata
+    # Generate slug from Name
     stripe_name = product_data["name"]
-    slug = metadata.get("slug") or slugify(stripe_name)
+    slug = product_data.get("metadata", {}).get("slug") or slugify(stripe_name)
 
     with transaction.atomic():
-        product, created = Product.objects.update_or_create(
+        product, created = Product.objects.get_or_create(
             stripe_product_id=product_id,
             defaults={
+                "name": stripe_name,  # Initial name
                 "stripe_name": stripe_name,
                 "slug": slug,
                 "main_photo": main_photo,
-                "price": 0,  # To be updated by price event or sync
+                "price": 0,  # Placeholder until price event arrives
             },
         )
 
-        # If it was just created, initialize name and public status
-        if created:
-            product.name = stripe_name
-            # product.public uses the model default (settings.DEBUG)
+        # Surgical update: only touch fields that belong to the Stripe Product object
+        product.stripe_name = stripe_name
+        product.main_photo = main_photo
+        product.slug = slug
 
-        # Ingest created timestamp from stripe
+        # Ingest created timestamp
         product.date_added = datetime.datetime.fromtimestamp(
             product_data["created"], tz=datetime.timezone.utc
         )
+
         product.save()
 
         # Update Gallery
@@ -94,8 +96,7 @@ def sync_price(price_data):
         product.price = price_data["unit_amount"]
         product.save()
     except Product.DoesNotExist:
-        # If product doesn't exist yet, we can't sync price.
-        # Usually product comes first or we sync everything later.
+        # Product will be created by product.created event
         pass
 
 
@@ -103,15 +104,12 @@ def handle_checkout_completed(session):
     """
     Decrement stock levels on successful checkout.
     """
-    # Fetch line items to identify products
     line_items = stripe.checkout.Session.list_line_items(session["id"])
 
     with transaction.atomic():
         for item in line_items.data:
-            # We need the product ID from the price object
             price_id = item.price.id
             try:
-                # Decrement stock locally
                 Product.objects.filter(stripe_price_id=price_id).update(
                     stock_quantity=F("stock_quantity") - item.quantity
                 )
