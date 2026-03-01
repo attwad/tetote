@@ -186,6 +186,12 @@ class CartViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "shop/cart.html")
 
+    def test_checkout_success_page_view(self):
+        url = reverse("shop:checkout_success")
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "shop/checkout_success.html")
+
     def test_product_info_api(self):
         url = reverse("shop:product_info") + "?price_ids[]=price_cart"
         response = self.client.get(url)

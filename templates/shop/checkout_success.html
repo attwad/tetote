@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load i18n %}{% load static %}
+
+{% block title %}{% translate "Thank You" %} - Tetote{% endblock %}
+
+{% block content %}
+<div style="text-align: center; padding: 5rem 2rem;">
+    <h1 style="font-size: 3rem; margin-bottom: 1.5rem;">{% translate "Thank You!" %}</h1>
+    <p style="font-size: 1.2rem; color: var(--text-muted); margin-bottom: 3rem;">
+        {% translate "Your order has been placed successfully. We are preparing your ceramics with love." %}
+    </p>
+    <a href="{% url 'shop:product_list' %}" class="btn">{% translate "Back to Shop" %}</a>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script type="module">
+    import { saveCart } from "{% static 'js/shop.js' %}";
+
+    // Clear the cart upon reaching the success page
+    saveCart([]);
+    console.log("Cart cleared after successful checkout.");
+</script>
+{% endblock %}

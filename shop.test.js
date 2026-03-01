@@ -64,5 +64,12 @@ describe('Shop Logic Tests', () => {
             updateCartUI();
             expect(document.getElementById('cart-count').textContent).toBe('');
         });
+
+        it('saveCart([]) should clear the cart and UI', () => {
+            localStorage.setItem('cart', JSON.stringify([{ price_id: 'p1', qty: 1 }]));
+            saveCart([]);
+            expect(localStorage.getItem('cart')).toBe('[]');
+            expect(document.getElementById('cart-count').textContent).toBe('');
+        });
     });
 });

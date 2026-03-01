@@ -22,6 +22,10 @@ class TermsConditionsView(TemplateView):
     template_name = "shop/terms_conditions.html"
 
 
+class CheckoutSuccessView(TemplateView):
+    template_name = "shop/checkout_success.html"
+
+
 class ProductInfoView(View):
     """
     Helper view to get product details for the cart UI
@@ -134,8 +138,9 @@ class CreateCheckoutSessionView(View):
                 payment_method_types=["card"],
                 line_items=line_items,
                 mode="payment",
-                success_url=request.build_absolute_uri(reverse("shop:product_list"))
-                + "?success=true",
+                success_url=request.build_absolute_uri(
+                    reverse("shop:checkout_success")
+                ),
                 cancel_url=request.build_absolute_uri(reverse("shop:product_list"))
                 + "?canceled=true",
             )

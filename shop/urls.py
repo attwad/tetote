@@ -19,4 +19,9 @@ urlpatterns = [
         views.CreateCheckoutSessionView.as_view(),
         name="create_checkout_session",
     ),
+    path(
+        "checkout-success/",
+        views.CheckoutSuccessView.as_view(),
+        name="checkout_success",
+    ),
 ]
