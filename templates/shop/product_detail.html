@@ -5,55 +5,109 @@
 <style>
     .metadata { margin: 0.1rem 0; }
 
+    /* Embla Carousel Base Styles */
+    .embla { overflow: hidden; position: relative; background: #fdfdfd; border: 1px solid #eee; }
+    .embla__container { display: flex; }
+    .embla__slide { flex: 0 0 100%; min-width: 0; position: relative; }
+    .embla__slide img { display: block; width: 100%; height: 500px; object-fit: contain; cursor: zoom-in; }
+
+    /* Thumbnails */
+    .thumbnails { display: flex; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap; }
+    .thumb { width: 60px; height: 60px; object-fit: cover; cursor: pointer; border: 2px solid transparent; opacity: 0.6; transition: 0.2s; }
+    .thumb.is-selected { border-color: #333; opacity: 1; }
+
+    /* Modal / Dialog Styles */
+    dialog#image-modal {
+        padding: 0;
+        border: none;
+        max-width: 100vw;
+        max-height: 100vh;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.9);
+        color: white;
+    }
+    dialog#image-modal::backdrop {
+        background: rgba(0,0,0,0.95);
+    }
+    .modal-content {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+    .modal-content img {
+        max-width: 95vw;
+        max-height: 85vh;
+        object-fit: contain;
+    }
+    .close-modal {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: none;
+        border: none;
+        color: white;
+        font-size: 2rem;
+        cursor: pointer;
+        font-family: sans-serif;
+    }
+
     /* Layout grid */
     .product-detail-container {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 2rem;
+        gap: 3rem;
     }
 
-    /* Mobile specific adjustments */
     @media (max-width: 768px) {
-        .product-detail-container {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-        .product-info-section {
-            order: 2;
-        }
-        .product-image-section {
-            order: 1;
-        }
-        .mobile-title {
-            display: block !important;
-            order: 0;
-            margin-bottom: 1rem;
-        }
-        .desktop-title {
-            display: none;
-        }
+        .product-detail-container { display: flex; flex-direction: column; gap: 1rem; }
+        .product-info-section { order: 2; }
+        .product-image-section { order: 1; }
+        .mobile-title { display: block !important; order: 0; margin-bottom: 1rem; }
+        .desktop-title { display: none; }
+        .embla__slide img { height: 350px; }
     }
 
-    .mobile-title {
-        display: none;
-    }
+    .mobile-title { display: none; }
 </style>
 {% endblock %}
 
 {% block content %}
     <div class="product-detail-container">
-        <!-- Title for Mobile (Top) -->
+        <!-- Title for Mobile -->
         <h1 class="mobile-title">{{ product.name }}</h1>
 
-        <!-- Image Section -->
+        <!-- Image Section with Embla -->
         <div class="product-image-section">
-            {% if product.main_photo %}
-                <img src="{{ product.main_photo }}" alt="{{ product.name }}" class="main-image" style="max-width: 100%;">
-            {% endif %}
-            <div class="gallery" style="display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap;">
+            <div class="embla" id="product-carousel">
+                <div class="embla__container">
+                    {% if product.main_photo %}
+                        <div class="embla__slide">
+                            <img src="{{ product.main_photo }}" alt="{{ product.name }}" onclick="openModal(this.src)">
+                        </div>
+                    {% endif %}
+                    {% for image in product.images.all %}
+                        {% if image.url != product.main_photo %}
+                        <div class="embla__slide">
+                            <img src="{{ image.url }}" alt="{{ product.name }}" onclick="openModal(this.src)">
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Custom Thumbnail Navigation -->
+            <div class="thumbnails" id="carousel-thumbs">
+                {% if product.main_photo %}
+                    <img src="{{ product.main_photo }}" class="thumb is-selected" data-index="0">
+                {% endif %}
                 {% for image in product.images.all %}
-                    <img src="{{ image.url }}" alt="{{ product.name }}" style="max-height: 80px; cursor: pointer; border: 1px solid #eee;" onclick="document.querySelector('.main-image').src=this.src">
+                    {% if image.url != product.main_photo %}
+                        <img src="{{ image.url }}" class="thumb" data-index="{{ forloop.counter }}">
+                    {% endif %}
                 {% endfor %}
             </div>
         </div>
@@ -99,10 +153,54 @@
             </div>
         </div>
     </div>
+
+    <!-- Native HTML Dialog Modal -->
+    <dialog id="image-modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="document.getElementById('image-modal').close()">&times;</button>
+            <img id="modal-img" src="" alt="Fullscreen view">
+            <p id="modal-caption" style="margin-top: 1rem;">{{ product.name }}</p>
+        </div>
+    </dialog>
 {% endblock %}
 
 {% block extra_js %}
+<script src="https://unpkg.com/embla-carousel/embla-carousel.umd.js"></script>
 <script>
+    // Initialize Embla
+    const emblaNode = document.getElementById('product-carousel');
+    const options = { loop: true };
+    const emblaApi = EmblaCarousel(emblaNode, options);
+
+    // Thumbnail Sync
+    const thumbNodes = document.querySelectorAll('.thumb');
+    thumbNodes.forEach((thumb, index) => {
+        thumb.addEventListener('click', () => emblaApi.scrollTo(index));
+    });
+
+    emblaApi.on('select', () => {
+        const index = emblaApi.selectedScrollSnap();
+        thumbNodes.forEach((thumb, i) => {
+            if (i === index) thumb.classList.add('is-selected');
+            else thumb.classList.remove('is-selected');
+        });
+    });
+
+    // Modal Logic
+    const modal = document.getElementById('image-modal');
+    const modalImg = document.getElementById('modal-img');
+
+    function openModal(src) {
+        modalImg.src = src;
+        modal.showModal();
+    }
+
+    // Close modal on click outside
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.close();
+    });
+
+    // Existing Shop Logic
     function addToCart(priceId, qty, maxStock) {
         let cart = getCart();
         const existing = cart.find(item => item.price_id === priceId);
