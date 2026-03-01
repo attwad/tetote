@@ -51,7 +51,7 @@
                     {% if product.product_type %} | {{ product.product_type.name }}{% endif %}
                 </div>
                 <p class="price">CHF {{ product.price_in_chf|floatformat:2 }}</p>
-                <p>
+                <p style="display: flex; align-items: center; gap: 0.5rem;">
                     {% if product.is_in_stock %}
                         <span style="color: green;">{% translate "In Stock" %}</span>
                     {% else %}
@@ -59,9 +59,10 @@
                     {% endif %}
 
                     {% if product.is_recently_added %}
-                        <span style="background: #ffd700; padding: 0.1rem 0.4rem; border-radius: 4px; font-size: 0.75rem; margin-left: 0.5rem; color: black; vertical-align: middle;">{% translate "NEW" %}</span>
+                        <span style="background: #ffd700; padding: 0.1rem 0.4rem; border-radius: 4px; font-size: 0.75rem; color: black; line-height: 1;">{% translate "NEW" %}</span>
                     {% endif %}
                 </p>
+
             </div>
         {% empty %}
             <p>{% translate "No products found." %}</p>
