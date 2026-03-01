@@ -151,6 +151,22 @@ class ShopViewTests(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
 
+    def test_product_list_filter_stock(self):
+        # Create out of stock product
+        Product.objects.create(
+            stripe_product_id="prod_oos",
+            stripe_price_id="price_oos",
+            name="Out of Stock Prod",
+            slug="oos-prod",
+            price=100,
+            stock_quantity=0,
+            public=True,
+        )
+        url = reverse("shop:product_list") + "?stock=in_stock"
+        response = self.client.get(url)
+        self.assertContains(response, "Brand Product")
+        self.assertNotContains(response, "Out of Stock Prod")
+
 
 class CartViewTests(TestCase):
     def setUp(self):

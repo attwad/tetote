@@ -50,6 +50,7 @@ class ProductListView(ListView):
         brand_slug = self.request.GET.get("brand")
         yakikata_slug = self.request.GET.get("yakikata")
         type_slug = self.request.GET.get("type")
+        stock_filter = self.request.GET.get("stock")
 
         if brand_slug:
             queryset = queryset.filter(brand__slug=brand_slug)
@@ -57,6 +58,8 @@ class ProductListView(ListView):
             queryset = queryset.filter(yakikata__slug=yakikata_slug)
         if type_slug:
             queryset = queryset.filter(product_type__slug=type_slug)
+        if stock_filter == "in_stock":
+            queryset = queryset.filter(stock_quantity__gt=0)
 
         return queryset
 

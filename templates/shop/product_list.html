@@ -31,6 +31,13 @@
                     {% endfor %}
                 </select>
             </div>
+            <div>
+                <label for="stock">{% translate "Stock" %}:</label>
+                <select name="stock" id="stock" onchange="this.form.submit()">
+                    <option value="">{% translate "All Products" %}</option>
+                    <option value="in_stock" {% if request.GET.stock == "in_stock" %}selected{% endif %}>{% translate "In Stock Only" %}</option>
+                </select>
+            </div>
         </form>
     </div>
 
@@ -84,4 +91,20 @@
             {% endif %}
         </div>
     {% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Sync filters on page load (handles 'Back' button behavior)
+    window.onpageshow = function(event) {
+        const urlParams = new URLSearchParams(window.location.search);
+
+        const filters = ['brand', 'yakikata', 'type', 'stock'];
+        filters.forEach(f => {
+            const val = urlParams.get(f) || "";
+            const el = document.getElementById(f);
+            if (el) el.value = val;
+        });
+    };
+</script>
 {% endblock %}
