@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load i18n %}{% load static %}
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
 <head>
@@ -92,18 +92,11 @@
         }
         .btn:hover { background: var(--accent-hover); }
 
-        .cart-icon { position: relative; }
+        .cart-icon { }
         #cart-count {
-            background: var(--accent-color);
-            color: white;
-            border-radius: 50%;
-            padding: 0.1rem 0.4rem;
-            font-size: 0.7rem;
-            position: absolute;
-            top: -8px;
-            right: -12px;
+            color: var(--text-muted);
+            margin-left: 0.1rem;
         }
-
         /* Toast Styles Refined */
         #toast-container { position: fixed; bottom: 30px; right: 30px; z-index: 1000; display: flex; flex-direction: column; gap: 12px; }
         .toast {
@@ -165,43 +158,19 @@
 
     <div id="toast-container"></div>
 
-    <script>
-        function showToast(message, type = 'info', duration = 3000) {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
+    <script type="module">
+        import { getCart, saveCart, updateCartUI, showToast } from "{% static 'js/shop.js' %}";
 
-            toast.innerHTML = `
-                <span>${message}</span>
-                <button class="toast-close" onclick="this.parentElement.remove()">&times;</button>
-            `;
+        // Expose to window for existing inline onclick handlers in other templates
+        window.getCart = getCart;
+        window.saveCart = saveCart;
+        window.updateCartUI = updateCartUI;
+        window.showToast = showToast;
 
-            container.appendChild(toast);
-
-            if (duration > 0) {
-                setTimeout(() => {
-                    toast.style.animation = 'fadeOut 0.5s ease-out forwards';
-                    toast.addEventListener('animationend', () => toast.remove());
-                }, duration);
-            }
-        }
-
-        function getCart() {
-
-            return JSON.parse(localStorage.getItem('cart') || '[]');
-        }
-        function saveCart(cart) {
-            localStorage.setItem('cart', JSON.stringify(cart));
-            updateCartUI();
-        }
-        function updateCartUI() {
-            const cart = getCart();
-            const count = cart.length; // Count unique entries (price_ids)
-            const badge = document.getElementById('cart-count');
-            badge.textContent = count;
-            badge.style.display = count > 0 ? 'inline-block' : 'none';
-        }
         updateCartUI();
+        window.addEventListener('pageshow', (event) => {
+            updateCartUI();
+        });
     </script>
     {% block extra_js %}{% endblock %}
 </body>
