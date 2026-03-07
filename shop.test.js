@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { getCart, saveCart, updateCartUI, showToast } from './static/js/shop.js';
+import { getCart, saveCart, updateCartUI, showToast, getNewURL } from './static/js/shop.js';
 
 describe('Shop Logic Tests', () => {
     beforeEach(() => {
@@ -13,6 +13,47 @@ describe('Shop Logic Tests', () => {
         localStorage.clear();
         vi.clearAllTimers();
         vi.useFakeTimers();
+    });
+
+    describe('URL / Filter Logic', () => {
+        const baseUrl = 'http://localhost/';
+
+        it('toggleDrawer should add expanded=true', () => {
+            const result = getNewURL(baseUrl, 'drawer');
+            expect(result).toContain('expanded=true');
+        });
+
+        it('toggleDrawer should remove expanded=true if present', () => {
+            const result = getNewURL(baseUrl + '?expanded=true', 'drawer');
+            expect(result).not.toContain('expanded=true');
+        });
+
+        it('toggleFilter should add multiple values', () => {
+            let url = getNewURL(baseUrl, 'filter', 'brand', 'bizen');
+            url = getNewURL(url, 'filter', 'brand', 'seto');
+            const params = new URL(url).searchParams;
+            expect(params.getAll('brand')).toEqual(['bizen', 'seto']);
+        });
+
+        it('toggleFilter should remove existing value', () => {
+            const start = baseUrl + '?brand=bizen&brand=seto';
+            const result = getNewURL(start, 'filter', 'brand', 'bizen');
+            const params = new URL(result).searchParams;
+            expect(params.getAll('brand')).toEqual(['seto']);
+        });
+
+        it('toggleStock should toggle in_stock', () => {
+            const result = getNewURL(baseUrl, 'stock');
+            expect(result).toContain('stock=in_stock');
+            const back = getNewURL(result, 'stock');
+            expect(back).not.toContain('stock=in_stock');
+        });
+
+        it('any filter change should reset pagination', () => {
+            const start = baseUrl + '?page=2';
+            const result = getNewURL(start, 'filter', 'brand', 'bizen');
+            expect(result).not.toContain('page=2');
+        });
     });
 
     describe('showToast', () => {

@@ -96,7 +96,10 @@ class ProductListView(ListView):
         context["active_yakikatas"] = self.request.GET.getlist("yakikata")
         context["active_types"] = self.request.GET.getlist("type")
 
+        context["is_expanded"] = self.request.GET.get("expanded") == "true"
+
         # Include stock and new arrivals in the total count
+
         has_stock = 1 if self.request.GET.get("stock") == "in_stock" else 0
         has_new = 1 if self.request.GET.get("new") == "true" else 0
 

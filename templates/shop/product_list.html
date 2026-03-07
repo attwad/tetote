@@ -41,8 +41,6 @@
     .filter-drawer.open {
         max-height: 1000px;
         transition: max-height 0.3s ease-in-out;
-        margin-bottom: 2rem;
-        padding-bottom: 1rem;
     }
 
     .toggle-filters-btn {
@@ -81,7 +79,7 @@
             <div class="filter-controls">
                 <div style="display: flex; gap: 1rem; align-items: center;">
                     <button type="button" id="filter-toggle-btn"
-                            class="toggle-filters-btn {% if total_active_filters > 0 %}filters-active{% endif %} {% if active_brands or active_yakikatas or active_types %}btn-pressed{% endif %}"
+                            class="toggle-filters-btn {% if total_active_filters > 0 %}filters-active{% endif %} {% if is_expanded or active_brands or active_yakikatas or active_types %}btn-pressed{% endif %}"
                             onclick="toggleDrawer()">
                         <span>{% translate "Filters" %}{% if total_active_filters > 0 %} ({{ total_active_filters }}){% endif %}</span>
                     </button>
@@ -108,7 +106,7 @@
             </div>
 
             <!-- Expandable Drawer for secondary filters -->
-            <div id="filter-drawer" class="filter-drawer {% if active_brands or active_yakikatas or active_types %}open{% endif %}">
+            <div id="filter-drawer" class="filter-drawer {% if is_expanded or active_brands or active_yakikatas or active_types %}open{% endif %}">
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; padding-top: 1rem;">
                     <div class="filter-group">
                         <span class="filter-label">{% translate "Brands" %}</span>
@@ -202,64 +200,13 @@
 {% endblock %}
 
 {% block extra_js %}
-<script>
-    function toggleDrawer() {
-        const drawer = document.getElementById('filter-drawer');
-        const btn = document.getElementById('filter-toggle-btn');
-        const isOpen = drawer.classList.toggle('open');
-        btn.classList.toggle('btn-pressed', isOpen);
-    }
+<script type="module">
+    import { toggleDrawer, toggleFilter, toggleStock, toggleNew } from "{% static 'js/shop.js' %}";
 
-    function toggleFilter(event, name, value) {
-        event.preventDefault();
-        const url = new URL(window.location);
-        const params = url.searchParams;
-        const currentValues = params.getAll(name);
-
-        if (currentValues.includes(value)) {
-            const newValues = currentValues.filter(v => v !== value);
-            params.delete(name);
-            newValues.forEach(v => params.append(name, v));
-        } else {
-            params.append(name, value);
-        }
-
-        params.delete('page');
-        window.location.href = url.toString();
-    }
-
-    function toggleStock(event) {
-        event.preventDefault();
-        const url = new URL(window.location);
-        const params = url.searchParams;
-
-        if (params.get('stock') === 'in_stock') {
-            params.delete('stock');
-        } else {
-            params.set('stock', 'in_stock');
-        }
-
-        params.delete('page');
-        window.location.href = url.toString();
-    }
-
-    function toggleNew(event) {
-        event.preventDefault();
-        const url = new URL(window.location);
-        const params = url.searchParams;
-
-        if (params.get('new') === 'true') {
-            params.delete('new');
-        } else {
-            params.set('new', 'true');
-        }
-
-        params.delete('page');
-        window.location.href = url.toString();
-    }
-
-    window.onpageshow = function(event) {
-        // State is server-rendered
-    };
+    // Bridge to window for inline onclicks
+    window.toggleDrawer = toggleDrawer;
+    window.toggleFilter = toggleFilter;
+    window.toggleStock = toggleStock;
+    window.toggleNew = toggleNew;
 </script>
 {% endblock %}

@@ -8,11 +8,14 @@
             <article style="margin-bottom: 2rem;">
                 <h2><a href="{% url 'blog:post_detail' slug=post.slug %}" style="text-decoration: none; color: #333;">{{ post.title }}</a></h2>
                 <p style="color: #666; font-size: 0.9rem;">{{ post.created_at|date:"F j, Y" }}</p>
-                <div class="excerpt">
+                <div class="excerpt" style="margin-bottom: 1rem;">
                     {{ post.content|markdownify|truncatewords_html:50 }}
                 </div>
-                <a href="{% url 'blog:post_detail' slug=post.slug %}" style="color: #007bff;">{% translate "Read More" %} &raquo;</a>
+                <a href="{% url 'blog:post_detail' slug=post.slug %}" style="color: var(--text-main); font-weight: 500; font-size: 0.95rem;">{% translate "Read More" %} &raquo;</a>
             </article>
+            {% if not forloop.last %}
+                <hr style="border: none; border-top: 1px solid var(--border-light); margin: 3rem 0;">
+            {% endif %}
         {% endfor %}
     </div>
 

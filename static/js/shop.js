@@ -42,3 +42,59 @@ export function updateCartUI() {
         badge.style.display = 'inline-block';
     }
 }
+
+/**
+ * Filter Logic
+ */
+
+export function getNewURL(currentUrlStr, type, name, value) {
+    const url = new URL(currentUrlStr);
+    const params = url.searchParams;
+
+    if (type === 'drawer') {
+        const currentlyExpanded = params.get('expanded') === 'true';
+        if (currentlyExpanded) params.delete('expanded');
+        else params.set('expanded', 'true');
+    } else if (type === 'filter') {
+        const currentValues = params.getAll(name);
+        if (currentValues.includes(value)) {
+            const newValues = currentValues.filter(v => v !== value);
+            params.delete(name);
+            newValues.forEach(v => params.append(name, v));
+        } else {
+            params.append(name, value);
+        }
+    } else if (type === 'stock') {
+        if (params.get('stock') === 'in_stock') params.delete('stock');
+        else params.set('stock', 'in_stock');
+    } else if (type === 'new') {
+        if (params.get('new') === 'true') params.delete('new');
+        else params.set('new', 'true');
+    }
+
+    // Always reset page on filter change
+    if (type !== 'drawer') {
+        params.delete('page');
+    }
+
+    return url.toString();
+}
+
+export function toggleDrawer() {
+    window.location.href = getNewURL(window.location.href, 'drawer');
+}
+
+export function toggleFilter(event, name, value) {
+    if (event) event.preventDefault();
+    window.location.href = getNewURL(window.location.href, 'filter', name, value);
+}
+
+export function toggleStock(event) {
+    if (event) event.preventDefault();
+    window.location.href = getNewURL(window.location.href, 'stock');
+}
+
+export function toggleNew(event) {
+    if (event) event.preventDefault();
+    window.location.href = getNewURL(window.location.href, 'new');
+}
