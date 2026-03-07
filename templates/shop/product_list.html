@@ -45,9 +45,15 @@
         {% for product in products %}
             <div class="product-card">
                 <a href="{% url 'shop:product_detail' product_slug=product.slug %}">
-                    {% if product.main_photo %}
-                        <img src="{{ product.main_photo }}" alt="{{ product.name }}">
-                    {% endif %}
+                    <div class="product-card-image-wrapper">
+                        {% if product.main_photo %}
+                            <img src="{{ product.main_photo }}" alt="{{ product.name }}">
+                        {% endif %}
+
+                        {% if not product.is_in_stock %}
+                            <div class="stock-badge">{% translate "Out of Stock" %}</div>
+                        {% endif %}
+                    </div>
                 </a>
                 <a href="{% url 'shop:product_detail' product_slug=product.slug %}">
                     <h3>{{ product.name }}</h3>
@@ -57,20 +63,13 @@
                     {% if product.yakikata %} | {{ product.yakikata.name }}{% endif %}
                     {% if product.product_type %} | {{ product.product_type.name }}{% endif %}
                 </div>
-                <p class="price">CHF {{ product.price_in_chf|floatformat:2 }}</p>
-                <p style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem; font-size: 0.95rem;">
-                    {% if product.is_in_stock %}
-                        <span style="color: #4a5d4e;">{% translate "In Stock" %}</span>
-                    {% else %}
-                        <span style="color: #9a7b76;">{% translate "Out of Stock" %}</span>
-                    {% endif %}
-
+                <div style="display: flex; align-items: center; gap: 1rem; margin-top: 0.5rem;">
+                    <p class="price" style="margin: 0;">CHF {{ product.price_in_chf|floatformat:2 }}</p>
                     {% if product.is_recently_added %}
                         <span style="background: #eceae7; padding: 0.1rem 0.4rem; border-radius: 2px; font-size: 0.75rem; color: #6b6b6b; line-height: 1; letter-spacing: 0.05rem;">{% translate "NEW" %}</span>
                     {% endif %}
-                </p>
-
-            </div>
+                </div>
+                </div>
         {% empty %}
             <p>{% translate "No products found." %}</p>
         {% endfor %}
