@@ -43,6 +43,16 @@
         transition: max-height 0.3s ease-in-out;
     }
 
+    /* Mobile specific sorting/items layout */
+    .sort-desktop { display: flex; align-items: center; }
+    .sort-mobile { display: none; }
+
+    @media (max-width: 768px) {
+        .filter-controls { flex-direction: column; align-items: flex-start; gap: 1rem; }
+        .sort-desktop { display: none; }
+        .sort-mobile { display: block; margin-top: 1rem; border-top: 1px solid var(--border-light); padding-top: 1rem; }
+    }
+
     .toggle-filters-btn {
         background: white;
         border: 1px solid var(--border-light);
@@ -101,7 +111,7 @@
                     </div>
                 </div>
 
-                <div style="font-size: 0.9rem; color: var(--text-muted); display: flex; align-items: center; gap: 1.5rem;">
+                <div class="sort-desktop" style="font-size: 0.9rem; color: var(--text-muted); align-items: center; gap: 1.5rem;">
                     <div>
                         <label for="sort-select" style="margin-right: 0.5rem;">{% translate "Sort by" %}:</label>
                         <select id="sort-select" onchange="toggleSort(this.value)" style="border: none; background: none; color: var(--text-main); cursor: pointer; padding: 0;">
@@ -112,12 +122,20 @@
                     </div>
                     <span>{{ products|length }} {% translate "items" %}</span>
                 </div>
-            </div>
+                </div>
 
-            <!-- Expandable Drawer for secondary filters -->
-            <div id="filter-drawer" class="filter-drawer {% if is_expanded %}open{% endif %}">
-
+                <!-- Expandable Drawer for secondary filters -->
+                <div id="filter-drawer" class="filter-drawer {% if is_expanded %}open{% endif %}">
+                <div class="sort-mobile">
+                    <span class="filter-label">{% translate "Sort by" %}</span>
+                    <div class="chips">
+                        <a href="#" class="chip {% if not request.GET.sort %}active{% endif %}" onclick="toggleSort('')">{% translate "Newest" %}</a>
+                        <a href="#" class="chip {% if request.GET.sort == 'price_asc' %}active{% endif %}" onclick="toggleSort('price_asc')">{% translate "Price ↑" %}</a>
+                        <a href="#" class="chip {% if request.GET.sort == 'price_desc' %}active{% endif %}" onclick="toggleSort('price_desc')">{% translate "Price ↓" %}</a>
+                    </div>
+                </div>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; padding-top: 1rem;">
+
                     <div class="filter-group">
                         <span class="filter-label">{% translate "Brands" %}</span>
                         <div class="chips">
