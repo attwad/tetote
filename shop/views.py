@@ -79,8 +79,15 @@ class ProductListView(ListView):
         if stock_filter == "in_stock":
             queryset = queryset.filter(stock_quantity__gt=0)
 
+        # Sorting (Must be done on QuerySet)
+        sort = self.request.GET.get("sort")
+        if sort == "price_asc":
+            queryset = queryset.order_by("price")
+        elif sort == "price_desc":
+            queryset = queryset.order_by("-price")
+
         if new_filter == "true":
-            # Using the model property as requested
+            # Using the model property as requested (converts to list)
             queryset = [p for p in queryset if p.is_recently_added]
 
         return queryset

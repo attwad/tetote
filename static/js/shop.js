@@ -70,6 +70,9 @@ export function getNewURL(currentUrlStr, type, name, value) {
     } else if (type === 'new') {
         if (params.get('new') === 'true') params.delete('new');
         else params.set('new', 'true');
+    } else if (type === 'sort') {
+        if (value) params.set('sort', value);
+        else params.delete('sort');
     }
 
     // Always reset page on filter change
@@ -97,4 +100,8 @@ export function toggleStock(event) {
 export function toggleNew(event) {
     if (event) event.preventDefault();
     window.location.href = getNewURL(window.location.href, 'new');
+}
+
+export function toggleSort(value) {
+    window.location.href = getNewURL(window.location.href, 'sort', null, value);
 }

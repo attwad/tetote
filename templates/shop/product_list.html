@@ -79,8 +79,9 @@
             <div class="filter-controls">
                 <div style="display: flex; gap: 1rem; align-items: center;">
                     <button type="button" id="filter-toggle-btn"
-                            class="toggle-filters-btn {% if total_active_filters > 0 %}filters-active{% endif %} {% if is_expanded or active_brands or active_yakikatas or active_types %}btn-pressed{% endif %}"
+                            class="toggle-filters-btn {% if total_active_filters > 0 %}filters-active{% endif %} {% if is_expanded %}btn-pressed{% endif %}"
                             onclick="toggleDrawer()">
+
                         <span>{% translate "Filters" %}{% if total_active_filters > 0 %} ({{ total_active_filters }}){% endif %}</span>
                     </button>
 
@@ -100,13 +101,22 @@
                     </div>
                 </div>
 
-                <div style="font-size: 0.9rem; color: var(--text-muted);">
-                    {{ products|length }} {% translate "items" %}
+                <div style="font-size: 0.9rem; color: var(--text-muted); display: flex; align-items: center; gap: 1.5rem;">
+                    <div>
+                        <label for="sort-select" style="margin-right: 0.5rem;">{% translate "Sort by" %}:</label>
+                        <select id="sort-select" onchange="toggleSort(this.value)" style="border: none; background: none; color: var(--text-main); cursor: pointer; padding: 0;">
+                            <option value="">{% translate "Newest" %}</option>
+                            <option value="price_asc" {% if request.GET.sort == 'price_asc' %}selected{% endif %}>{% translate "Price: Low to High" %}</option>
+                            <option value="price_desc" {% if request.GET.sort == 'price_desc' %}selected{% endif %}>{% translate "Price: High to Low" %}</option>
+                        </select>
+                    </div>
+                    <span>{{ products|length }} {% translate "items" %}</span>
                 </div>
             </div>
 
             <!-- Expandable Drawer for secondary filters -->
-            <div id="filter-drawer" class="filter-drawer {% if is_expanded or active_brands or active_yakikatas or active_types %}open{% endif %}">
+            <div id="filter-drawer" class="filter-drawer {% if is_expanded %}open{% endif %}">
+
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; padding-top: 1rem;">
                     <div class="filter-group">
                         <span class="filter-label">{% translate "Brands" %}</span>
@@ -201,12 +211,13 @@
 
 {% block extra_js %}
 <script type="module">
-    import { toggleDrawer, toggleFilter, toggleStock, toggleNew } from "{% static 'js/shop.js' %}";
+    import { toggleDrawer, toggleFilter, toggleStock, toggleNew, toggleSort } from "{% static 'js/shop.js' %}";
 
     // Bridge to window for inline onclicks
     window.toggleDrawer = toggleDrawer;
     window.toggleFilter = toggleFilter;
     window.toggleStock = toggleStock;
     window.toggleNew = toggleNew;
+    window.toggleSort = toggleSort;
 </script>
 {% endblock %}

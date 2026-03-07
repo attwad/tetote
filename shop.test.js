@@ -54,6 +54,11 @@ describe('Shop Logic Tests', () => {
             const result = getNewURL(start, 'filter', 'brand', 'bizen');
             expect(result).not.toContain('page=2');
         });
+
+        it('toggleSort should add sort parameter', () => {
+            const result = getNewURL(baseUrl, 'sort', null, 'price_asc');
+            expect(result).toContain('sort=price_asc');
+        });
     });
 
     describe('showToast', () => {
