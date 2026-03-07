@@ -46,11 +46,16 @@
     /* Mobile specific sorting/items layout */
     .sort-desktop { display: flex; align-items: center; }
     .sort-mobile { display: none; }
+    .filter-main-action { display: flex; flex-direction: column; align-items: flex-start; gap: 0.4rem; }
+    .clear-mobile { display: none; }
 
     @media (max-width: 768px) {
         .filter-controls { flex-direction: column; align-items: flex-start; gap: 1rem; }
+        .filter-controls > div { width: 100%; justify-content: space-between; }
         .sort-desktop { display: none; }
         .sort-mobile { display: block; margin-top: 1rem; border-top: 1px solid var(--border-light); padding-top: 1rem; }
+        .clear-desktop { display: none; }
+        .clear-mobile { display: inline-block; margin-left: 1rem; }
     }
 
     .toggle-filters-btn {
@@ -65,6 +70,8 @@
         gap: 0.5rem;
         transition: all 0.2s;
         border-radius: 2px;
+        min-width: 100px; /* Reserve space for "(N)" */
+        justify-content: center;
     }
     .toggle-filters-btn:hover { border-color: var(--text-muted); }
 
@@ -87,13 +94,17 @@
     <div class="filters">
         <form id="filter-form" method="get">
             <div class="filter-controls">
-                <div style="display: flex; gap: 1rem; align-items: center;">
-                    <button type="button" id="filter-toggle-btn"
-                            class="toggle-filters-btn {% if total_active_filters > 0 %}filters-active{% endif %} {% if is_expanded %}btn-pressed{% endif %}"
-                            onclick="toggleDrawer()">
-
-                        <span>{% translate "Filters" %}{% if total_active_filters > 0 %} ({{ total_active_filters }}){% endif %}</span>
-                    </button>
+                <div style="display: flex; gap: 1.5rem; align-items: flex-start;">
+                    <div class="filter-main-action">
+                        <button type="button" id="filter-toggle-btn"
+                                class="toggle-filters-btn {% if active_brands or active_yakikatas or active_types %}filters-active{% endif %} {% if is_expanded %}btn-pressed{% endif %}"
+                                onclick="toggleDrawer()">
+                            <span>{% translate "Filters" %}{% if total_active_filters > 0 %} ({{ total_active_filters }}){% endif %}</span>
+                        </button>
+                        {% if total_active_filters > 0 %}
+                            <a href="{% url 'shop:product_list' %}" class="clear-desktop" style="font-size: 0.8rem; color: var(--text-muted); text-decoration: underline; line-height: 1; margin-top: 0.2rem;">{% translate "Clear all" %}</a>
+                        {% endif %}
+                    </div>
 
                     <!-- High-frequency stock toggle always visible -->
                     <div class="chips" style="align-items: center;">
@@ -105,9 +116,6 @@
                            onclick="toggleNew(event)">
                             {% translate "New Arrivals" %}
                         </a>
-                        {% if total_active_filters > 0 %}
-                            <a href="{% url 'shop:product_list' %}" style="font-size: 0.85rem; color: var(--text-muted); text-decoration: underline; margin-left: 0.5rem; line-height: 1;">{% translate "Clear all" %}</a>
-                        {% endif %}
                     </div>
                 </div>
 
@@ -128,10 +136,13 @@
                 <div id="filter-drawer" class="filter-drawer {% if is_expanded %}open{% endif %}">
                 <div class="sort-mobile">
                     <span class="filter-label">{% translate "Sort by" %}</span>
-                    <div class="chips">
+                    <div class="chips" style="align-items: center;">
                         <a href="#" class="chip {% if not request.GET.sort %}active{% endif %}" onclick="toggleSort('')">{% translate "Newest" %}</a>
                         <a href="#" class="chip {% if request.GET.sort == 'price_asc' %}active{% endif %}" onclick="toggleSort('price_asc')">{% translate "Price ↑" %}</a>
                         <a href="#" class="chip {% if request.GET.sort == 'price_desc' %}active{% endif %}" onclick="toggleSort('price_desc')">{% translate "Price ↓" %}</a>
+                        {% if total_active_filters > 0 %}
+                            <a href="{% url 'shop:product_list' %}" class="clear-mobile" style="font-size: 0.85rem; color: var(--text-muted); text-decoration: underline;">{% translate "Clear all" %}</a>
+                        {% endif %}
                     </div>
                 </div>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; padding-top: 1rem;">
