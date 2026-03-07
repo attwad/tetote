@@ -4,7 +4,7 @@ from django.utils import timezone, translation
 from unittest.mock import patch
 import datetime
 import json
-from .models import Brand, Product, Yakikata, ProductType
+from .models import Brand, Product, Yakikata, ProductType, ProductImage
 
 
 class ProductModelTest(TestCase):
@@ -214,6 +214,44 @@ class ShopViewTests(TestCase):
         self.assertEqual(response.context["active_brands"], ["bizen", "seto"])
         self.assertEqual(response.context["active_yakikatas"], ["y1"])
         self.assertEqual(response.context["total_active_filters"], 5)
+
+    def test_product_list_hover_class(self):
+        # Product with only 1 image (main_photo only)
+        Product.objects.create(
+            stripe_product_id="prod_img1",
+            stripe_price_id="pr1",
+            name="One Img",
+            slug="one-img",
+            price=100,
+            stock_quantity=1,
+            main_photo="http://test.com/1.jpg",
+            public=True,
+        )
+
+        # Product with 2 images
+        p2 = Product.objects.create(
+            stripe_product_id="prod_img2",
+            stripe_price_id="pr2",
+            name="Two Img",
+            slug="two-img",
+            price=100,
+            stock_quantity=1,
+            main_photo="http://test.com/2.jpg",
+            public=True,
+        )
+        ProductImage.objects.create(
+            product=p2, url="http://test.com/extra.jpg", order=1
+        )
+
+        url = reverse("shop:product_list")
+        response = self.client.get(url)
+
+        # p1 should NOT have has-secondary
+        self.assertContains(response, 'product-card-image-wrapper">', html=False)
+        # p2 SHOULD have has-secondary
+        self.assertContains(
+            response, 'product-card-image-wrapper has-secondary">', html=False
+        )
 
 
 class CartViewTests(TestCase):
