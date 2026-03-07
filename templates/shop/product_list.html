@@ -1,42 +1,91 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n %}{% load static %}
+
+{% block extra_head %}
+<style>
+    .filter-group { margin-bottom: 1.5rem; }
+    .filter-label { display: block; font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--text-muted); font-weight: 500; }
+    .chips { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .chip {
+        padding: 0.4rem 1rem;
+        background: white;
+        border: 1px solid var(--border-light);
+        border-radius: 20px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        color: var(--text-main);
+        text-decoration: none;
+    }
+    .chip:hover { border-color: var(--text-muted); }
+    .chip.active {
+        background: var(--text-main);
+        color: white;
+        border-color: var(--text-main);
+    }
+    .stock-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        font-size: 0.95rem;
+        user-select: none;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
     <div class="filters">
-        <form method="get" style="display: flex; gap: 1rem; flex-wrap: wrap;">
-            <div style="flex: 1; min-width: 140px;">
-                <label for="brand" style="display: block; font-size: 0.9rem;">{% translate "Brand" %}:</label>
-                <select name="brand" id="brand" onchange="this.form.submit()" style="width: 100%;">
-                    <option value="">{% translate "All Brands" %}</option>
-                    {% for brand in brands %}
-                        <option value="{{ brand.slug }}" {% if request.GET.brand == brand.slug %}selected{% endif %}>{{ brand.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div style="flex: 1; min-width: 140px;">
-                <label for="yakikata" style="display: block; font-size: 0.9rem;">{% translate "Yakikata" %}:</label>
-                <select name="yakikata" id="yakikata" onchange="this.form.submit()" style="width: 100%;">
-                    <option value="">{% translate "All Yakikatas" %}</option>
-                    {% for y in yakikatas %}
-                        <option value="{{ y.slug }}" {% if request.GET.yakikata == y.slug %}selected{% endif %}>{{ y.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div style="flex: 1; min-width: 140px;">
-                <label for="type" style="display: block; font-size: 0.9rem;">{% translate "Type" %}:</label>
-                <select name="type" id="type" onchange="this.form.submit()" style="width: 100%;">
-                    <option value="">{% translate "All Types" %}</option>
-                    {% for t in product_types %}
-                        <option value="{{ t.slug }}" {% if request.GET.type == t.slug %}selected{% endif %}>{{ t.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div style="flex: 1; min-width: 140px;">
-                <label for="stock" style="display: block; font-size: 0.9rem;">{% translate "Stock" %}:</label>
-                <select name="stock" id="stock" onchange="this.form.submit()" style="width: 100%;">
-                    <option value="">{% translate "All Products" %}</option>
-                    <option value="in_stock" {% if request.GET.stock == "in_stock" %}selected{% endif %}>{% translate "In Stock Only" %}</option>
-                </select>
+        <form id="filter-form" method="get">
+            <!-- Hidden stock input -->
+            <input type="hidden" name="stock" id="stock-input" value="{{ request.GET.stock }}">
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem;">
+                <div class="filter-group">
+                    <span class="filter-label">{% translate "Brands" %}</span>
+                    <div class="chips">
+                        {% for brand in brands %}
+                            <a href="#" class="chip {% if brand.slug in active_brands %}active{% endif %}"
+                               onclick="toggleFilter(event, 'brand', '{{ brand.slug }}')">
+                                {{ brand.name }}
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <span class="filter-label">{% translate "Yakikata" %}</span>
+                    <div class="chips">
+                        {% for y in yakikatas %}
+                            <a href="#" class="chip {% if y.slug in active_yakikatas %}active{% endif %}"
+                               onclick="toggleFilter(event, 'yakikata', '{{ y.slug }}')">
+                                {{ y.name }}
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <span class="filter-label">{% translate "Type" %}</span>
+                    <div class="chips">
+                        {% for t in product_types %}
+                            <a href="#" class="chip {% if t.slug in active_types %}active{% endif %}"
+                               onclick="toggleFilter(event, 'type', '{{ t.slug }}')">
+                                {{ t.name }}
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <span class="filter-label">{% translate "Availability" %}</span>
+                    <div class="chips">
+                        <a href="#" class="chip {% if request.GET.stock == 'in_stock' %}active{% endif %}"
+                           onclick="toggleStock(event)">
+                            {% translate "In Stock Only" %}
+                        </a>
+                    </div>
+                </div>
             </div>
         </form>
     </div>
@@ -69,7 +118,7 @@
                         <span style="background: #eceae7; padding: 0.1rem 0.4rem; border-radius: 2px; font-size: 0.75rem; color: #6b6b6b; line-height: 1; letter-spacing: 0.05rem;">{% translate "NEW" %}</span>
                     {% endif %}
                 </div>
-                </div>
+            </div>
         {% empty %}
             <p>{% translate "No products found." %}</p>
         {% endfor %}
@@ -94,16 +143,49 @@
 
 {% block extra_js %}
 <script>
-    // Sync filters on page load (handles 'Back' button behavior)
-    window.onpageshow = function(event) {
-        const urlParams = new URLSearchParams(window.location.search);
+    function toggleFilter(event, name, value) {
+        event.preventDefault();
+        const url = new URL(window.location);
+        const params = url.searchParams;
 
-        const filters = ['brand', 'yakikata', 'type', 'stock'];
-        filters.forEach(f => {
-            const val = urlParams.get(f) || "";
-            const el = document.getElementById(f);
-            if (el) el.value = val;
-        });
+        // Get current values for this filter
+        const currentValues = params.getAll(name);
+
+        if (currentValues.includes(value)) {
+            // Remove if already exists
+            const newValues = currentValues.filter(v => v !== value);
+            params.delete(name);
+            newValues.forEach(v => params.append(name, v));
+        } else {
+            // Add if not exists
+            params.append(name, value);
+        }
+
+        // Reset to page 1 when filtering
+        params.delete('page');
+        window.location.href = url.toString();
+    }
+
+    function toggleStock(event) {
+        event.preventDefault();
+        const url = new URL(window.location);
+        const params = url.searchParams;
+
+        if (params.get('stock') === 'in_stock') {
+            params.delete('stock');
+        } else {
+            params.set('stock', 'in_stock');
+        }
+
+        params.delete('page');
+        window.location.href = url.toString();
+    }
+
+    // Handle back button
+    window.onpageshow = function(event) {
+        if (event.persisted) {
+            // No need to reload as the chips are server-rendered with active classes
+        }
     };
 </script>
 {% endblock %}

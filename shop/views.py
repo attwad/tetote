@@ -59,17 +59,22 @@ class ProductListView(ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset().filter(public=True)
-        brand_slug = self.request.GET.get("brand")
-        yakikata_slug = self.request.GET.get("yakikata")
-        type_slug = self.request.GET.get("type")
+
+        # Multiple selections
+        brands = self.request.GET.getlist("brand")
+        yakikatas = self.request.GET.getlist("yakikata")
+        types = self.request.GET.getlist("type")
+
+        # Single click toggle
         stock_filter = self.request.GET.get("stock")
 
-        if brand_slug:
-            queryset = queryset.filter(brand__slug=brand_slug)
-        if yakikata_slug:
-            queryset = queryset.filter(yakikata__slug=yakikata_slug)
-        if type_slug:
-            queryset = queryset.filter(product_type__slug=type_slug)
+        if brands:
+            queryset = queryset.filter(brand__slug__in=brands)
+        if yakikatas:
+            queryset = queryset.filter(yakikata__slug__in=yakikatas)
+        if types:
+            queryset = queryset.filter(product_type__slug__in=types)
+
         if stock_filter == "in_stock":
             queryset = queryset.filter(stock_quantity__gt=0)
 
@@ -80,6 +85,12 @@ class ProductListView(ListView):
         context["brands"] = Brand.objects.all()
         context["yakikatas"] = Yakikata.objects.all()
         context["product_types"] = ProductType.objects.all()
+
+        # Pass active filter lists for template comparison
+        context["active_brands"] = self.request.GET.getlist("brand")
+        context["active_yakikatas"] = self.request.GET.getlist("yakikata")
+        context["active_types"] = self.request.GET.getlist("type")
+
         return context
 
 

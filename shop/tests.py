@@ -167,6 +167,30 @@ class ShopViewTests(TestCase):
         self.assertContains(response, "Brand Product")
         self.assertNotContains(response, "Out of Stock Prod")
 
+    def test_product_list_multi_filter(self):
+        b2 = Brand.objects.create(name="Seto", slug="seto")
+        Product.objects.create(
+            stripe_product_id="prod_b2",
+            stripe_price_id="price_b2",
+            name="Seto Product",
+            slug="seto-prod",
+            price=100,
+            stock_quantity=1,
+            brand=b2,
+            public=True,
+        )
+        # Filter for both brands
+        url = reverse("shop:product_list") + "?brand=bizen&brand=seto"
+        response = self.client.get(url)
+        self.assertContains(response, "Brand Product")
+        self.assertContains(response, "Seto Product")
+
+    def test_product_list_context_active_filters(self):
+        url = reverse("shop:product_list") + "?brand=bizen&brand=seto&yakikata=y1"
+        response = self.client.get(url)
+        self.assertEqual(response.context["active_brands"], ["bizen", "seto"])
+        self.assertEqual(response.context["active_yakikatas"], ["y1"])
+
 
 class CartViewTests(TestCase):
     def setUp(self):
