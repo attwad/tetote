@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Tetote - Django & Stripe{% endblock %}</title>
+    <link rel="icon" type="image/svg+xml" href="{% static 'images/logo.min.svg' %}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
@@ -146,7 +147,10 @@
 <body>
     <header>
         <div class="logo">
-            <a href="{% url 'shop:product_list' %}" style="color: white; font-size: 1.5rem; font-weight: bold;">Tetote</a>
+            <a href="{% url 'shop:product_list' %}" style="display: flex; align-items: center; gap: 0.8rem;">
+                <img src="{% static 'images/logo.min.svg' %}" alt="Tetote Logo" style="height: 35px; width: auto;">
+                <span style="font-size: 1.5rem; font-weight: bold; letter-spacing: 0.05rem;">Tetote</span>
+            </a>
         </div>
         <nav>
             <a href="{% url 'shop:product_list' %}" style="padding-bottom: 4px; {% if request.resolver_match.url_name == 'product_list' or request.resolver_match.url_name == 'product_detail' %}font-weight: 600; border-bottom: 2px solid var(--text-main);{% endif %}">{% translate "Shop" %}</a>
