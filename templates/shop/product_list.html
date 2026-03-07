@@ -23,13 +23,54 @@
         color: white;
         border-color: var(--text-main);
     }
-    .stock-toggle {
-        display: inline-flex;
+
+    /* New Compact Filter Styles */
+    .filter-controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .filter-drawer {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s cubic-bezier(0, 1, 0, 1);
+    }
+
+    .filter-drawer.open {
+        max-height: 1000px;
+        transition: max-height 0.3s ease-in-out;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+    }
+
+    .toggle-filters-btn {
+        background: white;
+        border: 1px solid var(--border-light);
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+        color: var(--text-main);
+        cursor: pointer;
+        display: flex;
         align-items: center;
         gap: 0.5rem;
-        cursor: pointer;
-        font-size: 0.95rem;
-        user-select: none;
+        transition: all 0.2s;
+        border-radius: 2px;
+    }
+    .toggle-filters-btn:hover { border-color: var(--text-muted); }
+
+    /* "Pressed" state when drawer is open */
+    .toggle-filters-btn.btn-pressed {
+        background: var(--text-main);
+        color: white;
+        border-color: var(--text-main);
+    }
+
+    /* Indicate that filters are active (even if drawer closed) */
+    .toggle-filters-btn.filters-active:not(.btn-pressed) {
+        background: #f0f0f0;
+        border-color: var(--text-muted);
     }
 </style>
 {% endblock %}
@@ -37,53 +78,72 @@
 {% block content %}
     <div class="filters">
         <form id="filter-form" method="get">
-            <!-- Hidden stock input -->
-            <input type="hidden" name="stock" id="stock-input" value="{{ request.GET.stock }}">
+            <div class="filter-controls">
+                <div style="display: flex; gap: 1rem; align-items: center;">
+                    <button type="button" id="filter-toggle-btn"
+                            class="toggle-filters-btn {% if total_active_filters > 0 %}filters-active{% endif %} {% if active_brands or active_yakikatas or active_types %}btn-pressed{% endif %}"
+                            onclick="toggleDrawer()">
+                        <span>{% translate "Filters" %}{% if total_active_filters > 0 %} ({{ total_active_filters }}){% endif %}</span>
+                    </button>
 
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem;">
-                <div class="filter-group">
-                    <span class="filter-label">{% translate "Brands" %}</span>
-                    <div class="chips">
-                        {% for brand in brands %}
-                            <a href="#" class="chip {% if brand.slug in active_brands %}active{% endif %}"
-                               onclick="toggleFilter(event, 'brand', '{{ brand.slug }}')">
-                                {{ brand.name }}
-                            </a>
-                        {% endfor %}
-                    </div>
-                </div>
-
-                <div class="filter-group">
-                    <span class="filter-label">{% translate "Yakikata" %}</span>
-                    <div class="chips">
-                        {% for y in yakikatas %}
-                            <a href="#" class="chip {% if y.slug in active_yakikatas %}active{% endif %}"
-                               onclick="toggleFilter(event, 'yakikata', '{{ y.slug }}')">
-                                {{ y.name }}
-                            </a>
-                        {% endfor %}
-                    </div>
-                </div>
-
-                <div class="filter-group">
-                    <span class="filter-label">{% translate "Type" %}</span>
-                    <div class="chips">
-                        {% for t in product_types %}
-                            <a href="#" class="chip {% if t.slug in active_types %}active{% endif %}"
-                               onclick="toggleFilter(event, 'type', '{{ t.slug }}')">
-                                {{ t.name }}
-                            </a>
-                        {% endfor %}
-                    </div>
-                </div>
-
-                <div class="filter-group">
-                    <span class="filter-label">{% translate "Availability" %}</span>
-                    <div class="chips">
+                    <!-- High-frequency stock toggle always visible -->
+                    <div class="chips" style="align-items: center;">
                         <a href="#" class="chip {% if request.GET.stock == 'in_stock' %}active{% endif %}"
                            onclick="toggleStock(event)">
-                            {% translate "In Stock Only" %}
+                            {% translate "In Stock" %}
                         </a>
+                        <a href="#" class="chip {% if request.GET.new == 'true' %}active{% endif %}"
+                           onclick="toggleNew(event)">
+                            {% translate "New Arrivals" %}
+                        </a>
+                        {% if total_active_filters > 0 %}
+                            <a href="{% url 'shop:product_list' %}" style="font-size: 0.85rem; color: var(--text-muted); text-decoration: underline; margin-left: 0.5rem; line-height: 1;">{% translate "Clear all" %}</a>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div style="font-size: 0.9rem; color: var(--text-muted);">
+                    {{ products|length }} {% translate "items" %}
+                </div>
+            </div>
+
+            <!-- Expandable Drawer for secondary filters -->
+            <div id="filter-drawer" class="filter-drawer {% if active_brands or active_yakikatas or active_types %}open{% endif %}">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; padding-top: 1rem;">
+                    <div class="filter-group">
+                        <span class="filter-label">{% translate "Brands" %}</span>
+                        <div class="chips">
+                            {% for brand in brands %}
+                                <a href="#" class="chip {% if brand.slug in active_brands %}active{% endif %}"
+                                   onclick="toggleFilter(event, 'brand', '{{ brand.slug }}')">
+                                    {{ brand.name }}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <span class="filter-label">{% translate "Yakikata" %}</span>
+                        <div class="chips">
+                            {% for y in yakikatas %}
+                                <a href="#" class="chip {% if y.slug in active_yakikatas %}active{% endif %}"
+                                   onclick="toggleFilter(event, 'yakikata', '{{ y.slug }}')">
+                                    {{ y.name }}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <span class="filter-label">{% translate "Type" %}</span>
+                        <div class="chips">
+                            {% for t in product_types %}
+                                <a href="#" class="chip {% if t.slug in active_types %}active{% endif %}"
+                                   onclick="toggleFilter(event, 'type', '{{ t.slug }}')">
+                                    {{ t.name }}
+                                </a>
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -143,25 +203,27 @@
 
 {% block extra_js %}
 <script>
+    function toggleDrawer() {
+        const drawer = document.getElementById('filter-drawer');
+        const btn = document.getElementById('filter-toggle-btn');
+        const isOpen = drawer.classList.toggle('open');
+        btn.classList.toggle('btn-pressed', isOpen);
+    }
+
     function toggleFilter(event, name, value) {
         event.preventDefault();
         const url = new URL(window.location);
         const params = url.searchParams;
-
-        // Get current values for this filter
         const currentValues = params.getAll(name);
 
         if (currentValues.includes(value)) {
-            // Remove if already exists
             const newValues = currentValues.filter(v => v !== value);
             params.delete(name);
             newValues.forEach(v => params.append(name, v));
         } else {
-            // Add if not exists
             params.append(name, value);
         }
 
-        // Reset to page 1 when filtering
         params.delete('page');
         window.location.href = url.toString();
     }
@@ -181,11 +243,23 @@
         window.location.href = url.toString();
     }
 
-    // Handle back button
-    window.onpageshow = function(event) {
-        if (event.persisted) {
-            // No need to reload as the chips are server-rendered with active classes
+    function toggleNew(event) {
+        event.preventDefault();
+        const url = new URL(window.location);
+        const params = url.searchParams;
+
+        if (params.get('new') === 'true') {
+            params.delete('new');
+        } else {
+            params.set('new', 'true');
         }
+
+        params.delete('page');
+        window.location.href = url.toString();
+    }
+
+    window.onpageshow = function(event) {
+        // State is server-rendered
     };
 </script>
 {% endblock %}

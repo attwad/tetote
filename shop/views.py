@@ -67,6 +67,7 @@ class ProductListView(ListView):
 
         # Single click toggle
         stock_filter = self.request.GET.get("stock")
+        new_filter = self.request.GET.get("new")
 
         if brands:
             queryset = queryset.filter(brand__slug__in=brands)
@@ -77,6 +78,10 @@ class ProductListView(ListView):
 
         if stock_filter == "in_stock":
             queryset = queryset.filter(stock_quantity__gt=0)
+
+        if new_filter == "true":
+            # Using the model property as requested
+            queryset = [p for p in queryset if p.is_recently_added]
 
         return queryset
 
@@ -90,6 +95,18 @@ class ProductListView(ListView):
         context["active_brands"] = self.request.GET.getlist("brand")
         context["active_yakikatas"] = self.request.GET.getlist("yakikata")
         context["active_types"] = self.request.GET.getlist("type")
+
+        # Include stock and new arrivals in the total count
+        has_stock = 1 if self.request.GET.get("stock") == "in_stock" else 0
+        has_new = 1 if self.request.GET.get("new") == "true" else 0
+
+        context["total_active_filters"] = (
+            len(context["active_brands"])
+            + len(context["active_yakikatas"])
+            + len(context["active_types"])
+            + has_stock
+            + has_new
+        )
 
         return context
 

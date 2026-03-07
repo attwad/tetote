@@ -167,6 +167,26 @@ class ShopViewTests(TestCase):
         self.assertContains(response, "Brand Product")
         self.assertNotContains(response, "Out of Stock Prod")
 
+    def test_product_list_filter_new(self):
+        # Create old product (70 days ago)
+        old_p = Product.objects.create(
+            stripe_product_id="prod_old",
+            stripe_price_id="price_old",
+            name="Old Product",
+            slug="old-prod",
+            price=100,
+            stock_quantity=1,
+            public=True,
+        )
+        old_p.date_added = timezone.now() - datetime.timedelta(days=70)
+        old_p.save()
+
+        # Test filter
+        url = reverse("shop:product_list") + "?new=true"
+        response = self.client.get(url)
+        self.assertContains(response, "Brand Product")
+        self.assertNotContains(response, "Old Product")
+
     def test_product_list_multi_filter(self):
         b2 = Brand.objects.create(name="Seto", slug="seto")
         Product.objects.create(
@@ -186,10 +206,14 @@ class ShopViewTests(TestCase):
         self.assertContains(response, "Seto Product")
 
     def test_product_list_context_active_filters(self):
-        url = reverse("shop:product_list") + "?brand=bizen&brand=seto&yakikata=y1"
+        url = (
+            reverse("shop:product_list")
+            + "?brand=bizen&brand=seto&yakikata=y1&stock=in_stock&new=true"
+        )
         response = self.client.get(url)
         self.assertEqual(response.context["active_brands"], ["bizen", "seto"])
         self.assertEqual(response.context["active_yakikatas"], ["y1"])
+        self.assertEqual(response.context["total_active_filters"], 5)
 
 
 class CartViewTests(TestCase):
