@@ -191,14 +191,9 @@
         {% for product in products %}
             <div class="product-card">
                 <a href="{% url 'shop:product_detail' product_slug=product.slug %}">
-                    <div class="product-card-image-wrapper{% if product.images.exists %} has-secondary{% endif %}">
+                    <div class="product-card-image-wrapper">
                         {% if product.main_photo %}
-                            <img src="{{ product.main_photo }}" alt="{{ product.name }}" class="main-photo">
-                        {% endif %}
-
-                        {% if product.images.exists %}
-                            {# Display the first secondary image on hover #}
-                            <img src="{{ product.images.all.0.url }}" alt="{{ product.name }}" class="secondary-photo">
+                            <img src="{{ product.main_photo }}" alt="{{ product.name }}">
                         {% endif %}
 
                         {% if not product.is_in_stock %}
