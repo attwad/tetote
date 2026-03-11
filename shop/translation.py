@@ -1,5 +1,5 @@
 from modeltranslation.translator import register, TranslationOptions
-from .models import Brand, Product, Yakikata, ProductType
+from .models import Brand, Product, Yakikata, ProductType, StoreAnnouncement
 
 
 @register(Brand)
@@ -20,3 +20,8 @@ class ProductTypeTranslationOptions(TranslationOptions):
 @register(Product)
 class ProductTranslationOptions(TranslationOptions):
     fields = ("name", "description")
+
+
+@register(StoreAnnouncement)
+class StoreAnnouncementTranslationOptions(TranslationOptions):
+    fields = ("text",)

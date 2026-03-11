@@ -1,7 +1,14 @@
 from django.contrib import admin
 from django.utils.html import format_html
 from modeltranslation.admin import TranslationAdmin, TabbedTranslationAdmin
-from .models import Brand, Product, ProductImage, Yakikata, ProductType
+from .models import (
+    Brand,
+    Product,
+    ProductImage,
+    Yakikata,
+    ProductType,
+    StoreAnnouncement,
+)
 
 
 class ProductImageInline(admin.TabularInline):
@@ -33,6 +40,12 @@ class YakikataAdmin(TranslationAdmin):
 class ProductTypeAdmin(TranslationAdmin):
     list_display = ("name", "slug")
     prepopulated_fields = {"slug": ("name",)}
+
+
+@admin.register(StoreAnnouncement)
+class StoreAnnouncementAdmin(TranslationAdmin):
+    list_display = ("text", "is_active", "updated_at")
+    list_editable = ("is_active",)
 
 
 @admin.register(Product)

@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.db import models
-from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 import datetime
 
 
@@ -119,3 +119,16 @@ class ProductImage(models.Model):
 
     def __str__(self):
         return f"Image for {self.product.name}"
+
+
+class StoreAnnouncement(models.Model):
+    text = models.TextField(_("Announcement Text"))
+    is_active = models.BooleanField(_("Is Active"), default=False)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = _("Store Announcement")
+        verbose_name_plural = _("Store Announcements")
+
+    def __str__(self):
+        return self.text[:50]

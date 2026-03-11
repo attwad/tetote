@@ -177,6 +177,12 @@
         </nav>
     </header>
 
+    {% if active_announcement %}
+        <div style="background-color: var(--accent-color); color: white; text-align: center; padding: 0.8rem 2rem; font-size: 1rem; border-bottom: 1px solid var(--border-light); letter-spacing: 0.03rem;">
+            {{ active_announcement.text }}
+        </div>
+    {% endif %}
+
     <main>
         {% block content %}{% endblock %}
     </main>
