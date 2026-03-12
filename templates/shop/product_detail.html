@@ -117,7 +117,7 @@
             <h1 class="desktop-title" style="margin-top: 0;">{{ product.name }}</h1>
 
             {% if product.brand %}
-                <p class="metadata">{% translate "Brand" %}: {{ product.brand.name }}</p>
+                <p class="metadata">{% translate "Brand" %}: <a href="{% url 'shop:brand_detail' brand_slug=product.brand.slug %}" style="color: inherit; text-decoration: underline; text-underline-offset: 3px;">{{ product.brand.name }}</a></p>
             {% endif %}
             {% if product.yakikata %}
                 <p class="metadata">{% translate "Yakikata" %}: {{ product.yakikata.name }}</p>

@@ -4,7 +4,14 @@ from .models import Brand, Product, Yakikata, ProductType, StoreAnnouncement
 
 @register(Brand)
 class BrandTranslationOptions(TranslationOptions):
-    fields = ("name", "description")
+    fields = (
+        "name",
+        "description",
+        "location",
+        "story_body",
+        "craftsmanship_body",
+        "wares_summary",
+    )
 
 
 @register(Yakikata)

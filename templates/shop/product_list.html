@@ -205,7 +205,9 @@
                     <h3>{{ product.name }}</h3>
                 </a>
                 <div style="font-size: 0.85rem; color: #666; margin-bottom: 0.5rem;">
-                    {% if product.brand %}{{ product.brand.name }}{% endif %}
+                    {% if product.brand %}
+                        <a href="{% url 'shop:brand_detail' brand_slug=product.brand.slug %}" style="color: inherit; text-decoration: underline; text-underline-offset: 2px;">{{ product.brand.name }}</a>
+                    {% endif %}
                     {% if product.yakikata %} | {{ product.yakikata.name }}{% endif %}
                     {% if product.product_type %} | {{ product.product_type.name }}{% endif %}
                 </div>

@@ -10,6 +10,14 @@ from .models import Product, Brand, Yakikata, ProductType
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
+class BrandDetailView(DetailView):
+    model = Brand
+    template_name = "shop/brand_detail.html"
+    context_object_name = "brand"
+    slug_url_kwarg = "brand_slug"
+    slug_field = "slug"
+
+
 class CartView(TemplateView):
     template_name = "shop/cart.html"
 

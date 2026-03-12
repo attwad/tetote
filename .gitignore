@@ -49,3 +49,5 @@ Thumbs.db
 # Gemini CLI / Task Specific
 implementation_plan.md
 .gemini/
+
+nanobanana-output/

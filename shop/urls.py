@@ -4,6 +4,11 @@ from . import views
 app_name = "shop"
 
 urlpatterns = [
+    path(
+        "brands/<slug:brand_slug>/",
+        views.BrandDetailView.as_view(),
+        name="brand_detail",
+    ),
     path("", views.ProductListView.as_view(), name="product_list"),
     path("cart/", views.CartView.as_view(), name="cart"),
     path("privacy-policy/", views.PrivacyPolicyView.as_view(), name="privacy_policy"),
