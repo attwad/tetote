@@ -114,7 +114,8 @@
         if (item) {
             newQty = parseInt(newQty);
             if (newQty > maxStock) {
-                showToast("{% translate 'Not enough stock!' %}", 'error');
+                const message = "{% translate 'Only X items are available in stock. If you need more, please contact us!' %}".replace('X', maxStock);
+                showToast(message, 'error');
                 loadCart(); // Refresh to original value
                 return;
             }

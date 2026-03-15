@@ -214,7 +214,8 @@
         let currentQty = existing ? existing.qty : 0;
 
         if (currentQty + qty > maxStock) {
-            showToast("{% translate 'Cannot add more than available stock!' %}", 'error');
+            const message = "{% translate 'Only X items are available in stock. If you need more, please contact us!' %}".replace('X', maxStock);
+            showToast(message, 'error');
             return;
         } else {
             if (existing) {
