@@ -29,6 +29,9 @@ Welcome to Tetote. This document provides critical procedural and architectural 
 2. **Frontend:** `npm test`
 3. **Surgical Verification:** If you modify sync logic, verify that manual local data (like stock) is preserved after a sync.
 
+## 🐙 GitHub Workflow
+- **Issue Management:** Always prefer closing issues automatically via git commit messages (e.g., `Closes #18`) in the push to the remote, rather than using the `gh` CLI directly.
+
 ## 🔒 Security
 - Do not commit `.env` or `db.sqlite3`.
 - Sensitive keys are accessed via `django-environ`.
