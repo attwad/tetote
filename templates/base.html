@@ -87,7 +87,7 @@
 
         footer {
             background: white;
-            padding: 1.5rem 2rem;
+            padding: 3rem 2rem;
             margin-top: 4rem;
             border-top: 1px solid var(--border-light);
             font-size: 0.85rem;
@@ -95,9 +95,9 @@
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 1rem;
+            gap: 2rem;
         }
-        .footer-left, .footer-center, .footer-right { display: flex; align-items: center; gap: 1rem; }
+        .footer-left, .footer-center, .footer-right { display: flex; align-items: center; gap: 1.5rem; }
 
         .filters { margin-bottom: 3rem; border-bottom: 1px solid var(--border-light); padding-bottom: 1.5rem; }
 
@@ -195,6 +195,7 @@
         </div>
         <div class="footer-center">
             <a href="{% url 'shop:privacy_policy' %}" style="color: #666;">{% translate "Privacy Policy" %}</a>
+            <a href="{% url 'shop:return_policy' %}" style="color: #666;">{% translate "Return Policy" %}</a>
             <a href="{% url 'shop:terms' %}" style="color: #666;">{% translate "Terms and Conditions" %}</a>
         </div>
         <div class="footer-right">
