@@ -1,0 +1,52 @@
+name: Tests
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    env:
+      SECRET_KEY: "dummy-secret-key-for-tests"
+      DEBUG: "True"
+      DATABASE_URL: "sqlite:///db.sqlite3"
+      STRIPE_SECRET_KEY: "sk_test_dummy"
+      STRIPE_PUBLISHABLE_KEY: "pk_test_dummy"
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v5
+      with:
+        enable-cache: true
+
+    - name: Install Python dependencies
+      run: uv sync --all-extras --dev
+
+    - name: Run Ruff Check
+      run: uv run ruff check .
+
+    - name: Run Django Tests
+      run: uv run python manage.py test
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: "22"
+        cache: 'npm'
+
+    - name: Install Node dependencies
+      run: npm ci
+
+    - name: Run Frontend Tests
+      run: npm test
