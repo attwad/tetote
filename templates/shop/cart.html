@@ -23,7 +23,8 @@
         </table>
 
         <div style="text-align: right; margin-top: 3rem;">
-            <p style="font-size: 1.8rem; margin-bottom: 2rem;">{% translate "Total" %}: <span id="cart-total" style="font-weight: 500;">CHF 0.00</span></p>
+            <p style="font-size: 1.8rem; margin-bottom: 0.5rem;">{% translate "Total" %}: <span id="cart-total" style="font-weight: 500;">CHF 0.00</span></p>
+            <p style="font-size: 1rem; color: var(--text-muted); margin-bottom: 2rem; font-style: italic;">{% translate "shipping: calculated at checkout" %}</p>
             <div style="display: flex; justify-content: flex-end; gap: 1rem; align-items: center;">
                 <button class="btn" onclick="clearCart()" style="background: none; border: 1px solid var(--border-light); color: var(--text-muted); padding: 0.7rem 1.5rem;">{% translate "Clear Cart" %}</button>
                 <button class="btn" id="checkout-btn" style="background: var(--text-main); min-width: 200px;">{% translate "Checkout" %}</button>
