@@ -296,3 +296,18 @@ class CheckoutViewTests(TestCase):
             url, data="invalid", content_type="application/json"
         )
         self.assertEqual(response.status_code, 400)
+
+    def test_create_checkout_session_aggregate_quantities(self):
+        # Product has 10 in stock. Request 6 + 6 of the same product.
+        url = reverse("shop:create_checkout_session")
+        data = {
+            "items": [
+                {"price_id": "price_test", "qty": 6},
+                {"price_id": "price_test", "qty": 6},
+            ]
+        }
+        response = self.client.post(
+            url, data=json.dumps(data), content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("Only 10 left", response.json()["error"])

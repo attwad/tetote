@@ -152,17 +152,39 @@ class CreateCheckoutSessionView(View):
         if not items:
             return JsonResponse({"error": "Cart is empty"}, status=400)
 
-        line_items = []
+        # Aggregate quantities by price_id for robustness and atomic check
+        aggregated_items = {}
         for item in items:
-            price_id = item["price_id"]
-            qty = int(item["qty"])
+            try:
+                price_id = item["price_id"]
+                qty = int(item["qty"])
+                if qty <= 0:
+                    continue
+                aggregated_items[price_id] = aggregated_items.get(price_id, 0) + qty
+            except (KeyError, ValueError, TypeError):
+                continue
 
-            # Check stock atomically
-            with transaction.atomic():
-                product = Product.objects.select_for_update().get(
-                    stripe_price_id=price_id
-                )
-                if product.stock_quantity < qty:
+        if not aggregated_items:
+            return JsonResponse({"error": "Invalid cart items"}, status=400)
+
+        line_items = []
+        # Atomic check: fetch all relevant products and lock them for the duration of the check
+        with transaction.atomic():
+            price_ids = list(aggregated_items.keys())
+            products = Product.objects.select_for_update().filter(
+                stripe_price_id__in=price_ids
+            )
+            product_map = {p.stripe_price_id: p for p in products}
+
+            for price_id, total_qty in aggregated_items.items():
+                product = product_map.get(price_id)
+                if not product:
+                    return JsonResponse(
+                        {"error": f"Product with price {price_id} not found"},
+                        status=400,
+                    )
+
+                if product.stock_quantity < total_qty:
                     return JsonResponse(
                         {
                             "error": f"Only {product.stock_quantity} left of {product.name}"
@@ -170,15 +192,14 @@ class CreateCheckoutSessionView(View):
                         status=400,
                     )
 
-                # We don't decrement yet, we'll do it on webhook 'checkout.session.completed'
-                # but we might want to "reserve" it for 15 mins. For now, simple checkout.
                 line_items.append(
                     {
                         "price": price_id,
-                        "quantity": qty,
+                        "quantity": total_qty,
                     }
                 )
 
+        # Call Stripe outside the atomic block to avoid holding DB locks during network IO
         try:
             checkout_session = stripe.checkout.Session.create(
                 payment_method_types=["card"],
