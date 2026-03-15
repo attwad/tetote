@@ -144,9 +144,9 @@
                                 {% translate "Add to Cart" %}
                             </button>
                         </div>
-                        <button class="btn" id="checkout-btn" style="background: var(--text-main); min-width: 180px;">
-                            {% translate "Checkout Now" %}
-                        </button>
+                        <a href="{% url 'shop:cart' %}" class="btn" style="background: var(--text-main); min-width: 180px; text-align: center;">
+                            {% translate "View Cart" %}
+                        </a>
                     </div>
                 {% else %}
                     <p style="margin: 0; color: #9a7b76; font-weight: 500;">{% translate "Out of Stock" %}</p>
@@ -226,29 +226,5 @@
         }
         saveCart(cart);
     }
-
-    document.getElementById('checkout-btn').onclick = async function() {
-        const cart = getCart();
-        if (cart.length === 0) {
-            showToast("{% translate 'Your cart is empty!' %}", 'error');
-            return;
-        }
-
-        const response = await fetch("{% url 'shop:create_checkout_session' %}", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": "{{ csrf_token }}"
-            },
-            body: JSON.stringify({ items: cart })
-        });
-
-        const session = await response.json();
-        if (session.url) {
-            window.location.href = session.url;
-        } else {
-            showToast(session.error, 'error');
-        }
-    };
 </script>
 {% endblock %}
