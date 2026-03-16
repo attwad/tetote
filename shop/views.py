@@ -217,6 +217,7 @@ class CreateCheckoutSessionView(View):
                 payment_method_types=["card"],
                 line_items=line_items,
                 mode="payment",
+                allow_promotion_codes=True,
                 success_url=request.build_absolute_uri(
                     reverse("shop:checkout_success")
                 ),

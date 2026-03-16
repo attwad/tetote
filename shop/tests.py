@@ -326,6 +326,10 @@ class CheckoutViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["url"], "https://checkout.stripe.com/test")
 
+        # Verify that allow_promotion_codes is True
+        args, kwargs = mock_create.call_args
+        self.assertTrue(kwargs.get("allow_promotion_codes"))
+
     def test_create_checkout_session_out_of_stock(self):
         url = reverse("shop:create_checkout_session")
         data = {"items": [{"price_id": "price_test", "qty": 11}]}
