@@ -53,6 +53,7 @@ class ProductInfoView(View):
                 {
                     "price_id": p.stripe_price_id,
                     "name": p.name,
+                    "description": p.description,
                     "price": p.price_in_chf,
                     "image": p.main_photo,
                     "stock": p.stock_quantity,

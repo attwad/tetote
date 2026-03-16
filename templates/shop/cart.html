@@ -1,40 +1,189 @@
 {% extends "base.html" %}
 {% load i18n %}{% load static %}
 
-{% block title %}{% translate "Your Cart" %} - Tetote{% endblock %}
+{% block title %}{% translate "Your selection" %} - Tetote{% endblock %}
+
+{% block extra_head %}
+<style>
+    .cart-item-card {
+        display: flex;
+        gap: 2rem;
+        padding: 1.5rem 0;
+        border-bottom: 1px solid var(--border-light);
+        align-items: flex-start;
+    }
+
+    .cart-item-image {
+        width: 120px;
+        height: 120px;
+        flex-shrink: 0;
+    }
+
+    .cart-item-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 2px;
+    }
+
+    .cart-item-info {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .cart-item-info h3 {
+        margin: 0;
+        font-size: 1.4rem;
+        font-weight: 500;
+    }
+
+    .cart-item-info h3 a {
+        color: var(--text-main);
+        text-decoration: none;
+    }
+
+    .cart-item-info h3 a:hover {
+        text-decoration: underline;
+    }
+
+    .cart-item-description {
+        font-size: 0.95rem;
+        color: var(--text-muted);
+        margin: 0;
+        line-height: 1.4;
+    }
+
+    .cart-item-price-unit {
+        font-size: 0.9rem;
+        color: var(--text-main);
+        margin-top: 0.5rem;
+    }
+
+    .cart-item-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 1.5rem;
+        min-width: 150px;
+    }
+
+    .qty-control {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+    }
+
+    .qty-control label {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+    }
+
+    .qty-control input {
+        width: 50px;
+        padding: 0.4rem;
+        border: 1px solid var(--border-light);
+        text-align: center;
+    }
+
+    .item-total {
+        font-size: 1.2rem;
+        font-weight: 500;
+        margin: 0;
+    }
+
+    .remove-btn {
+        background: none;
+        border: none;
+        color: var(--text-muted);
+        cursor: pointer;
+        padding: 0;
+        font-size: 0.9rem;
+        text-decoration: underline;
+        transition: color 0.2s;
+    }
+
+    .remove-btn:hover {
+        color: #d9534f;
+    }
+
+    @media (max-width: 768px) {
+        .cart-item-card {
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .cart-item-image {
+            width: 100%;
+            height: 200px;
+        }
+
+        .cart-item-actions {
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            min-width: 0;
+            border-top: 1px solid #f9f9f9;
+            padding-top: 1rem;
+        }
+
+        .cart-actions-container {
+            flex-direction: column-reverse;
+            gap: 1rem !important;
+        }
+
+        .cart-actions-container button, .cart-actions-container a {
+            width: 100%;
+            min-width: 0 !important;
+        }
+    }
+
+    .summary-section {
+        background: #fdfdfd;
+        padding: 2rem;
+        border: 1px solid var(--border-light);
+        margin-top: 3rem;
+        border-radius: 2px;
+    }
+
+    .cart-actions-container {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1.5rem;
+        align-items: center;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-    <h1>{% translate "Your Cart" %}</h1>
+    <h1>{% translate "Your selection" %}</h1>
 
     <div id="cart-container">
-        <table style="width: 100%; border-collapse: collapse; margin-bottom: 2rem;">
-            <thead>
-                <tr style="border-bottom: 1px solid #ddd; text-align: left;">
-                    <th>{% translate "Product" %}</th>
-                    <th>{% translate "Quantity" %}</th>
-                    <th>{% translate "Price" %}</th>
-                    <th>{% translate "Total" %}</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody id="cart-items">
-                <!-- Loaded via JS -->
-            </tbody>
-        </table>
+        <div id="cart-items" style="margin-bottom: 2rem;">
+            <!-- Loaded via JS -->
+        </div>
 
-        <div style="text-align: right; margin-top: 3rem;">
-            <p style="font-size: 1.8rem; margin-bottom: 0.5rem;">{% translate "Total" %}: <span id="cart-total" style="font-weight: 500;">CHF 0.00</span></p>
-            <p style="font-size: 1rem; color: var(--text-muted); margin-bottom: 2rem; font-style: italic;">{% translate "shipping: calculated at checkout" %}</p>
-            <div style="display: flex; justify-content: flex-end; gap: 1rem; align-items: center;">
-                <button class="btn" onclick="clearCart()" style="background: none; border: 1px solid var(--border-light); color: var(--text-muted); padding: 0.7rem 1.5rem;">{% translate "Clear Cart" %}</button>
+        <div class="summary-section">
+            <div style="display: flex; justify-content: flex-end; margin-bottom: 2rem;">
+                <div style="text-align: right;">
+                    <p style="font-size: 1rem; color: var(--text-muted); margin-bottom: 0.5rem; letter-spacing: 0.05rem; text-transform: uppercase;">{% translate "Total" %}</p>
+                    <p id="cart-total" style="font-size: 2.5rem; font-weight: 500; margin: 0; line-height: 1;">CHF 0.00</p>
+                    <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 1rem; font-style: italic;">{% translate "shipping: calculated at checkout" %}</p>
+                </div>
+            </div>
+
+            <div class="cart-actions-container">
+                <button class="btn" onclick="clearCart()" style="background: none; border: 1px solid var(--border-light); color: var(--text-muted); padding: 0.8rem 2rem; font-size: 0.95rem;">{% translate "Clear selection" %}</button>
                 {% if store_settings.sales_paused %}
-                    <button class="btn" id="checkout-btn" disabled style="background: var(--border-light); color: var(--text-muted); min-width: 200px; cursor: not-allowed;">{% translate "Checkout Paused" %}</button>
+                    <button class="btn" id="checkout-btn" disabled style="background: var(--border-light); color: var(--text-muted); min-width: 250px; cursor: not-allowed; padding: 1rem 2rem;">{% translate "Checkout Paused" %}</button>
                 {% else %}
-                    <button class="btn" id="checkout-btn" style="background: var(--text-main); min-width: 200px;">{% translate "Checkout" %}</button>
+                    <button class="btn" id="checkout-btn" style="background: var(--text-main); min-width: 250px; padding: 1rem 2rem; font-size: 1.1rem; font-weight: 500;">{% translate "Checkout" %}</button>
                 {% endif %}
             </div>
             {% if store_settings.sales_paused %}
-                <p style="color: var(--text-muted); margin-top: 1rem; font-style: italic;">{% translate "We have temporarily paused online sales. Please check back later!" %}</p>
+                <p style="color: var(--text-muted); margin-top: 1.5rem; font-style: italic; text-align: right;">{% translate "We have temporarily paused online sales. Please check back later!" %}</p>
             {% endif %}
         </div>
     </div>
@@ -86,30 +235,35 @@
             const itemTotal = info.price * item.qty;
             total += itemTotal;
 
-            const row = document.createElement('tr');
-            row.style.borderBottom = '1px solid #eee';
-            row.innerHTML = `
-                <td style="padding: 1rem 0; display: flex; align-items: center; gap: 1rem;">
-                    <img src="${info.image}" style="width: 50px; height: 50px; object-fit: cover;">
-                    <a href="${info.url}" style="text-decoration: none; color: #333;">${info.name}</a>
-                </td>
-                <td>
-                    <input type="number" value="${item.qty}" min="1" max="${info.stock}" style="width: 50px;"
-                           onchange="updateQty('${item.price_id}', this.value, ${info.stock})">
-                </td>
-                <td>CHF ${info.price.toFixed(2)}</td>
-                <td>CHF ${itemTotal.toFixed(2)}</td>
-                <td>
-                    <button onclick="removeItem('${item.price_id}')"
-                            style="background: #eee; border: none; color: #333; cursor: pointer; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: 0.2s; line-height: 30px;"
-                            onmouseover="this.style.background='#d9534f'; this.style.color='white'"
-                            onmouseout="this.style.background='#eee'; this.style.color='#333'">
-                        <span style="transform: translateY(-2px);">&times;</span>
+            const card = document.createElement('div');
+            card.className = 'cart-item-card';
+
+            const truncatedDescription = info.description.length > 100
+                ? info.description.substring(0, 100) + '...'
+                : info.description;
+
+            card.innerHTML = `
+                <div class="cart-item-image">
+                    <img src="${info.image}" alt="${info.name}">
+                </div>
+                <div class="cart-item-info">
+                    <h3><a href="${info.url}">${info.name}</a></h3>
+                    <p class="cart-item-description">${truncatedDescription}</p>
+                    <p class="cart-item-price-unit">CHF ${info.price.toFixed(2)}</p>
+                </div>
+                <div class="cart-item-actions">
+                    <div class="qty-control">
+                        <label>{% translate "Qty" %}</label>
+                        <input type="number" value="${item.qty}" min="1" max="${info.stock}"
+                               onchange="updateQty('${item.price_id}', this.value, ${info.stock})">
+                    </div>
+                    <p class="item-total">CHF ${itemTotal.toFixed(2)}</p>
+                    <button class="remove-btn" onclick="removeItem('${item.price_id}')">
+                        {% translate "Remove" %}
                     </button>
-                </td>
-                </td>
+                </div>
             `;
-            container.appendChild(row);
+            container.appendChild(card);
         });
 
         document.getElementById('cart-total').textContent = `CHF ${total.toFixed(2)}`;
