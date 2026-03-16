@@ -32,6 +32,14 @@ Welcome to Tetote. This document provides critical procedural and architectural 
 ## 🐙 GitHub Workflow
 - **Issue Management:** Always prefer closing issues automatically via git commit messages (e.g., `Closes #18`) in the push to the remote, rather than using the `gh` CLI directly.
 
+## Stripe integration
+- **Documentation:** https://docs.stripe.com/ is the source of truth, find what you need there when you need it.
+- **stripe-cli:** can be used for local webhook testing.
+
 ## 🔒 Security
 - Do not commit `.env` or `db.sqlite3`.
 - Sensitive keys are accessed via `django-environ`.
+
+## Others
+
+More general project guidance and information is written in @README.md
