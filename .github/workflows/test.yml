@@ -8,7 +8,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     env:
       SECRET_KEY: "dummy-secret-key-for-tests"
