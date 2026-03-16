@@ -6,8 +6,57 @@ from shop.models import Product
 from integrations.views import sync_product, sync_price
 
 
+from django.core.management import call_command
+from io import StringIO
+
+
+# ...
+class MockObject(dict):
+    def __getattr__(self, name):
+        try:
+            return self[name]
+        except KeyError:
+            raise AttributeError(name)
+
+
 class StripeIntegrationTest(TestCase):
-    def test_sync_product(self):
+    # ...
+    @patch("stripe.Price.list")
+    @patch("stripe.Product.list")
+    def test_sync_stripe_command(self, mock_product_list, mock_price_list):
+        # Mock product list
+        mock_p1 = MockObject(
+            {
+                "id": "prod_1",
+                "name": "Stripe Product 1",
+                "images": [],
+                "metadata": {},
+                "created": 1700000000,
+            }
+        )
+
+        mock_product_list.return_value.auto_paging_iter.return_value = [mock_p1]
+
+        # Mock price list
+        mock_price1 = MockObject(
+            {
+                "id": "price_1",
+                "product": "prod_1",
+                "unit_amount": 1500,
+            }
+        )
+
+        mock_price_list.return_value.auto_paging_iter.return_value = [mock_price1]
+
+        out = StringIO()
+        call_command("sync_stripe", stdout=out)
+
+        self.assertIn("Stripe sync completed!", out.getvalue())
+
+        product = Product.objects.get(stripe_product_id="prod_1")
+        self.assertEqual(product.stripe_name, "Stripe Product 1")
+        self.assertEqual(product.price, 1500)
+        self.assertEqual(product.stripe_price_id, "price_1")
         product_data = {
             "id": "prod_test",
             "name": "Test Product",
