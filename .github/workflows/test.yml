@@ -8,7 +8,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     env:
       SECRET_KEY: "dummy-secret-key-for-tests"
@@ -18,15 +18,10 @@ jobs:
       STRIPE_PUBLISHABLE_KEY: "pk_test_dummy"
 
     steps:
-    - uses: actions/checkout@v5
-
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: "3.12"
+    - uses: actions/checkout@v6
 
     - name: Install uv
-      uses: astral-sh/setup-uv@v5
+      uses: astral-sh/setup-uv@v7
       with:
         enable-cache: true
 
