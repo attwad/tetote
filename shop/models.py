@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from django.urls import reverse
 import datetime
 
 
@@ -21,9 +22,13 @@ class Brand(models.Model):
     class Meta:
         verbose_name = _("Brand")
         verbose_name_plural = _("Brands")
+        ordering = ["name"]
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse("shop:brand_detail", kwargs={"brand_slug": self.slug})
 
 
 class BrandImage(models.Model):
@@ -116,6 +121,9 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse("shop:product_detail", kwargs={"product_slug": self.slug})
 
     @property
     def price_in_chf(self):
