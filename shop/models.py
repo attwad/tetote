@@ -160,3 +160,14 @@ class StoreAnnouncement(models.Model):
 
     def __str__(self):
         return self.text[:50]
+
+
+class StoreSettings(models.Model):
+    sales_paused = models.BooleanField(_("Sales Paused"), default=False)
+
+    class Meta:
+        verbose_name = _("Store Settings")
+        verbose_name_plural = _("Store Settings")
+
+    def __str__(self):
+        return str(_("Store Settings"))

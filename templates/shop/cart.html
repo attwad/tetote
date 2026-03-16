@@ -27,8 +27,15 @@
             <p style="font-size: 1rem; color: var(--text-muted); margin-bottom: 2rem; font-style: italic;">{% translate "shipping: calculated at checkout" %}</p>
             <div style="display: flex; justify-content: flex-end; gap: 1rem; align-items: center;">
                 <button class="btn" onclick="clearCart()" style="background: none; border: 1px solid var(--border-light); color: var(--text-muted); padding: 0.7rem 1.5rem;">{% translate "Clear Cart" %}</button>
-                <button class="btn" id="checkout-btn" style="background: var(--text-main); min-width: 200px;">{% translate "Checkout" %}</button>
+                {% if store_settings.sales_paused %}
+                    <button class="btn" id="checkout-btn" disabled style="background: var(--border-light); color: var(--text-muted); min-width: 200px; cursor: not-allowed;">{% translate "Checkout Paused" %}</button>
+                {% else %}
+                    <button class="btn" id="checkout-btn" style="background: var(--text-main); min-width: 200px;">{% translate "Checkout" %}</button>
+                {% endif %}
             </div>
+            {% if store_settings.sales_paused %}
+                <p style="color: var(--text-muted); margin-top: 1rem; font-style: italic;">{% translate "We have temporarily paused online sales. Please check back later!" %}</p>
+            {% endif %}
         </div>
     </div>
 

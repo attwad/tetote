@@ -8,6 +8,7 @@ from .models import (
     Yakikata,
     ProductType,
     StoreAnnouncement,
+    StoreSettings,
 )
 
 
@@ -46,6 +47,16 @@ class ProductTypeAdmin(TranslationAdmin):
 class StoreAnnouncementAdmin(TranslationAdmin):
     list_display = ("text", "is_active", "updated_at")
     list_editable = ("is_active",)
+
+
+@admin.register(StoreSettings)
+class StoreSettingsAdmin(admin.ModelAdmin):
+    list_display = ("sales_paused",)
+
+    def has_add_permission(self, request):
+        if self.model.objects.exists():
+            return False
+        return True
 
 
 @admin.register(Product)

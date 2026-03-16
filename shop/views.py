@@ -5,7 +5,8 @@ from django.views.generic import ListView, DetailView, View, TemplateView
 from django.http import JsonResponse
 from django.urls import reverse
 from django.db import transaction
-from .models import Product, Brand, Yakikata, ProductType
+from django.utils.translation import gettext as _
+from .models import Product, Brand, Yakikata, ProductType, StoreSettings
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -146,6 +147,13 @@ class ProductDetailView(DetailView):
 
 class CreateCheckoutSessionView(View):
     def post(self, request, *args, **kwargs):
+        # Check if sales are paused
+        store_settings = StoreSettings.objects.first()
+        if store_settings and store_settings.sales_paused:
+            return JsonResponse(
+                {"error": _("Checkout is temporarily disabled")}, status=403
+            )
+
         # Data from JS: items: [{price_id: '...', qty: 1}]
         try:
             data = json.loads(request.body)
