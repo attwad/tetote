@@ -2,23 +2,22 @@
 {% load i18n %}{% load static %}
 
 {% block content %}
-    <div class="filters">
-        <form id="filter-form" method="get">
-            <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-4">
-                <div class="flex gap-6 items-start w-full md:w-auto">
-                    <div class="flex flex-col items-start gap-[0.4rem]">
-                        <button type="button" id="filter-toggle-btn"
-                                class="toggle-filters-btn {% if active_brands or active_glazes or active_types %}filters-active{% endif %} {% if is_expanded %}btn-pressed{% endif %}"
-                                onclick="toggleDrawer()">
-                            <span>{% translate "Filters" %}{% if total_active_filters > 0 %} ({{ total_active_filters }}){% endif %}</span>
-                        </button>
-                        {% if total_active_filters > 0 %}
-                            <a href="{% url 'shop:product_list' %}" class="hidden md:inline-block text-[0.8rem] text-brand-muted underline leading-none mt-[0.2rem]">{% translate "Clear all" %}</a>
-                        {% endif %}
-                    </div>
+    <!-- Sidebar for Desktop / Drawer for Mobile -->
+    <div id="filter-overlay" class="filter-overlay {% if is_expanded %}show{% endif %}" onclick="toggleDrawer()"></div>
 
-                    <!-- High-frequency stock toggle always visible -->
-                    <div class="flex gap-4 items-center">
+    <div class="filter-sidebar-container">
+        <aside id="filter-drawer" class="filter-drawer {% if is_expanded %}open{% endif %}">
+            <div class="md:hidden">
+                <button class="absolute top-4 right-4 text-brand-text" onclick="toggleDrawer()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+
+            <form id="filter-form" method="get">
+                <!-- Main Filter Groups -->
+                <div class="filter-group">
+                    <span class="filter-label">{% translate "Stock Status" %}</span>
+                    <div class="flex flex-col gap-2 items-start">
                         <a href="#" class="filter-item {% if request.GET.stock == 'in_stock' %}active{% endif %}"
                            onclick="toggleStock(event)">
                             {% if request.GET.stock == 'in_stock' %}
@@ -29,98 +28,83 @@
                     </div>
                 </div>
 
-                <div class="hidden md:flex text-[0.9rem] text-brand-muted items-center gap-6">
-                    <div class="flex items-center">
-                        <label for="sort-select" class="mr-2">{% translate "Sort by" %}:</label>
-                        <select id="sort-select" onchange="toggleSort(this.value)" class="border-none bg-none text-brand-text cursor-pointer p-0">
-                            <option value="">{% translate "Newest" %}</option>
-                            <option value="price_asc" {% if request.GET.sort == 'price_asc' %}selected{% endif %}>{% translate "Price: Low to High" %}</option>
-                            <option value="price_desc" {% if request.GET.sort == 'price_desc' %}selected{% endif %}>{% translate "Price: High to Low" %}</option>
-                        </select>
-                    </div>
-                    <span>{{ products|length }} {% translate "items" %}</span>
-                </div>
-            </div>
-
-            <!-- Expandable Drawer for secondary filters -->
-            <div id="filter-drawer" class="filter-drawer {% if is_expanded %}open{% endif %}">
-                <div class="md:hidden mt-4 border-t border-brand-border pt-4">
-                    <span class="filter-label">{% translate "Sort by" %}</span>
+                <div class="filter-group">
+                    <span class="filter-label">{% translate "Brands" %}</span>
                     <div class="flex flex-col gap-2 items-start">
-                        <a href="#" class="filter-item {% if not request.GET.sort %}active{% endif %}" onclick="toggleSort('')">
-                            {% if not request.GET.sort %}
-                                <span class="filter-remove-icon">&times;</span>
-                            {% endif %}
-                            {% translate "Newest" %}
-                        </a>
-                        <a href="#" class="filter-item {% if request.GET.sort == 'price_asc' %}active{% endif %}" onclick="toggleSort('price_asc')">
-                            {% if request.GET.sort == 'price_asc' %}
-                                <span class="filter-remove-icon">&times;</span>
-                            {% endif %}
-                            {% translate "Price ↑" %}
-                        </a>
-                        <a href="#" class="filter-item {% if request.GET.sort == 'price_desc' %}active{% endif %}" onclick="toggleSort('price_desc')">
-                            {% if request.GET.sort == 'price_desc' %}
-                                <span class="filter-remove-icon">&times;</span>
-                            {% endif %}
-                            {% translate "Price ↓" %}
-                        </a>
-                        {% if total_active_filters > 0 %}
-                            <a href="{% url 'shop:product_list' %}" class="text-[0.85rem] text-brand-muted underline mt-2">{% translate "Clear all" %}</a>
-                        {% endif %}
+                        {% for brand in brands %}
+                            <a href="#" class="filter-item {% if brand.slug in active_brands %}active{% endif %}"
+                               onclick="toggleFilter(event, 'brand', '{{ brand.slug }}')">
+                                {% if brand.slug in active_brands %}
+                                    <span class="filter-remove-icon">&times;</span>
+                                {% endif %}
+                                {{ brand.name }}
+                            </a>
+                        {% endfor %}
                     </div>
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 pt-4">
-                    <div class="filter-group">
-                        <span class="filter-label">{% translate "Brands" %}</span>
-                        <div class="flex flex-col gap-2 items-start">
-                            {% for brand in brands %}
-                                <a href="#" class="filter-item {% if brand.slug in active_brands %}active{% endif %}"
-                                   onclick="toggleFilter(event, 'brand', '{{ brand.slug }}')">
-                                    {% if brand.slug in active_brands %}
-                                        <span class="filter-remove-icon">&times;</span>
-                                    {% endif %}
-                                    {{ brand.name }}
-                                </a>
-                            {% endfor %}
-                        </div>
-                    </div>
 
-                    <div class="filter-group">
-                        <span class="filter-label">{% translate "Glaze" %}</span>
-                        <div class="flex flex-col gap-2 items-start">
-                            {% for glaze in glazes %}
-                                <a href="#" class="filter-item {% if glaze.slug in active_glazes %}active{% endif %}"
-                                   onclick="toggleFilter(event, 'glaze', '{{ glaze.slug }}')">
-                                    {% if glaze.slug in active_glazes %}
-                                        <span class="filter-remove-icon">&times;</span>
-                                    {% endif %}
-                                    {{ glaze.name }}
-                                </a>
-                            {% endfor %}
-                        </div>
+                <div class="filter-group">
+                    <span class="filter-label">{% translate "Glaze" %}</span>
+                    <div class="flex flex-col gap-2 items-start">
+                        {% for glaze in glazes %}
+                            <a href="#" class="filter-item {% if glaze.slug in active_glazes %}active{% endif %}"
+                               onclick="toggleFilter(event, 'glaze', '{{ glaze.slug }}')">
+                                {% if glaze.slug in active_glazes %}
+                                    <span class="filter-remove-icon">&times;</span>
+                                {% endif %}
+                                {{ glaze.name }}
+                            </a>
+                        {% endfor %}
                     </div>
+                </div>
 
-                    <div class="filter-group">
-                        <span class="filter-label">{% translate "Type" %}</span>
-                        <div class="flex flex-col gap-2 items-start">
-                            {% for t in product_types %}
-                                <a href="#" class="filter-item {% if t.slug in active_types %}active{% endif %}"
-                                   onclick="toggleFilter(event, 'type', '{{ t.slug }}')">
-                                    {% if t.slug in active_types %}
-                                        <span class="filter-remove-icon">&times;</span>
-                                    {% endif %}
-                                    {{ t.name }}
-                                </a>
-                            {% endfor %}
-                        </div>
+                <div class="filter-group">
+                    <span class="filter-label">{% translate "Type" %}</span>
+                    <div class="flex flex-col gap-2 items-start">
+                        {% for t in product_types %}
+                            <a href="#" class="filter-item {% if t.slug in active_types %}active{% endif %}"
+                               onclick="toggleFilter(event, 'type', '{{ t.slug }}')">
+                                {% if t.slug in active_types %}
+                                    <span class="filter-remove-icon">&times;</span>
+                                {% endif %}
+                                {{ t.name }}
+                            </a>
+                        {% endfor %}
                     </div>
+                </div>
+
+                {% if total_active_filters > 0 %}
+                    <a href="{% url 'shop:product_list' %}" class="inline-block mt-4 text-[0.85rem] text-brand-muted underline">{% translate "Clear all" %}</a>
+                {% endif %}
+            </form>
+        </aside>
+
+        <!-- Main Product Grid Section -->
+        <div class="product-grid-container">
+            <div class="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-6 mb-12 border-b border-brand-border pb-6">
+                <!-- Mobile Only Filter Button -->
+                <div class="md:hidden">
+                    <button type="button" class="refine-selection-btn {% if total_active_filters > 0 %}active{% endif %}"
+                            onclick="toggleDrawer()">
+                        <span>{% translate "Refine selection" %}{% if total_active_filters > 0 %} ({{ total_active_filters }}){% endif %}</span>
+                    </button>
+                </div>
+
+                <div class="flex flex-wrap items-center lg:justify-end gap-x-4 gap-y-2 text-[0.9rem] text-brand-muted flex-grow">
+                    <span class="text-brand-muted font-semibold tracking-wider text-[0.95rem]">{% translate "Sort by" %}</span>
+                    <a href="#" class="filter-item {% if not request.GET.sort %}active{% endif %}" onclick="toggleSort('')">
+                        {% translate "New in Shop" %}
+                    </a>
+                    <a href="#" class="filter-item {% if request.GET.sort == 'price_asc' %}active{% endif %}" onclick="toggleSort('price_asc')">
+                        {% translate "Lowest Price" %}
+                    </a>
+                    <a href="#" class="filter-item {% if request.GET.sort == 'price_desc' %}active{% endif %}" onclick="toggleSort('price_desc')">
+                        {% translate "Highest Price" %}
+                    </a>
                 </div>
             </div>
-        </form>
-    </div>
 
-    <div class="grid">
+            <div class="grid">
         {% for product in products %}
             <div class="product-card">
                 <a href="{% url 'shop:product_detail' product_slug=product.slug %}">

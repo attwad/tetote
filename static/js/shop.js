@@ -113,7 +113,48 @@ export function getNewURL(currentUrlStr, type, name, value) {
 }
 
 export function toggleDrawer() {
-    window.location.href = getNewURL(window.location.href, 'drawer');
+    const drawer = document.getElementById('filter-drawer');
+    const overlay = document.getElementById('filter-overlay');
+    const isMobile = window.innerWidth < 768;
+
+    if (isMobile && drawer && overlay) {
+        if (drawer.classList.contains('open')) {
+            // Close
+            drawer.classList.remove('open');
+            overlay.classList.add('opacity-0');
+            const transitionHandler = function() {
+                overlay.classList.add('hidden');
+                overlay.classList.remove('show');
+                overlay.removeEventListener('transitionend', transitionHandler);
+            };
+            overlay.addEventListener('transitionend', transitionHandler);
+            document.body.style.overflow = '';
+        } else {
+            // Open
+            drawer.classList.add('open');
+            overlay.classList.remove('hidden');
+            overlay.classList.add('show');
+            setTimeout(() => {
+                overlay.classList.remove('opacity-0');
+            }, 10);
+            document.body.style.overflow = 'hidden';
+        }
+    } else {
+        window.location.href = getNewURL(window.location.href, 'drawer');
+    }
+}
+
+// Initial state cleanup for drawer logic
+if (typeof window !== 'undefined') {
+    window.addEventListener('load', () => {
+        const drawer = document.getElementById('filter-drawer');
+        const overlay = document.getElementById('filter-overlay');
+        const isMobile = window.innerWidth < 768;
+        if (isMobile && drawer && drawer.classList.contains('open')) {
+            if (overlay) overlay.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+    });
 }
 
 export function toggleFilter(event, name, value) {

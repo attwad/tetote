@@ -95,33 +95,47 @@
   }
 
   .filter-group {
-    @apply mb-6;
+    @apply mb-8;
   }
   .filter-label {
-    @apply block text-[0.9rem] mb-2 text-brand-muted font-medium;
+    @apply block text-[0.95rem] mb-3 text-brand-muted font-semibold tracking-wider;
   }
   .chips {
     @apply flex gap-2 flex-wrap items-center;
   }
 
-  .filter-drawer {
-    @apply max-h-0 overflow-hidden transition-[max-height] duration-300 ease-[cubic-bezier(0,1,0,1)];
+  /* Desktop Sidebar / Mobile Drawer */
+  .filter-sidebar-container {
+    @apply flex flex-col md:flex-row gap-12;
   }
-  .filter-drawer.open {
-    @apply max-h-[1000px] transition-[max-height] duration-300 ease-in-out;
+  .filter-sidebar {
+    @apply hidden md:block w-[250px] flex-shrink-0;
+  }
+  .product-grid-container {
+    @apply flex-grow;
   }
 
-  .toggle-filters-btn {
-    @apply bg-white border border-brand-border px-4 py-2 text-[0.9rem] text-brand-text cursor-pointer flex items-center gap-2 transition-all duration-200 rounded-[2px] min-w-[100px] justify-center;
+  .filter-drawer {
+    @apply fixed top-0 left-0 bottom-0 w-[80%] max-w-[300px] bg-white z-[1002] -translate-x-full transition-transform duration-300 ease-in-out p-8 overflow-y-auto md:static md:w-auto md:max-w-none md:p-0 md:bg-transparent md:translate-x-0 md:z-auto md:overflow-visible;
   }
-  .toggle-filters-btn:hover {
-    @apply border-brand-muted;
+  .filter-drawer.open {
+    @apply translate-x-0;
   }
-  .toggle-filters-btn.btn-pressed {
-    @apply bg-brand-text text-white border-brand-text;
+  .filter-overlay {
+    @apply fixed inset-0 bg-black/50 z-[1001] hidden opacity-0 transition-opacity duration-300 md:hidden!;
   }
-  .toggle-filters-btn.filters-active:not(.btn-pressed) {
-    @apply bg-[#f0f0f0] border-brand-muted;
+  .filter-overlay.show {
+    @apply block opacity-100;
+  }
+
+  .refine-selection-btn {
+    @apply text-brand-text text-[0.95rem] cursor-pointer flex items-center gap-2 transition-all duration-200 border-none bg-transparent p-0 underline underline-offset-4;
+  }
+  .refine-selection-btn:hover {
+    @apply opacity-70;
+  }
+  .refine-selection-btn.active {
+    @apply font-bold;
   }
 
   /* Embla Carousel Base Styles */
