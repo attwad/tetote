@@ -1025,14 +1025,14 @@
   }
   .embla__slide img {
     display: block;
-    height: 500px;
+    aspect-ratio: 1 / 1;
     width: 100%;
     cursor: zoom-in;
     object-fit: contain;
   }
   @media (max-width: 768px) {
     .embla__slide img {
-      height: 350px;
+      aspect-ratio: 1 / 1;
     }
   }
   .thumbnails {

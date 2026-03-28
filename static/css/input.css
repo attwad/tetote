@@ -122,12 +122,12 @@
     @apply flex-[0_0_100%] min-w-0 relative;
   }
   .embla__slide img {
-    @apply block w-full h-[500px] object-contain cursor-zoom-in;
+    @apply block w-full aspect-square object-contain cursor-zoom-in;
   }
 
   @media (max-width: 768px) {
     .embla__slide img {
-      @apply h-[350px];
+      @apply aspect-square;
     }
   }
 
