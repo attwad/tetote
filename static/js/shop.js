@@ -99,9 +99,6 @@ export function getNewURL(currentUrlStr, type, name, value) {
     } else if (type === 'stock') {
         if (params.get('stock') === 'in_stock') params.delete('stock');
         else params.set('stock', 'in_stock');
-    } else if (type === 'new') {
-        if (params.get('new') === 'true') params.delete('new');
-        else params.set('new', 'true');
     } else if (type === 'sort') {
         if (value) params.set('sort', value);
         else params.delete('sort');
@@ -127,11 +124,6 @@ export function toggleFilter(event, name, value) {
 export function toggleStock(event) {
     if (event) event.preventDefault();
     window.location.href = getNewURL(window.location.href, 'stock');
-}
-
-export function toggleNew(event) {
-    if (event) event.preventDefault();
-    window.location.href = getNewURL(window.location.href, 'new');
 }
 
 export function toggleSort(value) {

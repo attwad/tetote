@@ -52,6 +52,19 @@
     @apply bg-brand-text text-white border-brand-text;
   }
 
+  .filter-item {
+    @apply text-[0.95rem] text-brand-text cursor-pointer transition-all duration-200 no-underline inline-flex items-center gap-1.5 py-0.5;
+  }
+  .filter-item:hover {
+    @apply opacity-70;
+  }
+  .filter-item.active {
+    @apply font-bold;
+  }
+  .filter-remove-icon {
+    @apply text-[0.85rem] font-normal opacity-60;
+  }
+
   .product-card {
     @apply p-0 transition-transform duration-300 ease-in-out text-center;
   }

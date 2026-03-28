@@ -1,12 +1,12 @@
-import stripe
-import json
 from django.conf import settings
+import stripe
 from django.views.generic import ListView, DetailView, View, TemplateView
 from django.http import JsonResponse
 from django.urls import reverse
 from django.db import transaction
 from django.utils.translation import gettext as _
 from .models import Product, Brand, Glaze, ProductType, StoreSettings
+import json
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -15,16 +15,29 @@ class BrandDetailView(DetailView):
     model = Brand
     template_name = "shop/brand_detail.html"
     context_object_name = "brand"
-    slug_url_kwarg = "brand_slug"
     slug_field = "slug"
+    slug_url_kwarg = "brand_slug"
 
 
-class CartView(TemplateView):
-    template_name = "shop/cart.html"
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = "shop/product_detail.html"
+    context_object_name = "product"
+    slug_field = "slug"
+    slug_url_kwarg = "product_slug"
 
+    def get_queryset(self):
+        return super().get_queryset().filter(public=True)
 
-class PrivacyPolicyView(TemplateView):
-    template_name = "shop/privacy_policy.html"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Recommendation Logic: Other products from the same Brand
+        context["related_products"] = (
+            Product.objects.filter(brand=self.object.brand, public=True)
+            .exclude(id=self.object.id)
+            .distinct()[:4]
+        )
+        return context
 
 
 class AboutUsView(TemplateView):
@@ -35,16 +48,20 @@ class ContactView(TemplateView):
     template_name = "shop/contact.html"
 
 
-class ReturnPolicyView(TemplateView):
-    template_name = "shop/return_policy.html"
+class TermsConditionsView(TemplateView):
+    template_name = "shop/terms_conditions.html"
+
+
+class PrivacyPolicyView(TemplateView):
+    template_name = "shop/privacy_policy.html"
 
 
 class DeliveryPolicyView(TemplateView):
     template_name = "shop/delivery_policy.html"
 
 
-class TermsConditionsView(TemplateView):
-    template_name = "shop/terms_conditions.html"
+class ReturnPolicyView(TemplateView):
+    template_name = "shop/return_policy.html"
 
 
 class CheckoutSuccessView(TemplateView):
@@ -93,7 +110,6 @@ class ProductListView(ListView):
 
         # Single click toggle
         stock_filter = self.request.GET.get("stock")
-        new_filter = self.request.GET.get("new")
 
         if brands:
             queryset = queryset.filter(brand__slug__in=brands)
@@ -112,10 +128,6 @@ class ProductListView(ListView):
         elif sort == "price_desc":
             queryset = queryset.order_by("-price")
 
-        if new_filter == "true":
-            # Using the model property as requested (converts to list)
-            queryset = [p for p in queryset if p.is_recently_added]
-
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -131,31 +143,17 @@ class ProductListView(ListView):
 
         context["is_expanded"] = self.request.GET.get("expanded") == "true"
 
-        # Include stock and new arrivals in the total count
-
+        # Include stock in the total count
         has_stock = 1 if self.request.GET.get("stock") == "in_stock" else 0
-        has_new = 1 if self.request.GET.get("new") == "true" else 0
 
         context["total_active_filters"] = (
             len(context["active_brands"])
             + len(context["active_glazes"])
             + len(context["active_types"])
             + has_stock
-            + has_new
         )
 
         return context
-
-
-class ProductDetailView(DetailView):
-    model = Product
-    template_name = "shop/product_detail.html"
-    context_object_name = "product"
-    slug_url_kwarg = "product_slug"
-    slug_field = "slug"
-
-    def get_queryset(self):
-        return super().get_queryset().filter(public=True)
 
 
 class CreateCheckoutSessionView(View):
@@ -240,3 +238,7 @@ class CreateCheckoutSessionView(View):
             return JsonResponse({"url": checkout_session.url})
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)
+
+
+class CartView(TemplateView):
+    template_name = "shop/cart.html"

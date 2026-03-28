@@ -18,14 +18,13 @@
                     </div>
 
                     <!-- High-frequency stock toggle always visible -->
-                    <div class="chips">
-                        <a href="#" class="chip {% if request.GET.stock == 'in_stock' %}active{% endif %}"
+                    <div class="flex gap-4 items-center">
+                        <a href="#" class="filter-item {% if request.GET.stock == 'in_stock' %}active{% endif %}"
                            onclick="toggleStock(event)">
+                            {% if request.GET.stock == 'in_stock' %}
+                                <span class="filter-remove-icon">&times;</span>
+                            {% endif %}
                             {% translate "In Stock" %}
-                        </a>
-                        <a href="#" class="chip {% if request.GET.new == 'true' %}active{% endif %}"
-                           onclick="toggleNew(event)">
-                            {% translate "New Arrivals" %}
                         </a>
                     </div>
                 </div>
@@ -47,22 +46,40 @@
             <div id="filter-drawer" class="filter-drawer {% if is_expanded %}open{% endif %}">
                 <div class="md:hidden mt-4 border-t border-brand-border pt-4">
                     <span class="filter-label">{% translate "Sort by" %}</span>
-                    <div class="chips">
-                        <a href="#" class="chip {% if not request.GET.sort %}active{% endif %}" onclick="toggleSort('')">{% translate "Newest" %}</a>
-                        <a href="#" class="chip {% if request.GET.sort == 'price_asc' %}active{% endif %}" onclick="toggleSort('price_asc')">{% translate "Price ↑" %}</a>
-                        <a href="#" class="chip {% if request.GET.sort == 'price_desc' %}active{% endif %}" onclick="toggleSort('price_desc')">{% translate "Price ↓" %}</a>
+                    <div class="flex flex-col gap-2 items-start">
+                        <a href="#" class="filter-item {% if not request.GET.sort %}active{% endif %}" onclick="toggleSort('')">
+                            {% if not request.GET.sort %}
+                                <span class="filter-remove-icon">&times;</span>
+                            {% endif %}
+                            {% translate "Newest" %}
+                        </a>
+                        <a href="#" class="filter-item {% if request.GET.sort == 'price_asc' %}active{% endif %}" onclick="toggleSort('price_asc')">
+                            {% if request.GET.sort == 'price_asc' %}
+                                <span class="filter-remove-icon">&times;</span>
+                            {% endif %}
+                            {% translate "Price ↑" %}
+                        </a>
+                        <a href="#" class="filter-item {% if request.GET.sort == 'price_desc' %}active{% endif %}" onclick="toggleSort('price_desc')">
+                            {% if request.GET.sort == 'price_desc' %}
+                                <span class="filter-remove-icon">&times;</span>
+                            {% endif %}
+                            {% translate "Price ↓" %}
+                        </a>
                         {% if total_active_filters > 0 %}
-                            <a href="{% url 'shop:product_list' %}" class="text-[0.85rem] text-brand-muted underline ml-4">{% translate "Clear all" %}</a>
+                            <a href="{% url 'shop:product_list' %}" class="text-[0.85rem] text-brand-muted underline mt-2">{% translate "Clear all" %}</a>
                         {% endif %}
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 pt-4">
                     <div class="filter-group">
                         <span class="filter-label">{% translate "Brands" %}</span>
-                        <div class="chips">
+                        <div class="flex flex-col gap-2 items-start">
                             {% for brand in brands %}
-                                <a href="#" class="chip {% if brand.slug in active_brands %}active{% endif %}"
+                                <a href="#" class="filter-item {% if brand.slug in active_brands %}active{% endif %}"
                                    onclick="toggleFilter(event, 'brand', '{{ brand.slug }}')">
+                                    {% if brand.slug in active_brands %}
+                                        <span class="filter-remove-icon">&times;</span>
+                                    {% endif %}
                                     {{ brand.name }}
                                 </a>
                             {% endfor %}
@@ -71,10 +88,13 @@
 
                     <div class="filter-group">
                         <span class="filter-label">{% translate "Glaze" %}</span>
-                        <div class="chips">
+                        <div class="flex flex-col gap-2 items-start">
                             {% for glaze in glazes %}
-                                <a href="#" class="chip {% if glaze.slug in active_glazes %}active{% endif %}"
+                                <a href="#" class="filter-item {% if glaze.slug in active_glazes %}active{% endif %}"
                                    onclick="toggleFilter(event, 'glaze', '{{ glaze.slug }}')">
+                                    {% if glaze.slug in active_glazes %}
+                                        <span class="filter-remove-icon">&times;</span>
+                                    {% endif %}
                                     {{ glaze.name }}
                                 </a>
                             {% endfor %}
@@ -83,10 +103,13 @@
 
                     <div class="filter-group">
                         <span class="filter-label">{% translate "Type" %}</span>
-                        <div class="chips">
+                        <div class="flex flex-col gap-2 items-start">
                             {% for t in product_types %}
-                                <a href="#" class="chip {% if t.slug in active_types %}active{% endif %}"
+                                <a href="#" class="filter-item {% if t.slug in active_types %}active{% endif %}"
                                    onclick="toggleFilter(event, 'type', '{{ t.slug }}')">
+                                    {% if t.slug in active_types %}
+                                        <span class="filter-remove-icon">&times;</span>
+                                    {% endif %}
                                     {{ t.name }}
                                 </a>
                             {% endfor %}
@@ -122,9 +145,6 @@
                 </div>
                 <div class="flex items-center justify-center gap-4 mt-2">
                     <p class="price m-0">CHF {{ product.price_in_chf|floatformat:2 }}</p>
-                    {% if product.is_recently_added %}
-                        <span class="bg-brand-border px-[0.4rem] py-[0.1rem] rounded-[2px] text-[0.75rem] text-brand-muted leading-none tracking-[0.05rem]">{% translate "NEW" %}</span>
-                    {% endif %}
                 </div>
             </div>
         {% empty %}
@@ -137,13 +157,13 @@
     {% if is_paginated %}
         <div class="flex justify-center mt-12 gap-8 text-[0.9rem]">
             {% if page_obj.has_previous %}
-                <a href="?{% if request.GET.brand %}brand={{ request.GET.brand }}&{% endif %}{% if request.GET.glaze %}glaze={{ request.GET.glaze }}&{% endif %}{% if request.GET.type %}type={{ request.GET.type }}&{% endif %}{% if request.GET.stock %}stock={{ request.GET.stock }}&{% endif %}{% if request.GET.new %}new={{ request.GET.new }}&{% endif %}{% if request.GET.sort %}sort={{ request.GET.sort }}&{% endif %}{% if is_expanded %}expanded=true&{% endif %}page={{ page_obj.previous_page_number }}" class="underline">{% translate "Previous" %}</a>
+                <a href="?{% if request.GET.brand %}brand={{ request.GET.brand }}&{% endif %}{% if request.GET.glaze %}glaze={{ request.GET.glaze }}&{% endif %}{% if request.GET.type %}type={{ request.GET.type }}&{% endif %}{% if request.GET.stock %}stock={{ request.GET.stock }}&{% endif %}{% if request.GET.sort %}sort={{ request.GET.sort }}&{% endif %}{% if is_expanded %}expanded=true&{% endif %}page={{ page_obj.previous_page_number }}" class="underline">{% translate "Previous" %}</a>
             {% endif %}
 
             <span>{% blocktranslate with current=page_obj.number total=page_obj.paginator.num_pages %}Page {{ current }} of {{ total }}{% endblocktranslate %}</span>
 
             {% if page_obj.has_next %}
-                <a href="?{% if request.GET.brand %}brand={{ request.GET.brand }}&{% endif %}{% if request.GET.glaze %}glaze={{ request.GET.glaze }}&{% endif %}{% if request.GET.type %}type={{ request.GET.type }}&{% endif %}{% if request.GET.stock %}stock={{ request.GET.stock }}&{% endif %}{% if request.GET.new %}new={{ request.GET.new }}&{% endif %}{% if request.GET.sort %}sort={{ request.GET.sort }}&{% endif %}{% if is_expanded %}expanded=true&{% endif %}page={{ page_obj.next_page_number }}" class="underline">{% translate "Next" %}</a>
+                <a href="?{% if request.GET.brand %}brand={{ request.GET.brand }}&{% endif %}{% if request.GET.glaze %}glaze={{ request.GET.glaze }}&{% endif %}{% if request.GET.type %}type={{ request.GET.type }}&{% endif %}{% if request.GET.stock %}stock={{ request.GET.stock }}&{% endif %}{% if request.GET.sort %}sort={{ request.GET.sort }}&{% endif %}{% if is_expanded %}expanded=true&{% endif %}page={{ page_obj.next_page_number }}" class="underline">{% translate "Next" %}</a>
             {% endif %}
         </div>
     {% endif %}
@@ -153,11 +173,10 @@
 
 {% block extra_js %}
 <script type="module">
-    import { toggleDrawer, toggleFilter, toggleStock, toggleNew, toggleSort } from "{% static 'js/shop.js' %}";
+    import { toggleDrawer, toggleFilter, toggleStock, toggleSort } from "{% static 'js/shop.js' %}";
     window.toggleDrawer = toggleDrawer;
     window.toggleFilter = toggleFilter;
     window.toggleStock = toggleStock;
-    window.toggleNew = toggleNew;
     window.toggleSort = toggleSort;
 </script>
 {% endblock %}

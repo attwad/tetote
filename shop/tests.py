@@ -1,8 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
-from django.utils import timezone, translation
+from django.utils import translation
 from unittest.mock import patch
-import datetime
 import json
 from .models import Brand, Product, Glaze, ProductType, StoreSettings
 
@@ -32,13 +31,6 @@ class ProductModelTest(TestCase):
         self.product.stock_quantity = 0
         self.product.save()
         self.assertFalse(self.product.is_in_stock)
-
-    def test_is_recently_added(self):
-        self.assertTrue(self.product.is_recently_added)
-        # Test 61 days ago
-        self.product.date_added = timezone.now() - datetime.timedelta(days=61)
-        self.product.save()
-        self.assertFalse(self.product.is_recently_added)
 
 
 class StoreSettingsTests(TestCase):
@@ -220,26 +212,6 @@ class ShopViewTests(TestCase):
         self.assertContains(response, "Brand Product")
         self.assertNotContains(response, "Out of Stock Prod")
 
-    def test_product_list_filter_new(self):
-        # Create old product (70 days ago)
-        old_p = Product.objects.create(
-            stripe_product_id="prod_old",
-            stripe_price_id="price_old",
-            name="Old Product",
-            slug="old-prod",
-            price=100,
-            stock_quantity=1,
-            public=True,
-        )
-        old_p.date_added = timezone.now() - datetime.timedelta(days=70)
-        old_p.save()
-
-        # Test filter
-        url = reverse("shop:product_list") + "?new=true"
-        response = self.client.get(url)
-        self.assertContains(response, "Brand Product")
-        self.assertNotContains(response, "Old Product")
-
     def test_product_list_multi_filter(self):
         b2 = Brand.objects.create(name="Seto", slug="seto")
         Product.objects.create(
@@ -261,12 +233,12 @@ class ShopViewTests(TestCase):
     def test_product_list_context_active_filters(self):
         url = (
             reverse("shop:product_list")
-            + "?brand=bizen&brand=seto&glaze=g1&stock=in_stock&new=true"
+            + "?brand=bizen&brand=seto&glaze=g1&stock=in_stock"
         )
         response = self.client.get(url)
         self.assertEqual(response.context["active_brands"], ["bizen", "seto"])
         self.assertEqual(response.context["active_glazes"], ["g1"])
-        self.assertEqual(response.context["total_active_filters"], 5)
+        self.assertEqual(response.context["total_active_filters"], 4)
 
 
 class CartViewTests(TestCase):

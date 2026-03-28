@@ -3,7 +3,6 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
-import datetime
 
 
 class Brand(models.Model):
@@ -132,10 +131,6 @@ class Product(models.Model):
     @property
     def is_in_stock(self):
         return self.stock_quantity > 0
-
-    @property
-    def is_recently_added(self):
-        return self.date_added >= timezone.now() - datetime.timedelta(days=60)
 
 
 class ProductImage(models.Model):
