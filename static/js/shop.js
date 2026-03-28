@@ -17,7 +17,8 @@ export function showToast(message, type = 'info', duration = 3000) {
 
     if (duration > 0) {
         setTimeout(() => {
-            toast.style.animation = 'fadeOut 0.5s ease-out forwards';
+            toast.classList.add('animate-fade-out');
+            toast.style.animationFillMode = 'forwards';
             toast.addEventListener('animationend', () => toast.remove());
         }, duration);
     }

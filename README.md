@@ -8,7 +8,7 @@ Tetote is a high-end, minimalist e-commerce platform and digital showroom dedica
 - **Professional & Zen:** Every interaction is designed to be intentional and non-intrusive. High-contrast colors are avoided in favor of organic, understated tones.
 
 ## 🛠 Engineering Standards & Practices
-- **Vanilla over Frameworks:** We prioritize native web standards and vanilla JavaScript/CSS to maintain a lightweight, high-performance codebase and avoid unnecessary third-party dependencies.
+- **Vanilla over Frameworks:** We prioritize native web standards and vanilla JavaScript to maintain a lightweight, high-performance codebase and avoid unnecessary third-party dependencies. One exception is tailwindcss that must be used for CSS.
 - **Security First:** Sensitive data (Stripe keys, Django secrets) is strictly managed via environment variables and protected by aggressive `.gitignore` and `pre-commit` rules.
 - **High Test Coverage:** The project maintains near-total test coverage across both the Django backend (Python) and the modular frontend (Node/Vitest/JSDOM).
 - **Hybrid Content Management:**
@@ -19,7 +19,7 @@ Tetote is a high-end, minimalist e-commerce platform and digital showroom dedica
 
 ## 🏗 Technical Stack
 - **Backend:** Django 6.0+ (Python 3.14+)
-- **Frontend:** Vanilla JS (ES Modules), Vanilla CSS
+- **Frontend:** Vanilla JS (ES Modules), Tailwind CSS
 - **Database:** SQLite (Development) / `django-modeltranslation` (EN, DE, FR, JA)
 - **Payments:** Stripe (Checkout Sessions & Webhooks)
 - **Testing:**

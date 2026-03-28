@@ -3,192 +3,38 @@
 
 {% block title %}{% translate "Your selection" %} - Tetote{% endblock %}
 
-{% block extra_head %}
-<style>
-    .cart-item-card {
-        display: flex;
-        gap: 2rem;
-        padding: 1.5rem 0;
-        border-bottom: 1px solid var(--border-light);
-        align-items: flex-start;
-    }
-
-    .cart-item-image {
-        width: 120px;
-        height: 120px;
-        flex-shrink: 0;
-    }
-
-    .cart-item-image img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 2px;
-    }
-
-    .cart-item-info {
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-
-    .cart-item-info h3 {
-        margin: 0;
-        font-size: 1.4rem;
-        font-weight: 500;
-    }
-
-    .cart-item-info h3 a {
-        color: var(--text-main);
-        text-decoration: none;
-    }
-
-    .cart-item-info h3 a:hover {
-        text-decoration: underline;
-    }
-
-    .cart-item-description {
-        font-size: 0.95rem;
-        color: var(--text-muted);
-        margin: 0;
-        line-height: 1.4;
-    }
-
-    .cart-item-price-unit {
-        font-size: 0.9rem;
-        color: var(--text-main);
-        margin-top: 0.5rem;
-    }
-
-    .cart-item-actions {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        gap: 1.5rem;
-        min-width: 150px;
-    }
-
-    .qty-control {
-        display: flex;
-        align-items: center;
-        gap: 0.8rem;
-    }
-
-    .qty-control label {
-        font-size: 0.9rem;
-        color: var(--text-muted);
-    }
-
-    .qty-control input {
-        width: 50px;
-        padding: 0.4rem;
-        border: 1px solid var(--border-light);
-        text-align: center;
-    }
-
-    .item-total {
-        font-size: 1.2rem;
-        font-weight: 500;
-        margin: 0;
-    }
-
-    .remove-btn {
-        background: none;
-        border: none;
-        color: var(--text-muted);
-        cursor: pointer;
-        padding: 0;
-        font-size: 0.9rem;
-        text-decoration: underline;
-        transition: color 0.2s;
-    }
-
-    .remove-btn:hover {
-        color: #d9534f;
-    }
-
-    @media (max-width: 768px) {
-        .cart-item-card {
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .cart-item-image {
-            width: 100%;
-            height: 200px;
-        }
-
-        .cart-item-actions {
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            min-width: 0;
-            border-top: 1px solid #f9f9f9;
-            padding-top: 1rem;
-        }
-
-        .cart-actions-container {
-            flex-direction: column-reverse;
-            gap: 1rem !important;
-        }
-
-        .cart-actions-container button, .cart-actions-container a {
-            width: 100%;
-            min-width: 0 !important;
-        }
-    }
-
-    .summary-section {
-        background: #fdfdfd;
-        padding: 2rem;
-        border: 1px solid var(--border-light);
-        margin-top: 3rem;
-        border-radius: 2px;
-    }
-
-    .cart-actions-container {
-        display: flex;
-        justify-content: flex-end;
-        gap: 1.5rem;
-        align-items: center;
-    }
-</style>
-{% endblock %}
-
 {% block content %}
     <h1>{% translate "Your selection" %}</h1>
 
     <div id="cart-container">
-        <div id="cart-items" style="margin-bottom: 2rem;">
+        <div id="cart-items" class="mb-8">
             <!-- Loaded via JS -->
         </div>
 
         <div class="summary-section">
-            <div style="display: flex; justify-content: flex-end; margin-bottom: 2rem;">
-                <div style="text-align: right;">
-                    <p style="font-size: 1rem; color: var(--text-muted); margin-bottom: 0.5rem; letter-spacing: 0.05rem; text-transform: uppercase;">{% translate "Total" %}</p>
-                    <p id="cart-total" style="font-size: 2.5rem; font-weight: 500; margin: 0; line-height: 1;">CHF 0.00</p>
-                    <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 1rem; font-style: italic;">{% translate "shipping: calculated at checkout" %}</p>
+            <div class="flex justify-end mb-8">
+                <div class="text-right">
+                    <p class="text-base text-brand-muted mb-[0.5rem] tracking-[0.05rem] uppercase">{% translate "Total" %}</p>
+                    <p id="cart-total" class="text-[2.5rem] font-medium m-0 leading-none">CHF 0.00</p>
+                    <p class="text-[0.95rem] text-brand-muted mt-4 italic">{% translate "shipping: calculated at checkout" %}</p>
                 </div>
             </div>
 
-            <div class="cart-actions-container">
-                <button class="btn" onclick="clearCart()" style="background: none; border: 1px solid var(--border-light); color: var(--text-muted); padding: 0.8rem 2rem; font-size: 0.95rem;">{% translate "Clear selection" %}</button>
+            <div class="cart-actions-container flex-col-reverse md:flex-row gap-4 md:gap-6">
+                <button class="btn bg-transparent border border-brand-border text-brand-muted px-8 py-[0.8rem] text-[0.95rem] w-full md:w-auto hover:bg-transparent" onclick="clearCart()">{% translate "Clear selection" %}</button>
                 {% if store_settings.sales_paused %}
-                    <button class="btn" id="checkout-btn" disabled style="background: var(--border-light); color: var(--text-muted); min-width: 250px; cursor: not-allowed; padding: 1rem 2rem;">{% translate "Checkout Paused" %}</button>
+                    <button class="btn bg-brand-border text-brand-muted min-w-0 md:min-w-[250px] cursor-not-allowed px-8 py-4 w-full md:w-auto" disabled>{% translate "Checkout Paused" %}</button>
                 {% else %}
-                    <button class="btn" id="checkout-btn" style="background: var(--text-main); min-width: 250px; padding: 1rem 2rem; font-size: 1.1rem; font-weight: 500;">{% translate "Checkout" %}</button>
+                    <button class="btn bg-brand-text min-w-0 md:min-w-[250px] px-8 py-4 text-[1.1rem] font-medium w-full md:w-auto" id="checkout-btn">{% translate "Checkout" %}</button>
                 {% endif %}
             </div>
             {% if store_settings.sales_paused %}
-                <p style="color: var(--text-muted); margin-top: 1.5rem; font-style: italic; text-align: right;">{% translate "We have temporarily paused online sales. Please check back later!" %}</p>
+                <p class="text-brand-muted mt-6 italic text-right">{% translate "We have temporarily paused online sales. Please check back later!" %}</p>
             {% endif %}
         </div>
     </div>
 
-    <div id="empty-cart" style="display: none; text-align: center; padding: 3rem;">
+    <div id="empty-cart" class="hidden text-center py-12">
         <p>{% translate "Your cart is empty." %}</p>
         <a href="{% url 'shop:product_list' %}" class="btn">{% translate "Go Shopping" %}</a>
     </div>
@@ -196,7 +42,7 @@
 
 {% block extra_js %}
 <script type="module">
-    import { getCart, saveCart, showToast } from "{% static 'js/shop.js' %}";
+    import { getCart, saveCart, showToast, updateCartUI } from "{% static 'js/shop.js' %}";
 
     // Expose to window for inline onchange/onclick handlers
     window.updateQty = updateQty;
@@ -211,8 +57,9 @@
         const cartDiv = document.getElementById('cart-container');
 
         if (cart.length === 0) {
-            cartDiv.style.display = 'none';
-            emptyDiv.style.display = 'block';
+            cartDiv.classList.add('hidden');
+            emptyDiv.classList.remove('hidden');
+            updateCartUI();
             return;
         }
 
@@ -267,6 +114,7 @@
         });
 
         document.getElementById('cart-total').textContent = `CHF ${total.toFixed(2)}`;
+        updateCartUI();
     }
 
     function updateQty(priceId, newQty, maxStock) {
@@ -300,24 +148,27 @@
         }
     }
 
-    document.getElementById('checkout-btn').onclick = async function() {
-        const cart = getCart();
-        const response = await fetch("{% url 'shop:create_checkout_session' %}", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": "{{ csrf_token }}"
-            },
-            body: JSON.stringify({ items: cart })
-        });
+    const checkoutBtn = document.getElementById('checkout-btn');
+    if (checkoutBtn) {
+        checkoutBtn.onclick = async function() {
+            const cart = getCart();
+            const response = await fetch("{% url 'shop:create_checkout_session' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: JSON.stringify({ items: cart })
+            });
 
-        const session = await response.json();
-        if (session.url) {
-            window.location.href = session.url;
-        } else {
-            showToast(session.error, 'error');
-        }
-    };
+            const session = await response.json();
+            if (session.url) {
+                window.location.href = session.url;
+            } else {
+                showToast(session.error, 'error');
+            }
+        };
+    }
 
     loadCart();
 </script>

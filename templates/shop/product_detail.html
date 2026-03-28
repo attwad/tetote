@@ -1,87 +1,13 @@
 {% extends "base.html" %}
 {% load i18n %}{% load static %}
 
-{% block extra_head %}
-<style>
-    .metadata { margin: 0.1rem 0; }
-
-    /* Embla Carousel Base Styles */
-    .embla { overflow: hidden; position: relative; background: #fdfdfd; border: 1px solid #eee; }
-    .embla__container { display: flex; }
-    .embla__slide { flex: 0 0 100%; min-width: 0; position: relative; }
-    .embla__slide img { display: block; width: 100%; height: 500px; object-fit: contain; cursor: zoom-in; }
-
-    /* Thumbnails */
-    .thumbnails { display: flex; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap; }
-    .thumb { width: 100px; height: 100px; object-fit: cover; cursor: pointer; border: 1px solid #eee; opacity: 0.7; transition: 0.2s; border-radius: 2px; }
-    .thumb.is-selected { border-color: var(--text-main); opacity: 1; border-width: 2px; }
-
-    /* Modal / Dialog Styles */
-    dialog#image-modal {
-        padding: 0;
-        border: none;
-        max-width: 100vw;
-        max-height: 100vh;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.9);
-        color: white;
-    }
-    dialog#image-modal::backdrop {
-        background: rgba(0,0,0,0.95);
-    }
-    .modal-content {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-    }
-    .modal-content img {
-        max-width: 95vw;
-        max-height: 85vh;
-        object-fit: contain;
-    }
-    .close-modal {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        background: none;
-        border: none;
-        color: white;
-        font-size: 2rem;
-        cursor: pointer;
-        font-family: sans-serif;
-    }
-
-    /* Layout grid */
-    .product-detail-container {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 3rem;
-    }
-
-    @media (max-width: 768px) {
-        .product-detail-container { display: flex; flex-direction: column; gap: 1rem; }
-        .product-info-section { order: 2; }
-        .product-image-section { order: 1; }
-        .mobile-title { display: block !important; order: 0; margin-bottom: 1rem; }
-        .desktop-title { display: none; }
-        .embla__slide img { height: 350px; }
-    }
-
-    .mobile-title { display: none; }
-</style>
-{% endblock %}
-
 {% block content %}
-    <div class="product-detail-container">
+    <div class="flex flex-col md:grid md:grid-cols-2 gap-4 md:gap-12">
         <!-- Title for Mobile -->
-        <h1 class="mobile-title">{{ product.name }}</h1>
+        <h1 class="block md:hidden mb-4">{{ product.name }}</h1>
 
         <!-- Image Section with Embla -->
-        <div class="product-image-section">
+        <div class="order-1 md:order-none">
             <div class="embla" id="product-carousel">
                 <div class="embla__container">
                     {% if product.main_photo %}
@@ -113,43 +39,43 @@
         </div>
 
         <!-- Info Section -->
-        <div class="product-info-section">
-            <h1 class="desktop-title" style="margin-top: 0;">{{ product.name }}</h1>
+        <div class="order-2 md:order-none">
+            <h1 class="hidden md:block mt-0">{{ product.name }}</h1>
 
             {% if product.brand %}
-                <p class="metadata">{% translate "Brand" %}: <a href="{% url 'shop:brand_detail' brand_slug=product.brand.slug %}" style="color: inherit; text-decoration: underline; text-underline-offset: 3px;">{{ product.brand.name }}</a></p>
+                <p class="my-[0.1rem]">{% translate "Brand" %}: <a href="{% url 'shop:brand_detail' brand_slug=product.brand.slug %}" class="text-inherit underline underline-offset-[3px]">{{ product.brand.name }}</a></p>
             {% endif %}
             {% if product.yakikata %}
-                <p class="metadata">{% translate "Yakikata" %}: {{ product.yakikata.name }}</p>
+                <p class="my-[0.1rem]">{% translate "Yakikata" %}: {{ product.yakikata.name }}</p>
             {% endif %}
             {% if product.product_type %}
-                <p class="metadata">{% translate "Type" %}: {{ product.product_type.name }}</p>
+                <p class="my-[0.1rem]">{% translate "Type" %}: {{ product.product_type.name }}</p>
             {% endif %}
 
-            <p class="price" style="font-size: 1.5rem; margin: 1.5rem 0;">CHF {{ product.price_in_chf|floatformat:2 }}</p>
+            <p class="price text-[1.5rem] my-6">CHF {{ product.price_in_chf|floatformat:2 }}</p>
 
-            <div class="description" style="margin-bottom: 2rem;">
+            <div class="description mb-8">
                 {{ product.description|linebreaks }}
             </div>
 
-            <div style="background: #ffffff; border: 1px solid var(--border-light); padding: 1.5rem; border-radius: 2px;">
+            <div class="bg-white border border-brand-border p-6 rounded-[2px]">
                 {% if product.is_in_stock %}
-                    <p style="margin-top: 0; font-size: 1rem;">
-                        <span style="color: #4a5d4e; font-weight: 500;">{% translate "In Stock" %}</span> ({{ product.stock_quantity }} {% translate "available" %})
+                    <p class="mt-0 text-base">
+                        <span class="text-brand-accent font-medium">{% translate "In Stock" %}</span> ({{ product.stock_quantity }} {% translate "available" %})
                     </p>
-                    <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
-                        <div class="add-to-cart" style="display: flex; gap: 1rem; align-items: center;">
-                            <input type="number" id="qty" value="1" min="1" max="{{ product.stock_quantity }}" style="width: 60px; padding: 0.5rem; border: 1px solid var(--border-light);">
+                    <div class="flex gap-4 items-center flex-wrap">
+                        <div class="flex gap-4 items-center">
+                            <input type="number" id="qty" value="1" min="1" max="{{ product.stock_quantity }}" class="w-[60px] p-2 border border-brand-border">
                             <button class="btn" onclick="addToCart('{{ product.stripe_price_id }}', parseInt(document.getElementById('qty').value), {{ product.stock_quantity }})">
                                 {% translate "Add to Cart" %}
                             </button>
                         </div>
-                        <a href="{% url 'shop:cart' %}" class="btn" style="background: none; border: 1px solid var(--border-light); color: var(--text-muted); padding: 0.7rem 1.2rem; font-size: 0.95rem;">
+                        <a href="{% url 'shop:cart' %}" class="btn bg-none border border-brand-border text-brand-muted px-[1.2rem] py-[0.7rem] text-[0.95rem] hover:bg-transparent">
                             {% translate "View Cart" %}
                         </a>
                     </div>
                 {% else %}
-                    <p style="margin: 0; color: #9a7b76; font-weight: 500;">{% translate "Out of Stock" %}</p>
+                    <p class="m-0 text-[#9a7b76] font-medium">{% translate "Out of Stock" %}</p>
                 {% endif %}
             </div>
         </div>
@@ -160,7 +86,7 @@
         <div class="modal-content">
             <button class="close-modal" onclick="document.getElementById('image-modal').close()">&times;</button>
             <img id="modal-img" src="" alt="Fullscreen view">
-            <p id="modal-caption" style="margin-top: 1rem;">{{ product.name }}</p>
+            <p id="modal-caption" class="mt-4">{{ product.name }}</p>
         </div>
     </dialog>
 {% endblock %}
@@ -168,9 +94,9 @@
 {% block extra_js %}
 <script src="https://unpkg.com/embla-carousel/embla-carousel.umd.js"></script>
 <script type="module">
-    import { getCart, saveCart, showToast } from "{% static 'js/shop.js' %}";
+    import { getCart, saveCart, showToast, updateCartUI } from "{% static 'js/shop.js' %}";
 
-    // Expose to window for inline onclick handlers
+    // Bridge for inline onclicks
     window.addToCart = addToCart;
     window.openModal = openModal;
 
@@ -226,6 +152,7 @@
             showToast("{% translate 'Added to cart!' %}", 'info');
         }
         saveCart(cart);
+        updateCartUI();
     }
 </script>
 {% endblock %}

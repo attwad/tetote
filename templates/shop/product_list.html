@@ -1,113 +1,24 @@
 {% extends "base.html" %}
 {% load i18n %}{% load static %}
 
-{% block extra_head %}
-<style>
-    .filter-group { margin-bottom: 1.5rem; }
-    .filter-label { display: block; font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--text-muted); font-weight: 500; }
-    .chips { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-    .chip {
-        padding: 0.4rem 1rem;
-        background: white;
-        border: 1px solid var(--border-light);
-        border-radius: 20px;
-        font-size: 0.9rem;
-        cursor: pointer;
-        transition: all 0.2s;
-        color: var(--text-main);
-        text-decoration: none;
-    }
-    .chip:hover { border-color: var(--text-muted); }
-    .chip.active {
-        background: var(--text-main);
-        color: white;
-        border-color: var(--text-main);
-    }
-
-    /* New Compact Filter Styles */
-    .filter-controls {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1rem;
-    }
-
-    .filter-drawer {
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.3s cubic-bezier(0, 1, 0, 1);
-    }
-
-    .filter-drawer.open {
-        max-height: 1000px;
-        transition: max-height 0.3s ease-in-out;
-    }
-
-    /* Mobile specific sorting/items layout */
-    .sort-desktop { display: flex; align-items: center; }
-    .sort-mobile { display: none; }
-    .filter-main-action { display: flex; flex-direction: column; align-items: flex-start; gap: 0.4rem; }
-    .clear-mobile { display: none; }
-
-    @media (max-width: 768px) {
-        .filter-controls { flex-direction: column; align-items: flex-start; gap: 1rem; }
-        .filter-controls > div { width: 100%; justify-content: space-between; }
-        .sort-desktop { display: none; }
-        .sort-mobile { display: block; margin-top: 1rem; border-top: 1px solid var(--border-light); padding-top: 1rem; }
-        .clear-desktop { display: none; }
-        .clear-mobile { display: inline-block; margin-left: 1rem; }
-    }
-
-    .toggle-filters-btn {
-        background: white;
-        border: 1px solid var(--border-light);
-        padding: 0.5rem 1rem;
-        font-size: 0.9rem;
-        color: var(--text-main);
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        transition: all 0.2s;
-        border-radius: 2px;
-        min-width: 100px; /* Reserve space for "(N)" */
-        justify-content: center;
-    }
-    .toggle-filters-btn:hover { border-color: var(--text-muted); }
-
-    /* "Pressed" state when drawer is open */
-    .toggle-filters-btn.btn-pressed {
-        background: var(--text-main);
-        color: white;
-        border-color: var(--text-main);
-    }
-
-    /* Indicate that filters are active (even if drawer closed) */
-    .toggle-filters-btn.filters-active:not(.btn-pressed) {
-        background: #f0f0f0;
-        border-color: var(--text-muted);
-    }
-</style>
-{% endblock %}
-
 {% block content %}
     <div class="filters">
         <form id="filter-form" method="get">
-            <div class="filter-controls">
-                <div style="display: flex; gap: 1.5rem; align-items: flex-start;">
-                    <div class="filter-main-action">
+            <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-4">
+                <div class="flex gap-6 items-start w-full md:w-auto">
+                    <div class="flex flex-col items-start gap-[0.4rem]">
                         <button type="button" id="filter-toggle-btn"
                                 class="toggle-filters-btn {% if active_brands or active_yakikatas or active_types %}filters-active{% endif %} {% if is_expanded %}btn-pressed{% endif %}"
                                 onclick="toggleDrawer()">
                             <span>{% translate "Filters" %}{% if total_active_filters > 0 %} ({{ total_active_filters }}){% endif %}</span>
                         </button>
                         {% if total_active_filters > 0 %}
-                            <a href="{% url 'shop:product_list' %}" class="clear-desktop" style="font-size: 0.8rem; color: var(--text-muted); text-decoration: underline; line-height: 1; margin-top: 0.2rem;">{% translate "Clear all" %}</a>
+                            <a href="{% url 'shop:product_list' %}" class="hidden md:inline-block text-[0.8rem] text-brand-muted underline leading-none mt-[0.2rem]">{% translate "Clear all" %}</a>
                         {% endif %}
                     </div>
 
                     <!-- High-frequency stock toggle always visible -->
-                    <div class="chips" style="align-items: center;">
+                    <div class="chips">
                         <a href="#" class="chip {% if request.GET.stock == 'in_stock' %}active{% endif %}"
                            onclick="toggleStock(event)">
                             {% translate "In Stock" %}
@@ -119,10 +30,10 @@
                     </div>
                 </div>
 
-                <div class="sort-desktop" style="font-size: 0.9rem; color: var(--text-muted); align-items: center; gap: 1.5rem;">
-                    <div>
-                        <label for="sort-select" style="margin-right: 0.5rem;">{% translate "Sort by" %}:</label>
-                        <select id="sort-select" onchange="toggleSort(this.value)" style="border: none; background: none; color: var(--text-main); cursor: pointer; padding: 0;">
+                <div class="hidden md:flex text-[0.9rem] text-brand-muted items-center gap-6">
+                    <div class="flex items-center">
+                        <label for="sort-select" class="mr-2">{% translate "Sort by" %}:</label>
+                        <select id="sort-select" onchange="toggleSort(this.value)" class="border-none bg-none text-brand-text cursor-pointer p-0">
                             <option value="">{% translate "Newest" %}</option>
                             <option value="price_asc" {% if request.GET.sort == 'price_asc' %}selected{% endif %}>{% translate "Price: Low to High" %}</option>
                             <option value="price_desc" {% if request.GET.sort == 'price_desc' %}selected{% endif %}>{% translate "Price: High to Low" %}</option>
@@ -130,23 +41,22 @@
                     </div>
                     <span>{{ products|length }} {% translate "items" %}</span>
                 </div>
-                </div>
+            </div>
 
-                <!-- Expandable Drawer for secondary filters -->
-                <div id="filter-drawer" class="filter-drawer {% if is_expanded %}open{% endif %}">
-                <div class="sort-mobile">
+            <!-- Expandable Drawer for secondary filters -->
+            <div id="filter-drawer" class="filter-drawer {% if is_expanded %}open{% endif %}">
+                <div class="md:hidden mt-4 border-t border-brand-border pt-4">
                     <span class="filter-label">{% translate "Sort by" %}</span>
-                    <div class="chips" style="align-items: center;">
+                    <div class="chips">
                         <a href="#" class="chip {% if not request.GET.sort %}active{% endif %}" onclick="toggleSort('')">{% translate "Newest" %}</a>
                         <a href="#" class="chip {% if request.GET.sort == 'price_asc' %}active{% endif %}" onclick="toggleSort('price_asc')">{% translate "Price ↑" %}</a>
                         <a href="#" class="chip {% if request.GET.sort == 'price_desc' %}active{% endif %}" onclick="toggleSort('price_desc')">{% translate "Price ↓" %}</a>
                         {% if total_active_filters > 0 %}
-                            <a href="{% url 'shop:product_list' %}" class="clear-mobile" style="font-size: 0.85rem; color: var(--text-muted); text-decoration: underline;">{% translate "Clear all" %}</a>
+                            <a href="{% url 'shop:product_list' %}" class="text-[0.85rem] text-brand-muted underline ml-4">{% translate "Clear all" %}</a>
                         {% endif %}
                     </div>
                 </div>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; padding-top: 1rem;">
-
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 pt-4">
                     <div class="filter-group">
                         <span class="filter-label">{% translate "Brands" %}</span>
                         <div class="chips">
@@ -201,20 +111,20 @@
                         {% endif %}
                     </div>
                 </a>
-                <a href="{% url 'shop:product_detail' product_slug=product.slug %}">
+                <a href="{% url 'shop:product_detail' product_slug=product.slug %}" class="no-underline text-brand-text">
                     <h3>{{ product.name }}</h3>
                 </a>
-                <div style="font-size: 0.85rem; color: #666; margin-bottom: 0.5rem;">
+                <div class="text-[0.85rem] text-[#666] mb-2">
                     {% if product.brand %}
-                        <a href="{% url 'shop:brand_detail' brand_slug=product.brand.slug %}" style="color: inherit; text-decoration: underline; text-underline-offset: 2px;">{{ product.brand.name }}</a>
+                        <a href="{% url 'shop:brand_detail' brand_slug=product.brand.slug %}" class="text-inherit underline underline-offset-2">{{ product.brand.name }}</a>
                     {% endif %}
                     {% if product.yakikata %} | {{ product.yakikata.name }}{% endif %}
                     {% if product.product_type %} | {{ product.product_type.name }}{% endif %}
                 </div>
-                <div style="display: flex; align-items: center; gap: 1rem; margin-top: 0.5rem;">
-                    <p class="price" style="margin: 0;">CHF {{ product.price_in_chf|floatformat:2 }}</p>
+                <div class="flex items-center gap-4 mt-2">
+                    <p class="price m-0">CHF {{ product.price_in_chf|floatformat:2 }}</p>
                     {% if product.is_recently_added %}
-                        <span style="background: #eceae7; padding: 0.1rem 0.4rem; border-radius: 2px; font-size: 0.75rem; color: #6b6b6b; line-height: 1; letter-spacing: 0.05rem;">{% translate "NEW" %}</span>
+                        <span class="bg-brand-border px-[0.4rem] py-[0.1rem] rounded-[2px] text-[0.75rem] text-brand-muted leading-none tracking-[0.05rem]">{% translate "NEW" %}</span>
                     {% endif %}
                 </div>
             </div>
@@ -224,17 +134,17 @@
     </div>
 
     {% if is_paginated %}
-        <div class="pagination">
+        <div class="flex justify-center gap-4 mt-12 text-sm">
             {% if page_obj.has_previous %}
-                <a href="?page=1">&laquo; first</a>
-                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                <a href="?page=1" class="text-brand-text underline">&laquo; {% translate "first" %}</a>
+                <a href="?page={{ page_obj.previous_page_number }}" class="text-brand-text underline">{% translate "previous" %}</a>
             {% endif %}
             <span class="current">
-                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                {% blocktranslate with number=page_obj.number num_pages=page_obj.paginator.num_pages %}Page {{ number }} of {{ num_pages }}.{% endblocktranslate %}
             </span>
             {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">next</a>
-                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                <a href="?page={{ page_obj.next_page_number }}" class="text-brand-text underline">{% translate "next" %}</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}" class="text-brand-text underline">{% translate "last" %} &raquo;</a>
             {% endif %}
         </div>
     {% endif %}

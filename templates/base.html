@@ -9,202 +9,52 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-color: #fdfcfb;
-            --text-main: #2c2c2c;
-            --text-muted: #6b6b6b;
-            --accent-color: #4a5d4e; /* Muted Olive Earth Tone */
-            --accent-hover: #3a4a3d;
-            --border-light: #eceae7;
-            --header-bg: #ffffff;
-        }
-
-        body {
-            font-family: 'Cormorant Garamond', serif;
-            margin: 0;
-            padding: 0;
-            font-size: 1.15rem;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            line-height: 1.6;
-        }
-
-        select, input, button, textarea {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1rem;
-            border: 1px solid var(--border-light);
-            background: white;
-            padding: 0.4rem;
-        }
-
-        header {
-            background: var(--header-bg);
-            color: var(--text-main);
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border-light);
-        }
-
-        header a { color: var(--text-main); text-decoration: none; transition: opacity 0.2s; }
-        header a:hover { opacity: 0.7; }
-        .logo a { color: var(--text-main) !important; font-size: 1.4rem !important; }
-
-        nav a { margin-left: 1.5rem; font-weight: 500; letter-spacing: 0.05rem; }
-
-        main { padding: 2rem; max-width: 1400px; margin: 0 auto; min-height: 70vh; }
-
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 2rem; }
-
-        .product-card { padding: 0; transition: transform 0.3s ease; }
-        .product-card-image-wrapper { position: relative; }
-        .product-card img {
-            width: 100%;
-            height: auto;
-            border-radius: 2px;
-            filter: grayscale(10%) contrast(95%);
-            display: block;
-        }
-
-        .stock-badge {
-
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 0.3rem 0.6rem;
-            font-size: 0.8rem;
-            color: #9a7b76;
-            border-radius: 2px;
-            letter-spacing: 0.05rem;
-            font-weight: 500;
-        }
-        .product-card h3 { margin: 1rem 0 0.2rem 0; font-size: 1.4rem; font-weight: 500; }
-
-        .price { font-size: 1.1rem; color: var(--text-main); margin-top: 0.5rem; }
-
-        footer {
-            background: white;
-            padding: 3rem 2rem;
-            margin-top: 4rem;
-            border-top: 1px solid var(--border-light);
-            font-size: 0.85rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 2rem;
-        }
-        .footer-left, .footer-center, .footer-right { display: flex; align-items: center; gap: 1.5rem; }
-
-        .filters { margin-bottom: 3rem; border-bottom: 1px solid var(--border-light); padding-bottom: 1.5rem; }
-
-        .btn {
-            padding: 0.7rem 1.5rem;
-            background: var(--accent-color);
-            color: white;
-            border: none;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.3s;
-            letter-spacing: 0.05rem;
-            display: inline-block;
-        }
-        .btn:hover { background: var(--accent-hover); }
-
-        .cart-icon { }
-        #cart-count {
-            color: var(--text-muted);
-            margin-left: 0.1rem;
-            display: inline-block;
-            min-width: 1.5rem; /* Reserve space for " (X)" */
-        }
-
-        /* Toast Styles Refined */
-        #toast-container { position: fixed; top: 100px; right: 30px; z-index: 1000; display: flex; flex-direction: column; gap: 12px; }
-        .toast {
-            min-width: 280px;
-            padding: 1.2rem;
-            background: white;
-            color: var(--text-main);
-            border: 1px solid var(--border-light);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            animation: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            font-size: 1rem;
-        }
-        .toast.error { border-left: 4px solid #c9a09a; }
-        .toast.info { border-left: 4px solid var(--accent-color); }
-        .toast-close { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.4rem; }
-
-        @media (max-width: 768px) {
-            #toast-container {
-                top: 80px;
-                right: 20px;
-                left: 20px;
-            }
-            .toast {
-                min-width: 0;
-                width: 100%;
-            }
-        }
-
-        @keyframes slideDown {
-            from { transform: translateY(-20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        @keyframes fadeOut {
-            from { opacity: 1; }
-            to { opacity: 0; }
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     {% block extra_head %}{% endblock %}
 </head>
-<body>
-    <header>
+<body class="bg-brand-bg text-brand-text font-serif text-[1.15rem] leading-[1.6]">
+    <header class="bg-white text-brand-text px-8 py-4 flex justify-between items-center border-b border-brand-border">
         <div class="logo">
-            <a href="{% url 'shop:product_list' %}" style="display: flex; align-items: center; gap: 0.8rem;">
-                <img src="{% static 'images/logo.min.svg' %}" alt="Tetote Logo" style="height: 35px; width: auto;">
-                <span style="font-size: 1.5rem; font-weight: bold; letter-spacing: 0.05rem;">Tetote</span>
+            <a href="{% url 'shop:product_list' %}" class="flex items-center gap-[0.8rem] text-brand-text no-underline transition-opacity duration-200 hover:opacity-70">
+                <img src="{% static 'images/logo.min.svg' %}" alt="Tetote Logo" class="h-[35px] w-auto">
+                <span class="text-[1.5rem] font-bold tracking-[0.05rem]">Tetote</span>
             </a>
         </div>
-        <nav>
-            <a href="{% url 'shop:product_list' %}" style="padding-bottom: 4px; {% if request.resolver_match.url_name == 'product_list' or request.resolver_match.url_name == 'product_detail' %}font-weight: 600; border-bottom: 2px solid var(--text-main);{% endif %}">{% translate "Shop" %}</a>
-            <a href="{% url 'blog:post_list' %}" style="padding-bottom: 4px; {% if request.resolver_match.app_name == 'blog' %}font-weight: 600; border-bottom: 2px solid var(--text-main);{% endif %}">{% translate "Blog" %}</a>
-            <a href="{% url 'shop:cart' %}" class="cart-icon" style="{% if request.resolver_match.url_name == 'cart' %}font-weight: 600;{% endif %}">{% translate "Cart" %}<span id="cart-count"></span></a>
+        <nav class="flex items-center">
+            <a href="{% url 'shop:product_list' %}" class="ml-6 font-medium tracking-[0.05rem] text-brand-text no-underline transition-opacity duration-200 hover:opacity-70 pb-1 {% if request.resolver_match.url_name == 'product_list' or request.resolver_match.url_name == 'product_detail' %}font-semibold border-b-2 border-brand-text{% endif %}">{% translate "Shop" %}</a>
+            <a href="{% url 'blog:post_list' %}" class="ml-6 font-medium tracking-[0.05rem] text-brand-text no-underline transition-opacity duration-200 hover:opacity-70 pb-1 {% if request.resolver_match.app_name == 'blog' %}font-semibold border-b-2 border-brand-text{% endif %}">{% translate "Blog" %}</a>
+            <a href="{% url 'shop:cart' %}" class="ml-6 font-medium tracking-[0.05rem] text-brand-text no-underline transition-opacity duration-200 hover:opacity-70 {% if request.resolver_match.url_name == 'cart' %}font-semibold{% endif %}">
+                {% translate "Cart" %}<span id="cart-count" class="text-brand-muted ml-[0.1rem] inline-block min-w-[1.5rem]"></span>
+            </a>
         </nav>
     </header>
 
     {% if active_announcement %}
-        <div style="background-color: var(--accent-color); color: white; text-align: center; padding: 0.8rem 2rem; font-size: 1rem; border-bottom: 1px solid var(--border-light); letter-spacing: 0.03rem;">
+        <div class="bg-brand-accent text-white text-center py-[0.8rem] px-8 text-base border-b border-brand-border tracking-[0.03rem]">
             {{ active_announcement.text }}
         </div>
     {% endif %}
 
-    <main>
+    <main class="p-8 max-w-[1400px] mx-auto min-h-[70vh]">
         {% block content %}{% endblock %}
     </main>
 
-    <footer>
-        <div class="footer-left">
+    <footer class="bg-white py-12 px-8 mt-16 border-t border-brand-border text-[0.85rem] flex justify-between items-center flex-wrap gap-8">
+        <div class="flex items-center gap-6">
             <span>&copy; {% now "Y" %} {% translate "Tetote. All rights reserved." %}</span>
         </div>
-        <div class="footer-center">
-            <a href="{% url 'shop:privacy_policy' %}" style="color: #666;">{% translate "Privacy Policy" %}</a>
-            <a href="{% url 'shop:return_policy' %}" style="color: #666;">{% translate "Return Policy" %}</a>
-            <a href="{% url 'shop:terms' %}" style="color: #666;">{% translate "Terms and Conditions" %}</a>
+        <div class="flex items-center gap-6">
+            <a href="{% url 'shop:privacy_policy' %}" class="text-[#666] no-underline">{% translate "Privacy Policy" %}</a>
+            <a href="{% url 'shop:return_policy' %}" class="text-[#666] no-underline">{% translate "Return Policy" %}</a>
+            <a href="{% url 'shop:terms' %}" class="text-[#666] no-underline">{% translate "Terms and Conditions" %}</a>
         </div>
-        <div class="footer-right">
-            <span style="margin-right: 1.5rem;">{% translate "Made with ❤️ in 🇨🇭" %}</span>
+        <div class="flex items-center gap-6">
+            <span class="mr-6">{% translate "Made with ❤️ in 🇨🇭" %}</span>
             <span>{% translate "Payments secured by Stripe" %}</span>
         </div>
     </footer>
 
-    <div id="toast-container"></div>
+    <div id="toast-container" class="toast-container"></div>
 
     <script type="module">
         import { getCart, saveCart, updateCartUI, showToast } from "{% static 'js/shop.js' %}";

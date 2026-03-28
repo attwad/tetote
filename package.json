@@ -4,14 +4,20 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "vitest run"
+    "test": "vitest run",
+    "build:css": "npx tailwindcss -i ./static/css/input.css -o ./static/css/styles.css",
+    "watch:css": "npx tailwindcss -i ./static/css/input.css -o ./static/css/styles.css --watch"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
+    "@tailwindcss/cli": "^4.2.2",
+    "autoprefixer": "^10.4.27",
     "jsdom": "^27.0.1",
+    "postcss": "^8.5.8",
+    "tailwindcss": "^4.2.2",
     "vitest": "^3.2.4"
   }
 }

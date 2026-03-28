@@ -1,36 +1,36 @@
 {% extends "base.html" %}
 {% load i18n %}
-
 {% load markdown_extras %}
+
 {% block content %}
-    <div class="post-list">
+    <div class="max-w-[800px] mx-auto">
         {% for post in posts %}
-            <article style="margin-bottom: 2rem;">
-                <h2><a href="{% url 'blog:post_detail' slug=post.slug %}" style="text-decoration: none; color: #333;">{{ post.title }}</a></h2>
-                <p style="color: #666; font-size: 0.9rem;">{{ post.created_at|date:"F j, Y" }}</p>
-                <div class="excerpt" style="margin-bottom: 1rem;">
+            <article class="mb-12">
+                <h2 class="mb-2"><a href="{% url 'blog:post_detail' slug=post.slug %}" class="no-underline text-[#333] hover:underline">{{ post.title }}</a></h2>
+                <p class="text-[#666] text-[0.9rem] mb-4">{{ post.created_at|date:"F j, Y" }}</p>
+                <div class="excerpt mb-4 leading-relaxed">
                     {{ post.content|markdownify|truncatewords_html:50 }}
                 </div>
-                <a href="{% url 'blog:post_detail' slug=post.slug %}" style="color: var(--text-main); font-weight: 500; font-size: 0.95rem;">{% translate "Read More" %} &raquo;</a>
+                <a href="{% url 'blog:post_detail' slug=post.slug %}" class="text-brand-text font-medium text-[0.95rem] no-underline hover:underline">{% translate "Read More" %} &raquo;</a>
             </article>
             {% if not forloop.last %}
-                <hr style="border: none; border-top: 1px solid var(--border-light); margin: 3rem 0;">
+                <hr class="border-none border-t border-brand-border my-12">
             {% endif %}
         {% endfor %}
     </div>
 
     {% if is_paginated %}
-        <div class="pagination">
+        <div class="flex justify-center gap-4 mt-12 text-sm">
             {% if page_obj.has_previous %}
-                <a href="?page=1">&laquo; first</a>
-                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                <a href="?page=1" class="text-brand-text underline">&laquo; {% translate "first" %}</a>
+                <a href="?page={{ page_obj.previous_page_number }}" class="text-brand-text underline">{% translate "previous" %}</a>
             {% endif %}
             <span class="current">
-                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                {% blocktranslate with number=page_obj.number num_pages=page_obj.paginator.num_pages %}Page {{ number }} of {{ num_pages }}.{% endblocktranslate %}
             </span>
             {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">next</a>
-                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                <a href="?page={{ page_obj.next_page_number }}" class="text-brand-text underline">{% translate "next" %}</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}" class="text-brand-text underline">{% translate "last" %} &raquo;</a>
             {% endif %}
         </div>
     {% endif %}

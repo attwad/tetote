@@ -4,26 +4,26 @@
 {% block title %}{% translate "Thank You" %} - Tetote{% endblock %}
 
 {% block content %}
-<div style="text-align: center; padding: 6rem 2rem; max-width: 600px; margin: 0 auto; background: white; border: 1px solid var(--border-light); border-radius: 2px; margin-top: 2rem; box-shadow: 0 5px 20px rgba(0,0,0,0.02);">
+<div class="text-center py-24 px-8 max-w-[600px] mx-auto bg-white border border-brand-border rounded-[2px] mt-8 shadow-[0_5px_20px_rgba(0,0,0,0.02)]">
 
     <!-- Logo -->
-    <div style="margin-bottom: 3rem;">
-        <img src="{% static 'images/logo.min.svg' %}" alt="Tetote Logo" style="height: 60px; width: auto;">
-        <p style="font-size: 1.8rem; font-weight: 500; letter-spacing: 0.2rem; margin-top: 1rem; text-transform: uppercase; color: var(--text-main);">Tetote</p>
+    <div class="mb-12">
+        <img src="{% static 'images/logo.min.svg' %}" alt="Tetote Logo" class="h-[60px] w-auto mx-auto">
+        <p class="text-[1.8rem] font-medium tracking-[0.2rem] mt-4 uppercase text-brand-text">Tetote</p>
     </div>
 
     <!-- Message -->
-    <h1 style="font-size: 2.5rem; margin-bottom: 1.5rem; font-weight: 400; color: var(--accent-color);">{% translate "Thank You for Your Order!" %}</h1>
-    <p style="font-size: 1.25rem; color: var(--text-muted); margin-bottom: 4rem; line-height: 1.8; font-style: italic;">
+    <h1 class="text-[2.5rem] mb-6 font-normal text-brand-accent">{% translate "Thank You for Your Order!" %}</h1>
+    <p class="text-[1.25rem] text-brand-muted mb-16 leading-relaxed italic">
         {% translate "Your transaction was successful. We are now carefully preparing your artisanal ceramics for their journey to you." %}
     </p>
 
     <!-- Navigation -->
-    <div style="display: flex; flex-direction: column; gap: 1rem; align-items: center;">
-        <a href="{% url 'shop:product_list' %}" class="btn" style="min-width: 250px; padding: 1rem 2rem;">
+    <div class="flex flex-col gap-4 items-center">
+        <a href="{% url 'shop:product_list' %}" class="btn min-w-[250px] py-4 px-8">
             {% translate "Continue Shopping" %}
         </a>
-        <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 1rem;">
+        <p class="text-[0.9rem] text-brand-muted mt-4">
             {% translate "A confirmation email will be sent to you shortly." %}
         </p>
     </div>

@@ -4,106 +4,6 @@
 
 {% block title %}{{ brand.name }} - Tetote{% endblock %}
 
-{% block extra_head %}
-<style>
-    .brand-hero {
-        width: 100%;
-        height: 60vh;
-        overflow: hidden;
-        position: relative;
-        margin-bottom: 4rem;
-    }
-    .brand-hero img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        filter: brightness(0.95);
-    }
-    .brand-header {
-        text-align: center;
-        margin-bottom: 5rem;
-        max-width: 800px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    .brand-header h1 {
-        font-size: 3.5rem;
-        font-weight: 300;
-        margin-bottom: 1rem;
-        letter-spacing: 0.1rem;
-    }
-    .brand-header .location {
-        font-style: italic;
-        color: var(--text-muted);
-        letter-spacing: 0.05rem;
-    }
-
-    .story-section {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 4rem;
-        align-items: start;
-        margin-bottom: 6rem;
-    }
-    .story-text {
-        font-size: 1.25rem;
-        line-height: 1.8;
-    }
-    .story-text p {
-        margin-bottom: 2rem;
-    }
-    .story-image-side img {
-        width: 100%;
-        border-radius: 2px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.03);
-    }
-
-    .gallery-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 2rem;
-        margin-bottom: 6rem;
-    }
-    .gallery-grid img {
-        width: 100%;
-        height: 500px;
-        object-fit: cover;
-        border-radius: 2px;
-    }
-
-    .craft-details {
-        background: #f8f7f5;
-        padding: 5rem;
-        margin: 0 -2rem 6rem -2rem;
-        text-align: center;
-    }
-    .craft-details h2 {
-        font-size: 2.2rem;
-        font-weight: 400;
-        margin-bottom: 2rem;
-    }
-    .craft-details p {
-        max-width: 700px;
-        margin: 0 auto;
-        font-size: 1.2rem;
-        color: var(--text-muted);
-    }
-
-    .shop-cta {
-        text-align: center;
-        padding: 4rem 0;
-        border-top: 1px solid var(--border-light);
-    }
-
-    @media (max-width: 900px) {
-        .story-section { grid-template-columns: 1fr; }
-        .gallery-grid { grid-template-columns: 1fr; }
-        .brand-header h1 { font-size: 2.5rem; }
-        .craft-details { padding: 3rem 2rem; }
-    }
-</style>
-{% endblock %}
-
 {% block content %}
 <article class="brand-page">
     <!-- Hero Section -->
@@ -139,9 +39,9 @@
         {% for img in brand.gallery_images.all %}
             {% if forloop.first %}
             <img src="{{ img.url }}" alt="{{ img.caption|default:brand.name }}">
-            <div style="display: flex; flex-direction: column; justify-content: center; padding: 2rem;">
-                <h3 style="font-size: 1.8rem; margin-bottom: 1.5rem;">{% translate "The Firing Process" %}</h3>
-                <p style="color: var(--text-muted);">
+            <div class="flex flex-col justify-center p-8">
+                <h3 class="text-[1.8rem] mb-6">{% translate "The Firing Process" %}</h3>
+                <p class="text-brand-muted">
                     {{ brand.craftsmanship_body|linebreaks }}
                 </p>
             </div>

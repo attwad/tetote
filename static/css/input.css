@@ -1,0 +1,314 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-bg: #fdfcfb;
+  --color-brand-text: #2c2c2c;
+  --color-brand-muted: #6b6b6b;
+  --color-brand-accent: #4a5d4e;
+  --color-brand-accent-hover: #3a4a3d;
+  --color-brand-border: #eceae7;
+  --color-brand-header-bg: #ffffff;
+
+  --font-serif: "Cormorant Garamond", serif;
+
+  --animate-slide-down: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-fade-out: fadeOut 0.4s ease-out;
+
+  @keyframes slideDown {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  @keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-brand-bg text-brand-text font-serif text-[1.15rem] leading-[1.6];
+  }
+
+  select, input, button, textarea {
+    @apply font-serif text-base border border-brand-border bg-white p-[0.4rem];
+  }
+}
+
+@layer components {
+  .btn {
+    @apply px-[1.5rem] py-[0.7rem] bg-brand-accent text-white border-none cursor-pointer no-underline transition-all duration-300 tracking-[0.05rem] inline-block;
+  }
+  .btn:hover {
+    @apply bg-brand-accent-hover;
+  }
+
+  .chip {
+    @apply px-4 py-[0.4rem] bg-white border border-brand-border rounded-[20px] text-[0.9rem] cursor-pointer transition-all duration-200 text-brand-text no-underline;
+  }
+  .chip:hover {
+    @apply border-brand-muted;
+  }
+  .chip.active {
+    @apply bg-brand-text text-white border-brand-text;
+  }
+
+  .product-card {
+    @apply p-0 transition-transform duration-300 ease-in-out;
+  }
+  .product-card-image-wrapper {
+    @apply relative;
+  }
+  .product-card img {
+    @apply w-full h-auto rounded-[2px] grayscale-[10%] contrast-[95%] block;
+  }
+  .stock-badge {
+    @apply absolute bottom-2.5 right-2.5 bg-white/90 px-[0.6rem] py-[0.3rem] text-[0.8rem] text-[#9a7b76] rounded-[2px] tracking-[0.05rem] font-medium;
+  }
+
+  .product-card h3 {
+    @apply mt-4 mb-[0.2rem] text-[1.4rem] font-medium;
+  }
+  .price {
+    @apply text-[1.1rem] text-brand-text mt-[0.5rem];
+  }
+
+  .grid {
+    @apply grid gap-8;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+
+  .filters {
+    @apply mb-12 border-b border-brand-border pb-6;
+  }
+
+  .filter-group {
+    @apply mb-6;
+  }
+  .filter-label {
+    @apply block text-[0.9rem] mb-2 text-brand-muted font-medium;
+  }
+  .chips {
+    @apply flex gap-2 flex-wrap items-center;
+  }
+
+  .filter-drawer {
+    @apply max-h-0 overflow-hidden transition-[max-height] duration-300 ease-[cubic-bezier(0,1,0,1)];
+  }
+  .filter-drawer.open {
+    @apply max-h-[1000px] transition-[max-height] duration-300 ease-in-out;
+  }
+
+  .toggle-filters-btn {
+    @apply bg-white border border-brand-border px-4 py-2 text-[0.9rem] text-brand-text cursor-pointer flex items-center gap-2 transition-all duration-200 rounded-[2px] min-w-[100px] justify-center;
+  }
+  .toggle-filters-btn:hover {
+    @apply border-brand-muted;
+  }
+  .toggle-filters-btn.btn-pressed {
+    @apply bg-brand-text text-white border-brand-text;
+  }
+  .toggle-filters-btn.filters-active:not(.btn-pressed) {
+    @apply bg-[#f0f0f0] border-brand-muted;
+  }
+
+  /* Embla Carousel Base Styles */
+  .embla {
+    @apply overflow-hidden relative bg-[#fdfdfd] border border-[#eee];
+  }
+  .embla__container {
+    @apply flex;
+  }
+  .embla__slide {
+    @apply flex-[0_0_100%] min-w-0 relative;
+  }
+  .embla__slide img {
+    @apply block w-full h-[500px] object-contain cursor-zoom-in;
+  }
+
+  @media (max-width: 768px) {
+    .embla__slide img {
+      @apply h-[350px];
+    }
+  }
+
+  /* Thumbnails */
+  .thumbnails {
+    @apply flex gap-4 mt-6 flex-wrap;
+  }
+  .thumb {
+    @apply w-[100px] h-[100px] object-cover cursor-pointer border border-[#eee] opacity-70 transition-opacity duration-200 rounded-[2px];
+  }
+  .thumb.is-selected {
+    @apply border-brand-text opacity-100 border-2;
+  }
+
+  /* Modal / Dialog Styles */
+  dialog#image-modal {
+    @apply p-0 border-none max-w-full max-h-full w-full h-full bg-black/90 text-white;
+  }
+  dialog#image-modal::backdrop {
+    @apply bg-black/95;
+  }
+  .modal-content {
+    @apply h-full flex flex-col items-center justify-center relative;
+  }
+  .modal-content img {
+    @apply max-w-[95vw] max-h-[85vh] object-contain;
+  }
+  .close-modal {
+    @apply absolute top-5 right-5 bg-none border-none text-white text-[2rem] cursor-pointer font-sans;
+  }
+
+  /* Cart Styles */
+  .cart-item-card {
+    @apply flex gap-8 py-6 border-b border-brand-border items-start;
+  }
+  .cart-item-image {
+    @apply w-[120px] h-[120px] flex-shrink-0;
+  }
+  .cart-item-image img {
+    @apply w-full h-full object-cover rounded-[2px];
+  }
+  .cart-item-info {
+    @apply flex-grow flex flex-col gap-2;
+  }
+  .cart-item-info h3 {
+    @apply m-0 text-[1.4rem] font-medium;
+  }
+  .cart-item-info h3 a {
+    @apply text-brand-text no-underline hover:underline;
+  }
+  .cart-item-description {
+    @apply text-[0.95rem] text-brand-muted m-0 leading-[1.4];
+  }
+  .cart-item-price-unit {
+    @apply text-[0.9rem] text-brand-text mt-2;
+  }
+  .cart-item-actions {
+    @apply flex flex-col items-end gap-6 min-w-[150px];
+  }
+  .qty-control {
+    @apply flex items-center gap-[0.8rem];
+  }
+  .qty-control label {
+    @apply text-[0.9rem] text-brand-muted;
+  }
+  .qty-control input {
+    @apply w-[50px] p-[0.4rem] border border-brand-border text-center;
+  }
+  .item-total {
+    @apply text-[1.2rem] font-medium m-0;
+  }
+  .remove-btn {
+    @apply bg-none border-none text-brand-muted cursor-pointer p-0 text-[0.9rem] underline transition-colors duration-200 hover:text-[#d9534f];
+  }
+
+  @media (max-width: 768px) {
+    .cart-item-card {
+      @apply flex-col gap-4;
+    }
+    .cart-item-image {
+      @apply w-full h-[200px];
+    }
+    .cart-item-actions {
+      @apply flex-row justify-between items-center w-full min-w-0 border-t border-[#f9f9f9] pt-4;
+    }
+  }
+
+  .summary-section {
+    @apply bg-[#fdfdfd] p-8 border border-brand-border mt-12 rounded-[2px];
+  }
+  .cart-actions-container {
+    @apply flex justify-end gap-6 items-center;
+  }
+
+  /* Brand Detail Styles */
+  .brand-hero {
+    @apply w-full h-[60vh] overflow-hidden relative mb-16;
+  }
+  .brand-hero img {
+    @apply w-full h-full object-cover brightness-[0.95];
+  }
+  .brand-header {
+    @apply text-center mb-20 max-w-[800px] mx-auto;
+  }
+  .brand-header h1 {
+    @apply text-[3.5rem] font-light mb-4 tracking-[0.1rem];
+  }
+  .brand-header .location {
+    @apply italic text-brand-muted tracking-[0.05rem];
+  }
+
+  .story-section {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-16 items-start mb-24;
+  }
+  .story-text {
+    @apply text-[1.25rem] leading-[1.8];
+  }
+  .story-text p {
+    @apply mb-8;
+  }
+  .story-image-side img {
+    @apply w-full rounded-[2px] shadow-[0_4px_20px_rgba(0,0,0,0.03)];
+  }
+
+  .gallery-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-8 mb-24;
+  }
+  .gallery-grid img {
+    @apply w-full h-[500px] object-cover rounded-[2px];
+  }
+
+  .craft-details {
+    @apply bg-[#f8f7f5] py-20 px-8 md:px-20 -mx-8 md:-mx-8 mb-24 text-center;
+  }
+  .craft-details h2 {
+    @apply text-[2.2rem] font-normal mb-8;
+  }
+  .craft-details p {
+    @apply max-w-[700px] mx-auto text-[1.2rem] text-brand-muted;
+  }
+
+  .shop-cta {
+    @apply text-center py-16 border-t border-brand-border;
+  }
+
+  @media (max-width: 900px) {
+    .brand-header h1 { @apply text-[2.5rem]; }
+  }
+
+  /* Toast Styles Refined */
+  .toast-container {
+    @apply fixed top-[100px] right-[30px] z-[1000] flex flex-col gap-3;
+  }
+  .toast {
+    @apply min-w-[280px] p-[1.2rem] bg-white text-brand-text border border-brand-border shadow-[0_10px_30px_rgba(0,0,0,0.05)] flex justify-between items-center animate-slide-down text-base;
+  }
+  .toast.error {
+    @apply border-l-4 border-l-[#c9a09a];
+  }
+  .toast.info {
+    @apply border-l-4 border-l-brand-accent;
+  }
+  .toast-close {
+    @apply bg-none border-none text-brand-muted cursor-pointer text-[1.4rem];
+  }
+
+  @media (max-width: 768px) {
+    .toast-container {
+      @apply top-[80px] right-5 left-5;
+    }
+    .toast {
+      @apply min-w-0 w-full;
+    }
+  }
+}
+
+@layer utilities {
+  .animate-slide-down {
+    animation: var(--animate-slide-down);
+  }
+  .animate-fade-out {
+    animation: var(--animate-fade-out);
+  }
+}
