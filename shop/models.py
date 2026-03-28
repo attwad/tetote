@@ -51,13 +51,13 @@ class BrandImage(models.Model):
         return f"Gallery image for {self.brand.name}"
 
 
-class Yakikata(models.Model):
+class Glaze(models.Model):
     name = models.CharField(_("Name"), max_length=255)
     slug = models.SlugField(_("Slug"), unique=True)
 
     class Meta:
-        verbose_name = _("Yakikata")
-        verbose_name_plural = _("Yakikatas")
+        verbose_name = _("Glaze")
+        verbose_name_plural = _("Glazes")
 
     def __str__(self):
         return self.name
@@ -96,13 +96,13 @@ class Product(models.Model):
         related_name="products",
         verbose_name=_("Brand"),
     )
-    yakikata = models.ForeignKey(
-        Yakikata,
+    glaze = models.ForeignKey(
+        Glaze,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
         related_name="products",
-        verbose_name=_("Yakikata"),
+        verbose_name=_("Glaze"),
     )
     product_type = models.ForeignKey(
         ProductType,

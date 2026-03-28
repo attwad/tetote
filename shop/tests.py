@@ -4,13 +4,13 @@ from django.utils import timezone, translation
 from unittest.mock import patch
 import datetime
 import json
-from .models import Brand, Product, Yakikata, ProductType, StoreSettings
+from .models import Brand, Product, Glaze, ProductType, StoreSettings
 
 
 class ProductModelTest(TestCase):
     def setUp(self):
         self.brand = Brand.objects.create(name="Bizen", slug="bizen")
-        self.yakikata = Yakikata.objects.create(name="Yakikata 1", slug="y1")
+        self.glaze = Glaze.objects.create(name="Glaze 1", slug="g1")
         self.type = ProductType.objects.create(name="Type 1", slug="t1")
         self.product = Product.objects.create(
             stripe_product_id="prod_123",
@@ -20,7 +20,7 @@ class ProductModelTest(TestCase):
             price=10000,
             stock_quantity=5,
             brand=self.brand,
-            yakikata=self.yakikata,
+            glaze=self.glaze,
             product_type=self.type,
         )
 
@@ -156,21 +156,21 @@ class ShopViewTests(TestCase):
         self.assertContains(response, "Brand Product")
         self.assertNotContains(response, "Unbranded Product")
 
-    def test_product_list_filter_yakikata(self):
-        y = Yakikata.objects.create(name="Special", slug="special")
+    def test_product_list_filter_glaze(self):
+        g = Glaze.objects.create(name="Special", slug="special")
         Product.objects.create(
-            stripe_product_id="prod_y",
-            stripe_price_id="price_y",
-            name="Yakikata Product",
-            slug="y-prod",
+            stripe_product_id="prod_g",
+            stripe_price_id="price_g",
+            name="Glaze Product",
+            slug="g-prod",
             price=100,
             stock_quantity=1,
-            yakikata=y,
+            glaze=g,
             public=True,
         )
-        url = reverse("shop:product_list") + "?yakikata=special"
+        url = reverse("shop:product_list") + "?glaze=special"
         response = self.client.get(url)
-        self.assertContains(response, "Yakikata Product")
+        self.assertContains(response, "Glaze Product")
         self.assertNotContains(response, "Brand Product")
 
     def test_product_list_filter_type(self):
@@ -261,11 +261,11 @@ class ShopViewTests(TestCase):
     def test_product_list_context_active_filters(self):
         url = (
             reverse("shop:product_list")
-            + "?brand=bizen&brand=seto&yakikata=y1&stock=in_stock&new=true"
+            + "?brand=bizen&brand=seto&glaze=g1&stock=in_stock&new=true"
         )
         response = self.client.get(url)
         self.assertEqual(response.context["active_brands"], ["bizen", "seto"])
-        self.assertEqual(response.context["active_yakikatas"], ["y1"])
+        self.assertEqual(response.context["active_glazes"], ["g1"])
         self.assertEqual(response.context["total_active_filters"], 5)
 
 

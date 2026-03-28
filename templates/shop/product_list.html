@@ -8,7 +8,7 @@
                 <div class="flex gap-6 items-start w-full md:w-auto">
                     <div class="flex flex-col items-start gap-[0.4rem]">
                         <button type="button" id="filter-toggle-btn"
-                                class="toggle-filters-btn {% if active_brands or active_yakikatas or active_types %}filters-active{% endif %} {% if is_expanded %}btn-pressed{% endif %}"
+                                class="toggle-filters-btn {% if active_brands or active_glazes or active_types %}filters-active{% endif %} {% if is_expanded %}btn-pressed{% endif %}"
                                 onclick="toggleDrawer()">
                             <span>{% translate "Filters" %}{% if total_active_filters > 0 %} ({{ total_active_filters }}){% endif %}</span>
                         </button>
@@ -70,12 +70,12 @@
                     </div>
 
                     <div class="filter-group">
-                        <span class="filter-label">{% translate "Yakikata" %}</span>
+                        <span class="filter-label">{% translate "Glaze" %}</span>
                         <div class="chips">
-                            {% for y in yakikatas %}
-                                <a href="#" class="chip {% if y.slug in active_yakikatas %}active{% endif %}"
-                                   onclick="toggleFilter(event, 'yakikata', '{{ y.slug }}')">
-                                    {{ y.name }}
+                            {% for glaze in glazes %}
+                                <a href="#" class="chip {% if glaze.slug in active_glazes %}active{% endif %}"
+                                   onclick="toggleFilter(event, 'glaze', '{{ glaze.slug }}')">
+                                    {{ glaze.name }}
                                 </a>
                             {% endfor %}
                         </div>
@@ -118,7 +118,7 @@
                     {% if product.brand %}
                         <a href="{% url 'shop:brand_detail' brand_slug=product.brand.slug %}" class="text-inherit underline underline-offset-2">{{ product.brand.name }}</a>
                     {% endif %}
-                    {% if product.yakikata %} | {{ product.yakikata.name }}{% endif %}
+                    {% if product.glaze %} | {{ product.glaze.name }}{% endif %}
                 </div>
                 <div class="flex items-center justify-center gap-4 mt-2">
                     <p class="price m-0">CHF {{ product.price_in_chf|floatformat:2 }}</p>
@@ -128,32 +128,32 @@
                 </div>
             </div>
         {% empty %}
-            <p>{% translate "No products found." %}</p>
+            <div class="text-center py-20 text-brand-muted">
+                {% translate "No products found." %}
+            </div>
         {% endfor %}
     </div>
 
     {% if is_paginated %}
-        <div class="flex justify-center gap-4 mt-12 text-sm">
+        <div class="flex justify-center mt-12 gap-8 text-[0.9rem]">
             {% if page_obj.has_previous %}
-                <a href="?page=1" class="text-brand-text underline">&laquo; {% translate "first" %}</a>
-                <a href="?page={{ page_obj.previous_page_number }}" class="text-brand-text underline">{% translate "previous" %}</a>
+                <a href="?{% if request.GET.brand %}brand={{ request.GET.brand }}&{% endif %}{% if request.GET.glaze %}glaze={{ request.GET.glaze }}&{% endif %}{% if request.GET.type %}type={{ request.GET.type }}&{% endif %}{% if request.GET.stock %}stock={{ request.GET.stock }}&{% endif %}{% if request.GET.new %}new={{ request.GET.new }}&{% endif %}{% if request.GET.sort %}sort={{ request.GET.sort }}&{% endif %}{% if is_expanded %}expanded=true&{% endif %}page={{ page_obj.previous_page_number }}" class="underline">{% translate "Previous" %}</a>
             {% endif %}
-            <span class="current">
-                {% blocktranslate with number=page_obj.number num_pages=page_obj.paginator.num_pages %}Page {{ number }} of {{ num_pages }}.{% endblocktranslate %}
-            </span>
+
+            <span>{% blocktranslate with current=page_obj.number total=page_obj.paginator.num_pages %}Page {{ current }} of {{ total }}{% endblocktranslate %}</span>
+
             {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}" class="text-brand-text underline">{% translate "next" %}</a>
-                <a href="?page={{ page_obj.paginator.num_pages }}" class="text-brand-text underline">{% translate "last" %} &raquo;</a>
+                <a href="?{% if request.GET.brand %}brand={{ request.GET.brand }}&{% endif %}{% if request.GET.glaze %}glaze={{ request.GET.glaze }}&{% endif %}{% if request.GET.type %}type={{ request.GET.type }}&{% endif %}{% if request.GET.stock %}stock={{ request.GET.stock }}&{% endif %}{% if request.GET.new %}new={{ request.GET.new }}&{% endif %}{% if request.GET.sort %}sort={{ request.GET.sort }}&{% endif %}{% if is_expanded %}expanded=true&{% endif %}page={{ page_obj.next_page_number }}" class="underline">{% translate "Next" %}</a>
             {% endif %}
         </div>
     {% endif %}
+
+    <input type="hidden" id="is-expanded" value="{% if is_expanded %}true{% else %}false{% endif %}">
 {% endblock %}
 
 {% block extra_js %}
 <script type="module">
     import { toggleDrawer, toggleFilter, toggleStock, toggleNew, toggleSort } from "{% static 'js/shop.js' %}";
-
-    // Bridge to window for inline onclicks
     window.toggleDrawer = toggleDrawer;
     window.toggleFilter = toggleFilter;
     window.toggleStock = toggleStock;

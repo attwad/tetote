@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from django.urls import reverse
 from django.db import transaction
 from django.utils.translation import gettext as _
-from .models import Product, Brand, Yakikata, ProductType, StoreSettings
+from .models import Product, Brand, Glaze, ProductType, StoreSettings
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -88,7 +88,7 @@ class ProductListView(ListView):
 
         # Multiple selections
         brands = self.request.GET.getlist("brand")
-        yakikatas = self.request.GET.getlist("yakikata")
+        glazes = self.request.GET.getlist("glaze")
         types = self.request.GET.getlist("type")
 
         # Single click toggle
@@ -97,8 +97,8 @@ class ProductListView(ListView):
 
         if brands:
             queryset = queryset.filter(brand__slug__in=brands)
-        if yakikatas:
-            queryset = queryset.filter(yakikata__slug__in=yakikatas)
+        if glazes:
+            queryset = queryset.filter(glaze__slug__in=glazes)
         if types:
             queryset = queryset.filter(product_type__slug__in=types)
 
@@ -121,12 +121,12 @@ class ProductListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["brands"] = Brand.objects.all()
-        context["yakikatas"] = Yakikata.objects.all()
+        context["glazes"] = Glaze.objects.all()
         context["product_types"] = ProductType.objects.all()
 
         # Pass active filter lists for template comparison
         context["active_brands"] = self.request.GET.getlist("brand")
-        context["active_yakikatas"] = self.request.GET.getlist("yakikata")
+        context["active_glazes"] = self.request.GET.getlist("glaze")
         context["active_types"] = self.request.GET.getlist("type")
 
         context["is_expanded"] = self.request.GET.get("expanded") == "true"
@@ -138,7 +138,7 @@ class ProductListView(ListView):
 
         context["total_active_filters"] = (
             len(context["active_brands"])
-            + len(context["active_yakikatas"])
+            + len(context["active_glazes"])
             + len(context["active_types"])
             + has_stock
             + has_new

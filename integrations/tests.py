@@ -62,7 +62,7 @@ class StripeIntegrationTest(TestCase):
             "name": "Test Product",
             "description": "Test Desc",
             "images": ["http://test.com/img1.jpg"],
-            "metadata": {"yakikata": "bizen", "product_type": "vase"},
+            "metadata": {"glaze": "bizen", "product_type": "vase"},
             "created": 1700000000,
         }
 

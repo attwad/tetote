@@ -13,7 +13,7 @@ Tetote is a high-end, minimalist e-commerce platform and digital showroom dedica
 - **High Test Coverage:** The project maintains near-total test coverage across both the Django backend (Python) and the modular frontend (Node/Vitest/JSDOM).
 - **Hybrid Content Management:**
     - **Stripe:** Acts as the source of truth for **Products and Prices**.
-    - **Django:** Acts as the source of truth for **Inventory (Stock)**, **Brands**, **Yakikata**, **Product Types**, and **Translations**.
+    - **Django:** Acts as the source of truth for **Inventory (Stock)**, **Brands**, **Glaze**, **Product Types**, and **Translations**.
 - **Surgical Sync Logic:** Integration with Stripe is "surgical"—webhooks and sync commands only update specific fields (like `stripe_name` and `price`), ensuring that manual stock levels and translations managed in the Django Admin are never overwritten.
 - **Consistency:** Coding practices are enforced via `Ruff` (linting/formatting) and custom git hooks.
 

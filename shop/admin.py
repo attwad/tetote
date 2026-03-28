@@ -5,7 +5,7 @@ from .models import (
     Brand,
     Product,
     ProductImage,
-    Yakikata,
+    Glaze,
     ProductType,
     StoreAnnouncement,
     StoreSettings,
@@ -31,8 +31,8 @@ class BrandAdmin(TranslationAdmin):
     prepopulated_fields = {"slug": ("name",)}
 
 
-@admin.register(Yakikata)
-class YakikataAdmin(TranslationAdmin):
+@admin.register(Glaze)
+class GlazeAdmin(TranslationAdmin):
     list_display = ("name", "slug")
     prepopulated_fields = {"slug": ("name",)}
 
@@ -68,13 +68,13 @@ class ProductAdmin(TabbedTranslationAdmin):
         "price",
         "stock_quantity",
         "brand",
-        "yakikata",
+        "glaze",
         "product_type",
         "is_in_stock",
         "date_added",
     )
     list_editable = ("public",)
-    list_filter = ("public", "brand", "yakikata", "product_type", "date_added")
+    list_filter = ("public", "brand", "glaze", "product_type", "date_added")
     search_fields = ("name", "stripe_name", "description", "stripe_product_id")
     readonly_fields = (
         "stripe_product_id",
@@ -111,7 +111,7 @@ class ProductAdmin(TabbedTranslationAdmin):
                 "fields": (
                     "public",
                     "brand",
-                    "yakikata",
+                    "glaze",
                     "product_type",
                     "stock_quantity",
                 )

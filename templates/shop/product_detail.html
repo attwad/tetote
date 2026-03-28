@@ -45,8 +45,8 @@
             {% if product.brand %}
                 <p class="my-[0.1rem]">{% translate "Brand" %}: <a href="{% url 'shop:brand_detail' brand_slug=product.brand.slug %}" class="text-inherit underline underline-offset-[3px]">{{ product.brand.name }}</a></p>
             {% endif %}
-            {% if product.yakikata %}
-                <p class="my-[0.1rem]">{% translate "Yakikata" %}: {{ product.yakikata.name }}</p>
+            {% if product.glaze %}
+                <p class="my-[0.1rem]">{% translate "Glaze" %}: {{ product.glaze.name }}</p>
             {% endif %}
             {% if product.product_type %}
                 <p class="my-[0.1rem]">{% translate "Type" %}: {{ product.product_type.name }}</p>
