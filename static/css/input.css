@@ -53,7 +53,7 @@
   }
 
   .product-card {
-    @apply p-0 transition-transform duration-300 ease-in-out;
+    @apply p-0 transition-transform duration-300 ease-in-out text-center;
   }
   .product-card-image-wrapper {
     @apply relative aspect-square overflow-hidden;

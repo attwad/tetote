@@ -120,7 +120,7 @@
                     {% endif %}
                     {% if product.yakikata %} | {{ product.yakikata.name }}{% endif %}
                 </div>
-                <div class="flex items-center gap-4 mt-2">
+                <div class="flex items-center justify-center gap-4 mt-2">
                     <p class="price m-0">CHF {{ product.price_in_chf|floatformat:2 }}</p>
                     {% if product.is_recently_added %}
                         <span class="bg-brand-border px-[0.4rem] py-[0.1rem] rounded-[2px] text-[0.75rem] text-brand-muted leading-none tracking-[0.05rem]">{% translate "NEW" %}</span>
