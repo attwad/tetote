@@ -15,14 +15,27 @@
 <body class="bg-brand-bg text-brand-text font-serif text-[1.15rem] leading-[1.6]">
     <header class="bg-white text-brand-text pt-4 pb-4">
         <!-- Logo Row -->
-        <div class="flex justify-center mb-4">
+        <div class="flex justify-center mb-4 relative px-8">
+            <!-- Mobile Hamburger (Left) -->
+            <button class="md:hidden absolute left-8 top-1/2 -translate-y-1/2 text-brand-text" onclick="toggleMobileMenu()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </button>
+
             <a href="{% url 'shop:product_list' %}" class="text-brand-text no-underline transition-opacity duration-200 hover:opacity-70">
                 <img src="{% static 'images/logo.min.svg' %}" alt="Tetote Logo" class="h-[60px] w-auto">
             </a>
+
+            <!-- Mobile Cart (Right) -->
+            <div class="md:hidden absolute right-8 top-1/2 -translate-y-1/2">
+                <a href="{% url 'shop:cart' %}" class="flex items-center text-brand-text no-underline">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+                    <span id="cart-count-mobile" class="text-brand-muted ml-[0.1rem] text-[0.9rem]"></span>
+                </a>
+            </div>
         </div>
 
-        <!-- Menu & Cart Row -->
-        <div class="px-8 flex justify-between items-center relative">
+        <!-- Desktop Menu & Cart Row -->
+        <div class="px-8 hidden md:flex justify-between items-center relative">
             <!-- Spacer to balance the cart icon -->
             <div class="flex-1"></div>
 
@@ -43,6 +56,21 @@
             </div>
         </div>
     </header>
+
+    <!-- Mobile Menu Drawer -->
+    <div id="mobile-menu-overlay" class="fixed inset-0 bg-black/50 z-[1001] hidden opacity-0 transition-opacity duration-300" onclick="toggleMobileMenu()"></div>
+    <div id="mobile-menu-drawer" class="fixed top-0 left-0 bottom-0 w-[80%] max-w-[300px] bg-white z-[1002] -translate-x-full transition-transform duration-300 ease-in-out p-8">
+        <button class="absolute top-4 right-4 text-brand-text" onclick="toggleMobileMenu()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+
+        <nav class="flex flex-col gap-8 mt-12">
+            <a href="{% url 'shop:about_us' %}" class="text-[1.2rem] font-medium tracking-[0.05rem] text-brand-text no-underline {% if request.resolver_match.url_name == 'about_us' %}font-bold{% endif %}">{% translate "About us" %}</a>
+            <a href="{% url 'shop:product_list' %}" class="text-[1.2rem] font-medium tracking-[0.05rem] text-brand-text no-underline {% if request.resolver_match.url_name == 'product_list' or request.resolver_match.url_name == 'product_detail' %}font-bold{% endif %}">{% translate "Shop" %}</a>
+            <a href="{% url 'blog:post_list' %}" class="text-[1.2rem] font-medium tracking-[0.05rem] text-brand-text no-underline {% if request.resolver_match.app_name == 'blog' %}font-bold{% endif %}">{% translate "Blog" %}</a>
+            <a href="{% url 'shop:contact' %}" class="text-[1.2rem] font-medium tracking-[0.05rem] text-brand-text no-underline {% if request.resolver_match.url_name == 'contact' %}font-bold{% endif %}">{% translate "Contact" %}</a>
+        </nav>
+    </div>
 
     <!-- Logo Threads / Red Lines -->
     <div class="flex flex-col gap-[1px] mt-[1px] mb-4">
@@ -94,14 +122,21 @@
 
     <div id="toast-container" class="toast-container"></div>
 
+    <script>
+        // Placeholder for early clicks before module loads
+        window.toggleMobileMenu = function() { };
+    </script>
+
     <script type="module">
-        import { getCart, saveCart, updateCartUI, showToast } from "{% static 'js/shop.js' %}";
+        // Using a query param for simple cache busting
+        import { getCart, saveCart, updateCartUI, showToast, toggleMobileMenu } from "{% static 'js/shop.js' %}?v=1.1";
 
         // Expose to window for existing inline onclick handlers in other templates
         window.getCart = getCart;
         window.saveCart = saveCart;
         window.updateCartUI = updateCartUI;
         window.showToast = showToast;
+        window.toggleMobileMenu = toggleMobileMenu;
 
         updateCartUI();
         window.addEventListener('pageshow', (event) => {

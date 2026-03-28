@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { getCart, saveCart, updateCartUI, showToast, getNewURL } from './static/js/shop.js';
+import { getCart, saveCart, updateCartUI, showToast, getNewURL, toggleMobileMenu } from './static/js/shop.js';
 
 describe('Shop Logic Tests', () => {
     beforeEach(() => {
@@ -8,7 +8,10 @@ describe('Shop Logic Tests', () => {
             <div id="toast-container"></div>
             <div id="nav">
                 <span id="cart-count"></span>
+                <span id="cart-count-mobile"></span>
             </div>
+            <div id="mobile-menu-overlay" class="hidden opacity-0"></div>
+            <div id="mobile-menu-drawer" class="-translate-x-full"></div>
         `;
         localStorage.clear();
         vi.clearAllTimers();
@@ -93,6 +96,7 @@ describe('Shop Logic Tests', () => {
 
             expect(localStorage.getItem('cart')).toBe(JSON.stringify(cart));
             expect(document.getElementById('cart-count').textContent).toBe(' (1)');
+            expect(document.getElementById('cart-count-mobile').textContent).toBe(' (1)');
         });
 
         it('updateCartUI should show unique product count', () => {
@@ -103,12 +107,14 @@ describe('Shop Logic Tests', () => {
 
             updateCartUI();
             expect(document.getElementById('cart-count').textContent).toBe(' (2)');
+            expect(document.getElementById('cart-count-mobile').textContent).toBe(' (2)');
         });
 
         it('updateCartUI should be empty for 0 items', () => {
             localStorage.setItem('cart', JSON.stringify([]));
             updateCartUI();
             expect(document.getElementById('cart-count').textContent).toBe('');
+            expect(document.getElementById('cart-count-mobile').textContent).toBe('');
         });
 
         it('saveCart([]) should clear the cart and UI', () => {
@@ -116,6 +122,39 @@ describe('Shop Logic Tests', () => {
             saveCart([]);
             expect(localStorage.getItem('cart')).toBe('[]');
             expect(document.getElementById('cart-count').textContent).toBe('');
+            expect(document.getElementById('cart-count-mobile').textContent).toBe('');
+        });
+    });
+
+    describe('Mobile Menu Logic', () => {
+        it('toggleMobileMenu should open the menu if closed', () => {
+            const drawer = document.getElementById('mobile-menu-drawer');
+            const overlay = document.getElementById('mobile-menu-overlay');
+
+            toggleMobileMenu();
+
+            expect(drawer.classList.contains('-translate-x-full')).toBe(false);
+            expect(overlay.classList.contains('hidden')).toBe(false);
+
+            vi.advanceTimersByTime(20);
+            expect(overlay.classList.contains('opacity-0')).toBe(false);
+            expect(document.body.style.overflow).toBe('hidden');
+        });
+
+        it('toggleMobileMenu should close the menu if open', () => {
+            const drawer = document.getElementById('mobile-menu-drawer');
+            const overlay = document.getElementById('mobile-menu-overlay');
+
+            // Set up as open
+            drawer.classList.remove('-translate-x-full');
+            overlay.classList.remove('hidden', 'opacity-0');
+            document.body.style.overflow = 'hidden';
+
+            toggleMobileMenu();
+
+            expect(drawer.classList.contains('-translate-x-full')).toBe(true);
+            expect(overlay.classList.contains('opacity-0')).toBe(true);
+            expect(document.body.style.overflow).toBe('');
         });
     });
 });

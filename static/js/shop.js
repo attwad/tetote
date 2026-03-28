@@ -42,6 +42,37 @@ export function updateCartUI() {
         badge.textContent = count > 0 ? ` (${count})` : "";
         badge.style.display = 'inline-block';
     }
+    const mobileBadge = document.getElementById('cart-count-mobile');
+    if (mobileBadge) {
+        mobileBadge.textContent = count > 0 ? ` (${count})` : "";
+    }
+}
+
+export function toggleMobileMenu() {
+    const drawer = document.getElementById('mobile-menu-drawer');
+    const overlay = document.getElementById('mobile-menu-overlay');
+
+    if (!drawer || !overlay) return;
+
+    if (drawer.classList.contains('-translate-x-full')) {
+        // Open
+        drawer.classList.remove('-translate-x-full');
+        overlay.classList.remove('hidden');
+        setTimeout(() => {
+            overlay.classList.remove('opacity-0');
+        }, 10);
+        document.body.style.overflow = 'hidden';
+    } else {
+        // Close
+        drawer.classList.add('-translate-x-full');
+        overlay.classList.add('opacity-0');
+        const transitionHandler = function() {
+            overlay.classList.add('hidden');
+            overlay.removeEventListener('transitionend', transitionHandler);
+        };
+        overlay.addEventListener('transitionend', transitionHandler);
+        document.body.style.overflow = '';
+    }
 }
 
 /**

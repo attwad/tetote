@@ -156,7 +156,9 @@
     @apply max-w-[95vw] max-h-[85vh] object-contain;
   }
   .close-modal {
-    @apply absolute top-5 right-5 bg-none border-none text-white text-[2rem] cursor-pointer font-sans;
+    @apply absolute top-2 right-4 bg-transparent border-none p-4 text-white text-[2.5rem] cursor-pointer font-sans opacity-80 hover:opacity-100 transition-opacity;
+    appearance: none;
+    line-height: 1;
   }
 
   /* Cart Styles */
