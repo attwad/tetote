@@ -23,7 +23,6 @@
     --font-weight-semibold: 600;
     --font-weight-bold: 700;
     --leading-relaxed: 1.625;
-    --ease-out: cubic-bezier(0, 0, 0.2, 1);
     --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
     --default-transition-duration: 150ms;
     --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
@@ -848,12 +847,15 @@
   }
   .product-card-image-wrapper {
     position: relative;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
   }
   .product-card img {
     display: block;
-    height: auto;
+    height: 100%;
     width: 100%;
     border-radius: 2px;
+    object-fit: cover;
     --tw-contrast: contrast(95%);
     --tw-grayscale: grayscale(10%);
     filter: var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,);

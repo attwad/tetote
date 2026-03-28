@@ -119,7 +119,6 @@
                         <a href="{% url 'shop:brand_detail' brand_slug=product.brand.slug %}" class="text-inherit underline underline-offset-2">{{ product.brand.name }}</a>
                     {% endif %}
                     {% if product.yakikata %} | {{ product.yakikata.name }}{% endif %}
-                    {% if product.product_type %} | {{ product.product_type.name }}{% endif %}
                 </div>
                 <div class="flex items-center gap-4 mt-2">
                     <p class="price m-0">CHF {{ product.price_in_chf|floatformat:2 }}</p>
