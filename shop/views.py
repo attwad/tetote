@@ -27,8 +27,20 @@ class PrivacyPolicyView(TemplateView):
     template_name = "shop/privacy_policy.html"
 
 
+class AboutUsView(TemplateView):
+    template_name = "shop/about_us.html"
+
+
+class ContactView(TemplateView):
+    template_name = "shop/contact.html"
+
+
 class ReturnPolicyView(TemplateView):
     template_name = "shop/return_policy.html"
+
+
+class DeliveryPolicyView(TemplateView):
+    template_name = "shop/delivery_policy.html"
 
 
 class TermsConditionsView(TemplateView):

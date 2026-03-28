@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "Delivery Policy" %} - Tetote{% endblock %}
+
+{% block content %}
+<div class="max-w-[800px] mx-auto leading-relaxed">
+    <h1 class="mb-8">{% translate "Delivery Policy" %}</h1>
+    <p class="mb-4">{% translate "We strive to deliver our artisanal ceramics as safely and quickly as possible." %}</p>
+    <p class="mb-4">{% translate "Standard shipping typically takes 5-10 business days depending on your location." %}</p>
+    <p>{% translate "All items are carefully packed in sustainable materials to ensure they arrive in perfect condition." %}</p>
+</div>
+{% endblock %}

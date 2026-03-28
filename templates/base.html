@@ -13,21 +13,43 @@
     {% block extra_head %}{% endblock %}
 </head>
 <body class="bg-brand-bg text-brand-text font-serif text-[1.15rem] leading-[1.6]">
-    <header class="bg-white text-brand-text px-8 py-4 flex justify-between items-center border-b border-brand-border">
-        <div class="logo">
-            <a href="{% url 'shop:product_list' %}" class="flex items-center gap-[0.8rem] text-brand-text no-underline transition-opacity duration-200 hover:opacity-70">
-                <img src="{% static 'images/logo.min.svg' %}" alt="Tetote Logo" class="h-[35px] w-auto">
-                <span class="text-[1.5rem] font-bold tracking-[0.05rem]">Tetote</span>
+    <header class="bg-white text-brand-text pt-4 pb-4">
+        <!-- Logo Row -->
+        <div class="flex justify-center mb-4">
+            <a href="{% url 'shop:product_list' %}" class="text-brand-text no-underline transition-opacity duration-200 hover:opacity-70">
+                <img src="{% static 'images/logo.min.svg' %}" alt="Tetote Logo" class="h-[60px] w-auto">
             </a>
         </div>
-        <nav class="flex items-center">
-            <a href="{% url 'shop:product_list' %}" class="ml-6 font-medium tracking-[0.05rem] text-brand-text no-underline transition-opacity duration-200 hover:opacity-70 pb-1 {% if request.resolver_match.url_name == 'product_list' or request.resolver_match.url_name == 'product_detail' %}font-semibold border-b-2 border-brand-text{% endif %}">{% translate "Shop" %}</a>
-            <a href="{% url 'blog:post_list' %}" class="ml-6 font-medium tracking-[0.05rem] text-brand-text no-underline transition-opacity duration-200 hover:opacity-70 pb-1 {% if request.resolver_match.app_name == 'blog' %}font-semibold border-b-2 border-brand-text{% endif %}">{% translate "Blog" %}</a>
-            <a href="{% url 'shop:cart' %}" class="ml-6 font-medium tracking-[0.05rem] text-brand-text no-underline transition-opacity duration-200 hover:opacity-70 {% if request.resolver_match.url_name == 'cart' %}font-semibold{% endif %}">
-                {% translate "Cart" %}<span id="cart-count" class="text-brand-muted ml-[0.1rem] inline-block min-w-[1.5rem]"></span>
-            </a>
-        </nav>
+
+        <!-- Menu & Cart Row -->
+        <div class="px-8 flex justify-between items-center relative">
+            <!-- Spacer to balance the cart icon -->
+            <div class="flex-1"></div>
+
+            <!-- Centered Menu -->
+            <nav class="flex items-center gap-10 flex-none">
+                <a href="{% url 'shop:about_us' %}" class="font-medium tracking-[0.05rem] text-brand-text no-underline transition-opacity duration-200 hover:opacity-70 {% if request.resolver_match.url_name == 'about_us' %}font-bold{% endif %}">{% translate "About us" %}</a>
+                <a href="{% url 'shop:product_list' %}" class="font-medium tracking-[0.05rem] text-brand-text no-underline transition-opacity duration-200 hover:opacity-70 {% if request.resolver_match.url_name == 'product_list' or request.resolver_match.url_name == 'product_detail' %}font-bold{% endif %}">{% translate "Shop" %}</a>
+                <a href="{% url 'blog:post_list' %}" class="font-medium tracking-[0.05rem] text-brand-text no-underline transition-opacity duration-200 hover:opacity-70 {% if request.resolver_match.app_name == 'blog' %}font-bold{% endif %}">{% translate "Blog" %}</a>
+                <a href="{% url 'shop:contact' %}" class="font-medium tracking-[0.05rem] text-brand-text no-underline transition-opacity duration-200 hover:opacity-70 {% if request.resolver_match.url_name == 'contact' %}font-bold{% endif %}">{% translate "Contact" %}</a>
+            </nav>
+
+            <!-- Cart Icon -->
+            <div class="flex-1 flex justify-end">
+                <a href="{% url 'shop:cart' %}" class="flex items-center font-medium text-brand-text no-underline transition-opacity duration-200 hover:opacity-70">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-[22px] h-[22px]"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+                    <span id="cart-count" class="text-brand-muted ml-[0.1rem] inline-block min-w-[1rem]"></span>
+                </a>
+            </div>
+        </div>
     </header>
+
+    <!-- Logo Threads / Red Lines -->
+    <div class="flex flex-col gap-[1px] mt-[1px] mb-4">
+        <div class="h-[1px] w-full bg-[#ef454a]"></div>
+        <div class="h-[1px] w-full bg-[#ef454a]"></div>
+        <div class="h-[1px] w-full bg-[#ef454a]"></div>
+    </div>
 
     {% if active_announcement %}
         <div class="bg-brand-accent text-white text-center py-[0.8rem] px-8 text-base border-b border-brand-border tracking-[0.03rem]">
@@ -39,18 +61,34 @@
         {% block content %}{% endblock %}
     </main>
 
-    <footer class="bg-white py-12 px-8 mt-16 border-t border-brand-border text-[0.85rem] flex justify-between items-center flex-wrap gap-8">
-        <div class="flex items-center gap-6">
-            <span>&copy; {% now "Y" %} {% translate "Tetote. All rights reserved." %}</span>
+    <!-- Footer Separator Band -->
+    <div class="h-16 w-full bg-brand-text mt-16"></div>
+
+    <footer class="bg-white pt-8 pb-8 px-8 text-center flex flex-col items-center gap-4">
+        <!-- Social Link -->
+        <a href="https://www.instagram.com/tetote.ch/" target="_blank" rel="noopener noreferrer" class="text-brand-text transition-opacity duration-200 hover:opacity-70">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        </a>
+
+        <!-- Brand Name -->
+        <div class="text-[2.5rem] font-bold tracking-[0.05rem] lowercase leading-none">tetote</div>
+
+        <!-- Footer Menu Links -->
+        <div class="flex flex-wrap justify-center items-center gap-y-2 text-[0.9rem]">
+            <a href="{% url 'shop:privacy_policy' %}" class="text-brand-text no-underline hover:opacity-70">{% translate "Privacy Policy" %}</a>
+            <span class="text-brand-border mx-4">|</span>
+            <a href="{% url 'shop:terms' %}" class="text-brand-text no-underline hover:opacity-70">{% translate "Terms and Conditions" %}</a>
+            <span class="text-brand-border mx-4">|</span>
+            <a href="{% url 'shop:delivery_policy' %}" class="text-brand-text no-underline hover:opacity-70">{% translate "Delivery Policy" %}</a>
+            <span class="text-brand-border mx-4">|</span>
+            <a href="{% url 'shop:return_policy' %}" class="text-brand-text no-underline hover:opacity-70">{% translate "Return Policy" %}</a>
+            <span class="text-brand-border mx-4">|</span>
+            <a href="{% url 'shop:contact' %}" class="text-brand-text no-underline hover:opacity-70">{% translate "Contact" %}</a>
         </div>
-        <div class="flex items-center gap-6">
-            <a href="{% url 'shop:privacy_policy' %}" class="text-[#666] no-underline">{% translate "Privacy Policy" %}</a>
-            <a href="{% url 'shop:return_policy' %}" class="text-[#666] no-underline">{% translate "Return Policy" %}</a>
-            <a href="{% url 'shop:terms' %}" class="text-[#666] no-underline">{% translate "Terms and Conditions" %}</a>
-        </div>
-        <div class="flex items-center gap-6">
-            <span class="mr-6">{% translate "Made with ❤️ in 🇨🇭" %}</span>
-            <span>{% translate "Payments secured by Stripe" %}</span>
+
+        <!-- Copyright -->
+        <div class="text-[0.8rem] text-brand-muted lowercase">
+            &copy; {% now "Y" %}, tetote
         </div>
     </footer>
 
