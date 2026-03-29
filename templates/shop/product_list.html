@@ -17,7 +17,7 @@
                 <!-- Main Filter Groups -->
                 <div class="filter-group">
                     <span class="filter-label">{% translate "Stock Status" %}</span>
-                    <div class="flex flex-col gap-2 items-start">
+                    <div class="flex flex-col gap-2 items-start pl-4">
                         <a href="#" class="filter-item {% if request.GET.stock == 'in_stock' %}active{% endif %}"
                            onclick="toggleStock(event)">
                             {% if request.GET.stock == 'in_stock' %}
@@ -30,7 +30,7 @@
 
                 <div class="filter-group">
                     <span class="filter-label">{% translate "Brands" %}</span>
-                    <div class="flex flex-col gap-2 items-start">
+                    <div class="flex flex-col gap-2 items-start pl-4">
                         {% for brand in brands %}
                             <a href="#" class="filter-item {% if brand.slug in active_brands %}active{% endif %}"
                                onclick="toggleFilter(event, 'brand', '{{ brand.slug }}')">
@@ -45,7 +45,7 @@
 
                 <div class="filter-group">
                     <span class="filter-label">{% translate "Glaze" %}</span>
-                    <div class="flex flex-col gap-2 items-start">
+                    <div class="flex flex-col gap-2 items-start pl-4">
                         {% for glaze in glazes %}
                             <a href="#" class="filter-item {% if glaze.slug in active_glazes %}active{% endif %}"
                                onclick="toggleFilter(event, 'glaze', '{{ glaze.slug }}')">
@@ -60,7 +60,7 @@
 
                 <div class="filter-group">
                     <span class="filter-label">{% translate "Type" %}</span>
-                    <div class="flex flex-col gap-2 items-start">
+                    <div class="flex flex-col gap-2 items-start pl-4">
                         {% for t in product_types %}
                             <a href="#" class="filter-item {% if t.slug in active_types %}active{% endif %}"
                                onclick="toggleFilter(event, 'type', '{{ t.slug }}')">
