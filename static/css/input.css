@@ -78,16 +78,13 @@
     @apply absolute bottom-2.5 right-2.5 bg-white/90 px-[0.6rem] py-[0.3rem] text-[0.8rem] text-[#9a7b76] rounded-[2px] tracking-[0.05rem] font-medium;
   }
 
-  .product-card h3 {
-    @apply mt-4 mb-[0.2rem] text-[1.4rem] font-medium;
-  }
   .price {
-    @apply text-[1.1rem] text-brand-text mt-[0.5rem];
+    @apply block;
   }
 
   .grid {
-    @apply grid gap-8;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr));
+    @apply grid gap-x-16 gap-y-12;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 185px), 1fr));
   }
 
   .filters {
@@ -108,15 +105,13 @@
   .filter-sidebar-container {
     @apply flex flex-col md:flex-row gap-12;
   }
-  .filter-sidebar {
-    @apply hidden md:block w-[250px] flex-shrink-0;
-  }
+
   .product-grid-container {
     @apply flex-grow;
   }
 
   .filter-drawer {
-    @apply fixed top-0 left-0 bottom-0 w-[80%] max-w-[300px] bg-white z-[1002] -translate-x-full transition-transform duration-300 ease-in-out p-8 overflow-y-auto md:static md:w-auto md:max-w-none md:p-0 md:bg-transparent md:translate-x-0 md:z-auto md:overflow-visible;
+    @apply fixed top-0 left-0 bottom-0 w-[80%] max-w-[300px] bg-white z-[1002] -translate-x-full transition-transform duration-300 ease-in-out p-8 overflow-y-auto md:static md:w-[200px] md:max-w-none md:p-0 md:bg-transparent md:translate-x-0 md:z-auto md:overflow-visible md:flex-shrink-0;
   }
   .filter-drawer.open {
     @apply translate-x-0;

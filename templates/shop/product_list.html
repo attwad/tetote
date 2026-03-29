@@ -118,17 +118,16 @@
                         {% endif %}
                     </div>
                 </a>
-                <a href="{% url 'shop:product_detail' product_slug=product.slug %}" class="no-underline text-brand-text">
-                    <h3>{{ product.name }}</h3>
-                </a>
-                <div class="text-[0.85rem] text-[#666] mb-2">
+                <div class="mt-2 text-center flex flex-col gap-1">
                     {% if product.brand %}
-                        <a href="{% url 'shop:brand_detail' brand_slug=product.brand.slug %}" class="text-inherit underline underline-offset-2">{{ product.brand.name }}</a>
+                        <a href="{% url 'shop:brand_detail' brand_slug=product.brand.slug %}" class="block no-underline text-[1.1rem] text-brand-text">{{ product.brand.name }}</a>
                     {% endif %}
-                    {% if product.glaze %} | {{ product.glaze.name }}{% endif %}
-                </div>
-                <div class="flex items-center justify-center gap-4 mt-2">
-                    <p class="price m-0">CHF {{ product.price_in_chf|floatformat:2 }}</p>
+
+                    <a href="{% url 'shop:product_detail' product_slug=product.slug %}" class="no-underline text-brand-text">
+                        <h3 class="m-0 text-[1.1rem] font-normal">{{ product.name }}</h3>
+                    </a>
+
+                    <p class="price m-0 text-[0.95rem] text-brand-muted">CHF {{ product.price_in_chf|floatformat:2 }}</p>
                 </div>
             </div>
         {% empty %}
