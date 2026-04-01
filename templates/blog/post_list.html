@@ -16,6 +16,10 @@
             {% if not forloop.last %}
                 <hr class="border-none border-t border-brand-border my-12">
             {% endif %}
+        {% empty %}
+            <div class="text-center py-20 text-brand-muted italic">
+                {% translate "We are sorry, there are no blog posts yet." %}
+            </div>
         {% endfor %}
     </div>
 
