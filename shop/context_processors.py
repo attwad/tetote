@@ -1,3 +1,4 @@
+from django.conf import settings
 from .models import StoreAnnouncement, StoreSettings
 
 
@@ -17,3 +18,10 @@ def store_settings(request):
     """
     settings = StoreSettings.objects.first()
     return {"store_settings": settings}
+
+
+def analytics(request):
+    """
+    Returns the Umami website ID for analytics.
+    """
+    return {"UMAMI_WEBSITE_ID": getattr(settings, "UMAMI_WEBSITE_ID", "")}

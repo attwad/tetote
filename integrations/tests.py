@@ -1,16 +1,16 @@
 import stripe
 from django.test import TestCase
 from django.urls import reverse
+from django.contrib.admin.sites import AdminSite
 from unittest.mock import patch, MagicMock
-from shop.models import Product
+from io import StringIO
+from django.core.management import call_command
+
+from shop.models import Product, ProductImage, Brand
+from shop.admin import ProductAdmin
 from integrations.views import sync_product, sync_price
 
 
-from django.core.management import call_command
-from io import StringIO
-
-
-# ...
 class MockObject(dict):
     def __getattr__(self, name):
         try:
@@ -20,7 +20,6 @@ class MockObject(dict):
 
 
 class StripeIntegrationTest(TestCase):
-    # ...
     @patch("stripe.Price.list")
     @patch("stripe.Product.list")
     def test_sync_stripe_command(self, mock_product_list, mock_price_list):
@@ -57,6 +56,8 @@ class StripeIntegrationTest(TestCase):
         self.assertEqual(product.stripe_name, "Stripe Product 1")
         self.assertEqual(product.price, 1500)
         self.assertEqual(product.stripe_price_id, "price_1")
+
+        # Test sync_product directly
         product_data = {
             "id": "prod_test",
             "name": "Test Product",
@@ -100,6 +101,39 @@ class StripeIntegrationTest(TestCase):
         # Price must remain unchanged
         self.assertEqual(product.price, 9900)
         self.assertEqual(product.stripe_price_id, "price_fixed")
+
+    def test_sync_product_does_not_overwrite_images(self):
+        # Create product with existing images
+        product = Product.objects.create(
+            stripe_product_id="prod_img_test",
+            name="Original",
+            stripe_name="Original",
+            slug="original",
+            price=1000,
+            main_photo="http://test.com/original_main.jpg",
+        )
+        ProductImage.objects.create(
+            product=product, url="http://test.com/original_gallery.jpg", order=0
+        )
+
+        # Update product via Stripe (simulated webhook/sync)
+        product_data = {
+            "id": "prod_img_test",
+            "name": "Updated Name",
+            "images": ["http://test.com/stripe_new.jpg"],
+            "created": 1700000000,
+        }
+
+        sync_product(product_data)
+
+        product.refresh_from_db()
+        self.assertEqual(product.stripe_name, "Updated Name")
+        # Images must remain unchanged from original local values
+        self.assertEqual(product.main_photo, "http://test.com/original_main.jpg")
+        self.assertEqual(product.images.count(), 1)
+        self.assertEqual(
+            product.images.first().url, "http://test.com/original_gallery.jpg"
+        )
 
     def test_sync_price(self):
         Product.objects.create(
@@ -196,3 +230,66 @@ class StripeIntegrationTest(TestCase):
             url, data=b"payload", content_type="application/json"
         )
         self.assertEqual(response.status_code, 400)
+
+
+class ProductAdminTest(TestCase):
+    def setUp(self):
+        self.site = AdminSite()
+        self.admin = ProductAdmin(Product, self.site)
+        self.brand = Brand.objects.create(name="Bizen", slug="bizen")
+        self.product = Product.objects.create(
+            stripe_product_id="prod_admin_test",
+            stripe_price_id="price_admin_test",
+            name="Admin Product",
+            slug="admin-prod",
+            price=5000,
+            main_photo="http://test.com/main.jpg",
+            brand=self.brand,
+        )
+
+    @patch("stripe.Product.modify")
+    def test_save_related_syncs_images_to_stripe(self, mock_modify):
+        # Add a gallery image
+        ProductImage.objects.create(
+            product=self.product, url="http://test.com/gallery.jpg", order=1
+        )
+
+        # Mock the form and formsets
+        mock_form = MagicMock()
+        mock_form.instance = self.product
+        mock_formsets = []
+        mock_request = MagicMock()
+
+        # Call save_related
+        self.admin.save_related(mock_request, mock_form, mock_formsets, change=True)
+
+        # Verify stripe.Product.modify was called with correct images
+        expected_images = [
+            "http://test.com/main.jpg",
+            "http://test.com/gallery.jpg",
+        ]
+        mock_modify.assert_called_once_with(
+            "prod_admin_test",
+            images=expected_images,
+        )
+
+    @patch("stripe.Product.modify")
+    def test_save_related_limits_to_8_images(self, mock_modify):
+        self.product.main_photo = "http://test.com/0.jpg"
+        self.product.save()
+
+        # Add 10 gallery images
+        for i in range(1, 11):
+            ProductImage.objects.create(
+                product=self.product, url=f"http://test.com/{i}.jpg", order=i
+            )
+
+        mock_form = MagicMock()
+        mock_form.instance = self.product
+        self.admin.save_related(MagicMock(), mock_form, [], change=True)
+
+        # Verify only 8 images were sent
+        args, kwargs = mock_modify.call_args
+        self.assertEqual(len(kwargs["images"]), 8)
+        self.assertEqual(kwargs["images"][0], "http://test.com/0.jpg")
+        self.assertEqual(kwargs["images"][7], "http://test.com/7.jpg")

@@ -82,6 +82,7 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "shop.context_processors.announcement",
                 "shop.context_processors.store_settings",
+                "shop.context_processors.analytics",
             ],
         },
     },
@@ -155,6 +156,9 @@ MEDIA_ROOT = BASE_DIR / "media"
 STRIPE_PUBLIC_KEY = env("STRIPE_PUBLIC_KEY", default="")
 STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY", default="")
 STRIPE_WEBHOOK_SECRET = env("STRIPE_WEBHOOK_SECRET", default="")
+
+# Umami Analytics
+UMAMI_WEBSITE_ID = env("UMAMI_WEBSITE_ID", default="")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/6.0/ref/settings/#default-auto-field

@@ -1,3 +1,5 @@
+import stripe
+from django.conf import settings
 from django.contrib import admin
 from django.utils.html import format_html
 from modeltranslation.admin import TranslationAdmin, TabbedTranslationAdmin
@@ -11,10 +13,14 @@ from .models import (
     StoreSettings,
 )
 
+stripe.api_key = settings.STRIPE_SECRET_KEY
+
 
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
-    extra = 0
+    extra = 1
+    max_num = 8
+    fields = ("url", "order", "image_preview")
     readonly_fields = ("image_preview",)
 
     def image_preview(self, obj):
@@ -85,7 +91,40 @@ class ProductAdmin(TabbedTranslationAdmin):
     inlines = [ProductImageInline]
 
     def has_add_permission(self, request):
-        return False
+        return True
+
+    def save_related(self, request, form, formsets, change):
+        """
+        After saving the product and its images, sync the images to Stripe.
+        """
+        super().save_related(request, form, formsets, change)
+
+        product = form.instance
+        if product.stripe_product_id:
+            # Collect all image URLs: main_photo first, then gallery images in order
+            images = []
+            if product.main_photo:
+                images.append(product.main_photo)
+
+            # Add gallery images, excluding duplicates and limiting to 8 total
+            for img in product.images.all().order_by("order"):
+                if img.url and img.url not in images:
+                    images.append(img.url)
+
+            # Stripe allows up to 8 images
+            final_images = images[:8]
+
+            try:
+                stripe.Product.modify(
+                    product.stripe_product_id,
+                    images=final_images,
+                )
+            except Exception as e:
+                self.message_user(
+                    request,
+                    f"Warning: Failed to sync images to Stripe: {e}",
+                    level="warning",
+                )
 
     # Note: price and main_photo are read-only as well but since they are common
     # we don't translate them. They are in fieldsets below.

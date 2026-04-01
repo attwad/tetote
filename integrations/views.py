@@ -69,7 +69,6 @@ def sync_product(product_data):
 
         # Surgical update: only touch fields that belong to the Stripe Product object
         product.stripe_name = stripe_name
-        product.main_photo = main_photo
         product.slug = slug
 
         # Ingest created timestamp
@@ -77,12 +76,17 @@ def sync_product(product_data):
             product_data["created"], tz=datetime.timezone.utc
         )
 
-        product.save()
+        # Only update images from Stripe if the product is being created for the first time
+        if created:
+            product.main_photo = main_photo
+            product.save()
 
-        # Update Gallery
-        product.images.all().delete()
-        for i, img_url in enumerate(images):
-            ProductImage.objects.create(product=product, url=img_url, order=i)
+            # Update Gallery
+            product.images.all().delete()
+            for i, img_url in enumerate(images):
+                ProductImage.objects.create(product=product, url=img_url, order=i)
+        else:
+            product.save()
 
 
 def sync_price(price_data):
