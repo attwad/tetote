@@ -2,7 +2,7 @@ import stripe
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.admin.sites import AdminSite
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch, MagicMock, PropertyMock
 from io import StringIO
 from django.core.management import call_command
 
@@ -272,6 +272,70 @@ class ProductAdminTest(TestCase):
             "prod_admin_test",
             images=expected_images,
         )
+
+    @patch("stripe.Product.modify")
+    @patch("stripe.FileLink.create")
+    @patch("stripe.File.create")
+    @patch("shop.admin.open", create=True)
+    @patch("shop.admin.os.path.exists")
+    @patch("shop.admin.os.remove")
+    def test_save_related_uploads_image_to_stripe(
+        self,
+        mock_remove,
+        mock_exists,
+        mock_open,
+        mock_file_create,
+        mock_file_link_create,
+        mock_modify,
+    ):
+        # Mocking the .path property of the ImageField
+        # We'll use a slightly different approach: patch the ProductImage.image_file.path directly
+        # But since we're using models, we can patch the underlying file storage or just the path
+
+        img = ProductImage.objects.create(
+            product=self.product,
+            image_file="product_images/test.jpg",
+            order=1,
+        )
+
+        # Mock the form and formsets
+        mock_form = MagicMock()
+        mock_form.instance = self.product
+        mock_request = MagicMock()
+
+        # Mock Stripe responses
+        mock_file_create.return_value = MockObject({"id": "file_123"})
+        mock_file_link_create.return_value = MockObject(
+            {"url": "https://files.stripe.com/test.jpg"}
+        )
+        mock_exists.return_value = True
+
+        # Instead of patching the class, we let the real object be used but we mock the .path property
+        # and ensure it behaves like it has a file.
+        # Actually, since it's a real model instance, we can just set the path on the instance's field.
+        with patch(
+            "django.db.models.fields.files.FieldFile.path", new_callable=PropertyMock
+        ) as mock_path:
+            mock_path.return_value = "/fake/path/test.jpg"
+
+            # Call save_related
+            self.admin.save_related(mock_request, mock_form, [], change=True)
+
+            # Verify Stripe File creation
+            mock_file_create.assert_called_once()
+            args, kwargs = mock_file_create.call_args
+            self.assertEqual(kwargs["purpose"], "product_image")
+
+            # Verify Stripe FileLink creation
+            mock_file_link_create.assert_called_once_with(file="file_123")
+
+            # Verify DB was updated
+            img.refresh_from_db()
+            self.assertEqual(img.url, "https://files.stripe.com/test.jpg")
+            self.assertFalse(img.image_file)  # Should be cleared after upload
+
+            # Verify local file was removed
+            mock_remove.assert_called_once_with("/fake/path/test.jpg")
 
     @patch("stripe.Product.modify")
     def test_save_related_limits_to_8_images(self, mock_modify):

@@ -499,6 +499,7 @@ dependencies = [
     { name = "django-environ" },
     { name = "django-markdownx" },
     { name = "django-modeltranslation" },
+    { name = "pillow" },
     { name = "stripe" },
 ]
 
@@ -515,6 +516,7 @@ requires-dist = [
     { name = "django-environ", specifier = ">=0.13.0" },
     { name = "django-markdownx", specifier = ">=4.0.9" },
     { name = "django-modeltranslation", specifier = ">=0.19.19" },
+    { name = "pillow", specifier = ">=12.1.1" },
     { name = "stripe", specifier = ">=14.4.0" },
 ]
 

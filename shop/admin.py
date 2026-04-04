@@ -1,4 +1,5 @@
 import stripe
+import os
 from django.conf import settings
 from django.contrib import admin
 from django.utils.html import format_html
@@ -20,8 +21,8 @@ class ProductImageInline(admin.TabularInline):
     model = ProductImage
     extra = 1
     max_num = 8
-    fields = ("url", "order", "image_preview")
-    readonly_fields = ("image_preview",)
+    fields = ("image_file", "url", "order", "image_preview")
+    readonly_fields = ("image_preview", "url")
 
     def image_preview(self, obj):
         if obj.url:
@@ -100,6 +101,37 @@ class ProductAdmin(TabbedTranslationAdmin):
         super().save_related(request, form, formsets, change)
 
         product = form.instance
+
+        # Handle file uploads to Stripe for each ProductImage
+        for img in product.images.all():
+            if img.image_file:
+                try:
+                    # 1. Upload file to Stripe
+                    with open(img.image_file.path, "rb") as f:
+                        stripe_file = stripe.File.create(
+                            file=f, purpose="product_image"
+                        )
+
+                    # 2. Create a public FileLink to get a public URL
+                    stripe_link = stripe.FileLink.create(file=stripe_file.id)
+
+                    # 3. Store the public URL in the database
+                    img.url = stripe_link.url
+                    img.save()
+
+                    # 4. Delete the local temporary file
+                    if os.path.exists(img.image_file.path):
+                        os.remove(img.image_file.path)
+                        img.image_file = None
+                        img.save()
+
+                except Exception as e:
+                    self.message_user(
+                        request,
+                        f"Warning: Failed to upload image for {product.name} to Stripe: {e}",
+                        level="warning",
+                    )
+
         if product.stripe_product_id:
             # Collect all image URLs: main_photo first, then gallery images in order
             images = []

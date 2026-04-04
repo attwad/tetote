@@ -140,7 +140,10 @@ class ProductImage(models.Model):
         related_name="images",
         verbose_name=_("Product"),
     )
-    url = models.URLField(_("Image URL"), max_length=500)
+    url = models.URLField(_("Image URL"), max_length=500, blank=True)
+    image_file = models.ImageField(
+        _("Image File"), upload_to="product_images/", blank=True, null=True
+    )
     order = models.PositiveIntegerField(_("Order"), default=0)
 
     class Meta:
