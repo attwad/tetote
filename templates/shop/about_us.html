@@ -1,13 +1,10 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n content_tags %}
 
 {% block title %}{% translate "About us" %} - Tetote{% endblock %}
 
 {% block content %}
-<div class="max-w-[800px] mx-auto leading-relaxed">
-    <h1 class="mb-8">{% translate "About us" %}</h1>
-    <p class="mb-4">{% translate "Tetote is a curated boutique specializing in the finest Japanese ceramics. We bridge the gap between traditional Japanese master potters and enthusiasts around the world." %}</p>
-    <p class="mb-4">{% translate "Our name, Tetote, represents the connection between 'Hand and Hand' (Te to Te)—the hand of the creator and the hand of the collector." %}</p>
-    <p>{% translate "Each piece in our collection is hand-selected for its unique craftsmanship, history, and aesthetic value, bringing the soul of Japanese artistry into your home." %}</p>
+<div class="max-w-[800px] mx-auto leading-relaxed markdown-content">
+    {% include_content "about_us" %}
 </div>
 {% endblock %}

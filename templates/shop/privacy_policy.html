@@ -1,12 +1,10 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n content_tags %}
 
 {% block title %}{% translate "Privacy Policy" %} - Tetote{% endblock %}
 
 {% block content %}
-<div class="max-w-[800px] mx-auto leading-relaxed">
-    <h1 class="mb-8">{% translate "Privacy Policy" %}</h1>
-    <p class="mb-4">{% translate "Your privacy is important to us. It is Tetote's policy to respect your privacy regarding any information we may collect from you across our website." %}</p>
-    <p>{% translate "This is a placeholder for our full Privacy Policy content." %}</p>
+<div class="max-w-[800px] mx-auto leading-relaxed markdown-content">
+    {% include_content "privacy_policy" %}
 </div>
 {% endblock %}

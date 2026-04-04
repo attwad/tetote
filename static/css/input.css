@@ -327,6 +327,41 @@
     @apply bg-none border-none text-brand-muted cursor-pointer text-[1.4rem];
   }
 
+  /* Markdown Content Styling */
+  .markdown-content h1 {
+    @apply text-[2.5rem] font-medium mb-8 mt-12 first:mt-0 tracking-[0.05rem];
+  }
+  .markdown-content h2 {
+    @apply text-[1.8rem] font-medium mb-6 mt-10 tracking-[0.03rem] border-b border-brand-border pb-2;
+  }
+  .markdown-content h3 {
+    @apply text-[1.4rem] font-semibold mb-4 mt-8;
+  }
+  .markdown-content h4 {
+    @apply text-[1.2rem] font-bold mb-3 mt-6 uppercase tracking-wider;
+  }
+  .markdown-content p {
+    @apply mb-6 leading-[1.8];
+  }
+  .markdown-content ul {
+    @apply list-disc list-inside mb-6 pl-4;
+  }
+  .markdown-content ol {
+    @apply list-decimal list-inside mb-6 pl-4;
+  }
+  .markdown-content li {
+    @apply mb-2;
+  }
+  .markdown-content strong {
+    @apply font-bold text-brand-text;
+  }
+  .markdown-content em {
+    @apply italic;
+  }
+  .markdown-content blockquote {
+    @apply border-l-4 border-brand-accent pl-6 py-2 my-8 italic text-brand-muted bg-brand-bg/50;
+  }
+
   @media (max-width: 768px) {
     .toast-container {
       @apply top-[80px] right-5 left-5;

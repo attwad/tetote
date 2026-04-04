@@ -1,0 +1,483 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-04-04 16:08+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: blog/models.py:8
+msgid "Title"
+msgstr "タイトル"
+
+#: blog/models.py:9 shop/models.py:10 shop/models.py:55 shop/models.py:67
+#: shop/models.py:84
+msgid "Slug"
+msgstr "スラッグ"
+
+#: blog/models.py:10
+msgid "Content"
+msgstr "内容"
+
+#: blog/models.py:11
+msgid "Created At"
+msgstr "作成日時"
+
+#: blog/models.py:14
+msgid "Post"
+msgstr "投稿"
+
+#: blog/models.py:15
+msgid "Posts"
+msgstr "投稿一覧"
+
+#: shop/models.py:9 shop/models.py:54 shop/models.py:66 shop/models.py:83
+msgid "Name"
+msgstr "名前"
+
+#: shop/models.py:11 shop/models.py:85
+msgid "Description"
+msgstr "説明"
+
+#: shop/models.py:12
+msgid "Location"
+msgstr "場所"
+
+#: shop/models.py:13
+msgid "Hero Image URL"
+msgstr "ヒーロー画像URL"
+
+#: shop/models.py:14
+msgid "The Story"
+msgstr "ストーリー"
+
+#: shop/models.py:15
+msgid "The Craft"
+msgstr "職人技"
+
+#: shop/models.py:16 templates/shop/brand_detail.html:59
+msgid "The Wares"
+msgstr "作品"
+
+#: shop/models.py:18
+msgid "Story Side Image URL"
+msgstr "ストーリーサイド画像URL"
+
+#: shop/models.py:22 shop/models.py:38 shop/models.py:96
+#: templates/shop/product_detail.html:46
+msgid "Brand"
+msgstr "ブランド"
+
+#: shop/models.py:23 templates/shop/product_list.html:32
+msgid "Brands"
+msgstr "ブランド一覧"
+
+#: shop/models.py:40 shop/models.py:143
+msgid "Image URL"
+msgstr "画像URL"
+
+#: shop/models.py:41 shop/models.py:144
+msgid "Order"
+msgstr "順序"
+
+#: shop/models.py:42
+msgid "Caption"
+msgstr "キャプション"
+
+#: shop/models.py:45
+msgid "Brand Image"
+msgstr "ブランド画像"
+
+#: shop/models.py:46
+msgid "Brand Images"
+msgstr "ブランド画像一覧"
+
+#: shop/models.py:58 shop/models.py:104 templates/shop/product_detail.html:49
+#: templates/shop/product_list.html:47
+msgid "Glaze"
+msgstr "釉薬"
+
+#: shop/models.py:59
+msgid "Glazes"
+msgstr "釉薬一覧"
+
+#: shop/models.py:70 shop/models.py:112
+msgid "Product Type"
+msgstr "商品タイプ"
+
+#: shop/models.py:71
+msgid "Product Types"
+msgstr "商品タイプ一覧"
+
+#: shop/models.py:79
+msgid "Stripe Product ID"
+msgstr "Stripe商品ID"
+
+#: shop/models.py:81
+msgid "Stripe Price ID"
+msgstr "Stripe価格ID"
+
+#: shop/models.py:82
+msgid "Stripe Name"
+msgstr "Stripe名称"
+
+#: shop/models.py:86
+msgid "Price (CHF cents)"
+msgstr "価格 (CHF セント)"
+
+#: shop/models.py:87
+msgid "Main Photo URL"
+msgstr "メイン写真URL"
+
+#: shop/models.py:88
+msgid "Stock Quantity"
+msgstr "在庫数"
+
+#: shop/models.py:89
+msgid "Public"
+msgstr "公開"
+
+#: shop/models.py:114
+msgid "Date Added"
+msgstr "追加日"
+
+#: shop/models.py:117 shop/models.py:141
+msgid "Product"
+msgstr "商品"
+
+#: shop/models.py:118
+msgid "Products"
+msgstr "商品一覧"
+
+#: shop/models.py:147
+msgid "Product Image"
+msgstr "商品画像"
+
+#: shop/models.py:148
+msgid "Product Images"
+msgstr "商品画像一覧"
+
+#: shop/models.py:156
+msgid "Announcement Text"
+msgstr "お知らせテキスト"
+
+#: shop/models.py:157
+msgid "Is Active"
+msgstr "有効"
+
+#: shop/models.py:161
+msgid "Store Announcement"
+msgstr "ショップのお知らせ"
+
+#: shop/models.py:162
+msgid "Store Announcements"
+msgstr "ショップのお知らせ一覧"
+
+#: shop/models.py:169
+msgid "Sales Paused"
+msgstr "販売停止中"
+
+#: shop/models.py:172 shop/models.py:173 shop/models.py:176
+msgid "Store Settings"
+msgstr "ショップ設定"
+
+#: shop/views.py:171
+msgid "Checkout is temporarily disabled"
+msgstr "現在、お支払いは一時的にご利用いただけません"
+
+#: shop/views.py:179
+msgid "Invalid request data"
+msgstr "不正なリクエストデータです"
+
+#: shop/views.py:182
+msgid "Cart is empty"
+msgstr "カートは空です"
+
+#: shop/views.py:197
+msgid "Invalid cart items"
+msgstr "カート内の商品が不正です"
+
+#: shop/views.py:212
+#, python-format
+msgid "Product with price %(price_id)s not found"
+msgstr "価格ID %(price_id)s の商品が見つかりません"
+
+#: shop/views.py:219
+#, python-format
+msgid "Only %(qty)s left of %(name)s"
+msgstr "%(name)s の在庫は残り %(qty)s 点です"
+
+#: templates/404.html:4
+msgid "Page Not Found"
+msgstr "ページが見つかりません"
+
+#: templates/404.html:9
+msgid "The page you are looking for does not exist."
+msgstr "お探しのページは存在しません。"
+
+#: templates/404.html:10
+msgid "It may have been moved, or the link might be broken."
+msgstr "移動されたか、リンクが切れている可能性があります。"
+
+#: templates/404.html:11
+msgid "Return to Shop"
+msgstr "ショップに戻る"
+
+#: templates/base.html:47 templates/base.html:84 templates/shop/about_us.html:4
+msgid "About us"
+msgstr "私たちについて"
+
+#: templates/base.html:48 templates/base.html:85
+msgid "Shop"
+msgstr "ショップ"
+
+#: templates/base.html:49 templates/base.html:86
+msgid "Blog"
+msgstr "ブログ"
+
+#: templates/base.html:50 templates/base.html:87 templates/base.html:143
+#: templates/shop/contact.html:4
+msgid "Contact"
+msgstr "お問い合わせ"
+
+#: templates/base.html:92
+msgid "Language"
+msgstr "言語"
+
+#: templates/base.html:135 templates/shop/privacy_policy.html:4
+msgid "Privacy Policy"
+msgstr "プライバシーポリシー"
+
+#: templates/base.html:137 templates/shop/terms_conditions.html:4
+msgid "Terms and Conditions"
+msgstr "利用規約"
+
+#: templates/base.html:139 templates/shop/delivery_policy.html:4
+msgid "Delivery Policy"
+msgstr "配送ポリシー"
+
+#: templates/base.html:141 templates/shop/return_policy.html:4
+msgid "Return Policy"
+msgstr "返品ポリシー"
+
+#: templates/blog/post_detail.html:22
+msgid "Published on"
+msgstr "公開日："
+
+#: templates/blog/post_detail.html:29
+msgid "Back to Blog"
+msgstr "ブログ一覧に戻る"
+
+#: templates/blog/post_list.html:14
+msgid "Read More"
+msgstr "続きを読む"
+
+#: templates/blog/post_list.html:21
+msgid "We are sorry, there are no blog posts yet."
+msgstr "申し訳ありません。まだブログ記事がありません。"
+
+#: templates/blog/post_list.html:29
+msgid "first"
+msgstr "最初"
+
+#: templates/blog/post_list.html:30
+msgid "previous"
+msgstr "前へ"
+
+#: templates/blog/post_list.html:33
+#, python-format
+msgid "Page %(number)s of %(num_pages)s."
+msgstr "%(num_pages)s ページ中 %(number)s ページ目"
+
+#: templates/blog/post_list.html:36
+msgid "next"
+msgstr "次へ"
+
+#: templates/blog/post_list.html:37
+msgid "last"
+msgstr "最後"
+
+#: templates/shop/brand_detail.html:43
+msgid "The Firing Process"
+msgstr "焼成プロセス"
+
+#: templates/shop/brand_detail.html:69
+msgid "View the Collection"
+msgstr "コレクションを見る"
+
+#: templates/shop/cart.html:4 templates/shop/cart.html:7
+msgid "Your selection"
+msgstr "選択した商品"
+
+#: templates/shop/cart.html:17
+msgid "Total"
+msgstr "合計"
+
+#: templates/shop/cart.html:19
+msgid "shipping: calculated at checkout"
+msgstr "送料：チェックアウト時に計算されます"
+
+#: templates/shop/cart.html:24
+msgid "Clear selection"
+msgstr "選択を解除"
+
+#: templates/shop/cart.html:26
+msgid "Checkout Paused"
+msgstr "お支払い停止中"
+
+#: templates/shop/cart.html:28
+msgid "Checkout"
+msgstr "購入手続きへ"
+
+#: templates/shop/cart.html:32
+msgid "We have temporarily paused online sales. Please check back later!"
+msgstr "現在、オンライン販売を一時停止しております。後ほど再度ご確認ください。"
+
+#: templates/shop/cart.html:38
+msgid "Your cart is empty."
+msgstr "カートは空です。"
+
+#: templates/shop/cart.html:39
+msgid "Go Shopping"
+msgstr "買い物を続ける"
+
+#: templates/shop/cart.html:103
+msgid "Qty"
+msgstr "数量"
+
+#: templates/shop/cart.html:109
+msgid "Remove"
+msgstr "削除"
+
+#: templates/shop/cart.html:126 templates/shop/product_detail.html:143
+msgid ""
+"Only X items are available in stock. If you need more, please contact us!"
+msgstr "在庫は残り X 点です。さらに多く必要な場合は、お問い合わせください。"
+
+#: templates/shop/cart.html:145
+msgid "Are you sure you want to clear your cart?"
+msgstr "カートを空にしてもよろしいですか？"
+
+#: templates/shop/checkout_success.html:4
+msgid "Thank You"
+msgstr "ありがとうございます"
+
+#: templates/shop/checkout_success.html:16
+msgid "Thank You for Your Order!"
+msgstr "ご注文ありがとうございます"
+
+#: templates/shop/checkout_success.html:18
+msgid ""
+"Your transaction was successful. We are now carefully preparing your "
+"artisanal ceramics for their journey to you."
+msgstr ""
+"お支払いが完了しました。現在、お客様のもとへお届けする職人仕立ての陶器を慎重に準備しております。"
+
+#: templates/shop/checkout_success.html:24
+msgid "Continue Shopping"
+msgstr "買い物を続ける"
+
+#: templates/shop/checkout_success.html:27
+msgid "A confirmation email will be sent to you shortly."
+msgstr "まもなく確認メールが送信されます。"
+
+#: templates/shop/product_detail.html:52 templates/shop/product_list.html:62
+msgid "Type"
+msgstr "タイプ"
+
+#: templates/shop/product_detail.html:64 templates/shop/product_list.html:26
+msgid "In Stock"
+msgstr "在庫あり"
+
+#: templates/shop/product_detail.html:64
+msgid "available"
+msgstr "在庫あり"
+
+#: templates/shop/product_detail.html:70
+msgid "Add to Cart"
+msgstr "カートに追加"
+
+#: templates/shop/product_detail.html:74
+msgid "View Cart"
+msgstr "カートを見る"
+
+#: templates/shop/product_detail.html:78 templates/shop/product_list.html:122
+msgid "Out of Stock"
+msgstr "在庫切れ"
+
+#: templates/shop/product_detail.html:152
+msgid "Added to cart!"
+msgstr "カートに追加されました"
+
+#: templates/shop/product_list.html:19
+msgid "Stock Status"
+msgstr "在庫状況"
+
+#: templates/shop/product_list.html:77
+msgid "Clear all"
+msgstr "すべてクリア"
+
+#: templates/shop/product_list.html:89
+msgid "Refine selection"
+msgstr "絞り込み"
+
+#: templates/shop/product_list.html:94
+msgid "Sort by"
+msgstr "並べ替え"
+
+#: templates/shop/product_list.html:96
+msgid "New in Shop"
+msgstr "新着順"
+
+#: templates/shop/product_list.html:99
+msgid "Lowest Price"
+msgstr "価格の安い順"
+
+#: templates/shop/product_list.html:102
+msgid "Highest Price"
+msgstr "価格の高い順"
+
+#: templates/shop/product_list.html:141
+msgid "No products found."
+msgstr "商品が見つかりませんでした。"
+
+#: templates/shop/product_list.html:149
+msgid "Previous"
+msgstr "前へ"
+
+#: templates/shop/product_list.html:152
+#, python-format
+msgid "Page %(current)s of %(total)s"
+msgstr "%(total)s ページ中 %(current)s ページ目"
+
+#: templates/shop/product_list.html:155
+msgid "Next"
+msgstr "次へ"
+
+#: tetote/settings.py:134
+msgid "English"
+msgstr "英語"
+
+#: tetote/settings.py:135
+msgid "German"
+msgstr "ドイツ語"
+
+#: tetote/settings.py:136
+msgid "French"
+msgstr "フランス語"
+
+#: tetote/settings.py:137
+msgid "Japanese"
+msgstr "日本語"

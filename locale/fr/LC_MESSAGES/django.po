@@ -1,0 +1,488 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-04-04 15:19+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: blog/models.py:8
+msgid "Title"
+msgstr "Titre"
+
+#: blog/models.py:9 shop/models.py:10 shop/models.py:55 shop/models.py:67
+#: shop/models.py:84
+msgid "Slug"
+msgstr "Slug"
+
+#: blog/models.py:10
+msgid "Content"
+msgstr "Contenu"
+
+#: blog/models.py:11
+msgid "Created At"
+msgstr "Créé le"
+
+#: blog/models.py:14
+msgid "Post"
+msgstr "Article"
+
+#: blog/models.py:15
+msgid "Posts"
+msgstr "Articles"
+
+#: shop/models.py:9 shop/models.py:54 shop/models.py:66 shop/models.py:83
+msgid "Name"
+msgstr "Nom"
+
+#: shop/models.py:11 shop/models.py:85
+msgid "Description"
+msgstr "Description"
+
+#: shop/models.py:12
+msgid "Location"
+msgstr "Lieu"
+
+#: shop/models.py:13
+msgid "Hero Image URL"
+msgstr "URL de l'image principale"
+
+#: shop/models.py:14
+msgid "The Story"
+msgstr "L'histoire"
+
+#: shop/models.py:15
+msgid "The Craft"
+msgstr "L'artisanat"
+
+#: shop/models.py:16 templates/shop/brand_detail.html:59
+msgid "The Wares"
+msgstr "Les créations"
+
+#: shop/models.py:18
+msgid "Story Side Image URL"
+msgstr "URL de l'image latérale de l'histoire"
+
+#: shop/models.py:22 shop/models.py:38 shop/models.py:96
+#: templates/shop/product_detail.html:46
+msgid "Brand"
+msgstr "Marque"
+
+#: shop/models.py:23 templates/shop/product_list.html:32
+msgid "Brands"
+msgstr "Marques"
+
+#: shop/models.py:40 shop/models.py:143
+msgid "Image URL"
+msgstr "URL de l'image"
+
+#: shop/models.py:41 shop/models.py:144
+msgid "Order"
+msgstr "Ordre"
+
+#: shop/models.py:42
+msgid "Caption"
+msgstr "Légende"
+
+#: shop/models.py:45
+msgid "Brand Image"
+msgstr "Image de la marque"
+
+#: shop/models.py:46
+msgid "Brand Images"
+msgstr "Images de la marque"
+
+#: shop/models.py:58 shop/models.py:104 templates/shop/product_detail.html:49
+#: templates/shop/product_list.html:47
+msgid "Glaze"
+msgstr "Émaux"
+
+#: shop/models.py:59
+msgid "Glazes"
+msgstr "Émaux"
+
+#: shop/models.py:70 shop/models.py:112
+msgid "Product Type"
+msgstr "Type de produit"
+
+#: shop/models.py:71
+msgid "Product Types"
+msgstr "Types de produit"
+
+#: shop/models.py:79
+msgid "Stripe Product ID"
+msgstr "ID Produit Stripe"
+
+#: shop/models.py:81
+msgid "Stripe Price ID"
+msgstr "ID Prix Stripe"
+
+#: shop/models.py:82
+msgid "Stripe Name"
+msgstr "Nom Stripe"
+
+#: shop/models.py:86
+msgid "Price (CHF cents)"
+msgstr "Prix (centimes CHF)"
+
+#: shop/models.py:87
+msgid "Main Photo URL"
+msgstr "URL de la photo principale"
+
+#: shop/models.py:88
+msgid "Stock Quantity"
+msgstr "Quantité en stock"
+
+#: shop/models.py:89
+msgid "Public"
+msgstr "Public"
+
+#: shop/models.py:114
+msgid "Date Added"
+msgstr "Date d'ajout"
+
+#: shop/models.py:117 shop/models.py:141
+msgid "Product"
+msgstr "Produit"
+
+#: shop/models.py:118
+msgid "Products"
+msgstr "Produits"
+
+#: shop/models.py:147
+msgid "Product Image"
+msgstr "Image du produit"
+
+#: shop/models.py:148
+msgid "Product Images"
+msgstr "Images du produit"
+
+#: shop/models.py:156
+msgid "Announcement Text"
+msgstr "Texte de l'annonce"
+
+#: shop/models.py:157
+msgid "Is Active"
+msgstr "Est actif"
+
+#: shop/models.py:161
+msgid "Store Announcement"
+msgstr "Annonce de la boutique"
+
+#: shop/models.py:162
+msgid "Store Announcements"
+msgstr "Annonces de la boutique"
+
+#: shop/models.py:169
+msgid "Sales Paused"
+msgstr "Ventes suspendues"
+
+#: shop/models.py:172 shop/models.py:173 shop/models.py:176
+msgid "Store Settings"
+msgstr "Paramètres de la boutique"
+
+#: shop/views.py:171
+msgid "Checkout is temporarily disabled"
+msgstr "Le paiement est temporairement désactivé"
+
+#: shop/views.py:179
+msgid "Invalid request data"
+msgstr "Données de requête invalides"
+
+#: shop/views.py:182
+msgid "Cart is empty"
+msgstr "Votre panier est vide."
+
+#: shop/views.py:197
+msgid "Invalid cart items"
+msgstr "Articles du panier invalides"
+
+#: shop/views.py:212
+#, python-format
+msgid "Product with price %(price_id)s not found"
+msgstr "Produit avec le prix %(price_id)s non trouvé"
+
+#: shop/views.py:219
+#, python-format
+msgid "Only %(qty)s left of %(name)s"
+msgstr "Seulement %(qty)s restant(s) pour %(name)s"
+
+#: templates/404.html:4
+msgid "Page Not Found"
+msgstr "Page non trouvée"
+
+#: templates/404.html:9
+msgid "The page you are looking for does not exist."
+msgstr "La page que vous recherchez n'existe pas."
+
+#: templates/404.html:10
+msgid "It may have been moved, or the link might be broken."
+msgstr "Elle a peut-être été déplacée, ou le lien est cassé."
+
+#: templates/404.html:11
+msgid "Return to Shop"
+msgstr "Retour à la boutique"
+
+#: templates/base.html:47 templates/base.html:84 templates/shop/about_us.html:4
+msgid "About us"
+msgstr "À propos"
+
+#: templates/base.html:48 templates/base.html:85
+msgid "Shop"
+msgstr "Boutique"
+
+#: templates/base.html:49 templates/base.html:86
+msgid "Blog"
+msgstr "Blog"
+
+#: templates/base.html:50 templates/base.html:87 templates/base.html:143
+#: templates/shop/contact.html:4
+msgid "Contact"
+msgstr "Contact"
+
+#: templates/base.html:92
+msgid "Language"
+msgstr "Langue"
+
+#: templates/base.html:135 templates/shop/privacy_policy.html:4
+msgid "Privacy Policy"
+msgstr "Politique de confidentialité"
+
+#: templates/base.html:137 templates/shop/terms_conditions.html:4
+msgid "Terms and Conditions"
+msgstr "Termes et Conditions"
+
+#: templates/base.html:139 templates/shop/delivery_policy.html:4
+msgid "Delivery Policy"
+msgstr "Politique de livraison"
+
+#: templates/base.html:141 templates/shop/return_policy.html:4
+msgid "Return Policy"
+msgstr "Politique de retour"
+
+#: templates/blog/post_detail.html:22
+msgid "Published on"
+msgstr "Publié le"
+
+#: templates/blog/post_detail.html:29
+msgid "Back to Blog"
+msgstr "Retour au Blog"
+
+#: templates/blog/post_list.html:14
+msgid "Read More"
+msgstr "Lire la suite"
+
+#: templates/blog/post_list.html:21
+msgid "We are sorry, there are no blog posts yet."
+msgstr "Nous sommes désolés, il n'y a pas encore d'articles sur le blog."
+
+#: templates/blog/post_list.html:29
+msgid "first"
+msgstr "premier"
+
+#: templates/blog/post_list.html:30
+msgid "previous"
+msgstr "précédent"
+
+#: templates/blog/post_list.html:33
+#, python-format
+msgid "Page %(number)s of %(num_pages)s."
+msgstr "Page %(number)s sur %(num_pages)s."
+
+#: templates/blog/post_list.html:36
+msgid "next"
+msgstr "suivant"
+
+#: templates/blog/post_list.html:37
+msgid "last"
+msgstr "dernier"
+
+#: templates/shop/brand_detail.html:43
+msgid "The Firing Process"
+msgstr "Le processus de cuisson"
+
+#: templates/shop/brand_detail.html:69
+msgid "View the Collection"
+msgstr "Voir la collection"
+
+#: templates/shop/cart.html:4 templates/shop/cart.html:7
+msgid "Your selection"
+msgstr "Votre sélection"
+
+#: templates/shop/cart.html:17
+msgid "Total"
+msgstr "Total"
+
+#: templates/shop/cart.html:19
+msgid "shipping: calculated at checkout"
+msgstr "livraison : calculée lors du paiement"
+
+#: templates/shop/cart.html:24
+msgid "Clear selection"
+msgstr "Vider la sélection"
+
+#: templates/shop/cart.html:26
+msgid "Checkout Paused"
+msgstr "Paiement suspendu"
+
+#: templates/shop/cart.html:28
+msgid "Checkout"
+msgstr "Paiement"
+
+#: templates/shop/cart.html:32
+msgid "We have temporarily paused online sales. Please check back later!"
+msgstr ""
+"Nous avons temporairement suspendu les ventes en ligne. Veuillez revenir "
+"plus tard !"
+
+#: templates/shop/cart.html:38
+msgid "Your cart is empty."
+msgstr "Votre panier est vide."
+
+#: templates/shop/cart.html:39
+msgid "Go Shopping"
+msgstr "Aller à la boutique"
+
+#: templates/shop/cart.html:103
+msgid "Qty"
+msgstr "Qté"
+
+#: templates/shop/cart.html:109
+msgid "Remove"
+msgstr "Supprimer"
+
+#: templates/shop/cart.html:126 templates/shop/product_detail.html:143
+msgid ""
+"Only X items are available in stock. If you need more, please contact us!"
+msgstr ""
+"Seulement X articles sont disponibles en stock. Si vous en avez besoin de "
+"plus, veuillez nous contacter !"
+
+#: templates/shop/cart.html:145
+msgid "Are you sure you want to clear your cart?"
+msgstr "Êtes-vous sûr de vouloir vider votre panier ?"
+
+#: templates/shop/checkout_success.html:4
+msgid "Thank You"
+msgstr "Merci"
+
+#: templates/shop/checkout_success.html:16
+msgid "Thank You for Your Order!"
+msgstr "Merci pour votre commande !"
+
+#: templates/shop/checkout_success.html:18
+msgid ""
+"Your transaction was successful. We are now carefully preparing your "
+"artisanal ceramics for their journey to you."
+msgstr ""
+"Votre transaction a réussi. Nous préparons maintenant soigneusement vos "
+"céramiques artisanales pour leur voyage jusqu'à vous."
+
+#: templates/shop/checkout_success.html:24
+msgid "Continue Shopping"
+msgstr "Continuer vos achats"
+
+#: templates/shop/checkout_success.html:27
+msgid "A confirmation email will be sent to you shortly."
+msgstr "Un e-mail de confirmation vous sera envoyé prochainement."
+
+#: templates/shop/product_detail.html:52 templates/shop/product_list.html:62
+msgid "Type"
+msgstr "Type"
+
+#: templates/shop/product_detail.html:64 templates/shop/product_list.html:26
+msgid "In Stock"
+msgstr "En stock"
+
+#: templates/shop/product_detail.html:64
+msgid "available"
+msgstr "disponible(s)"
+
+#: templates/shop/product_detail.html:70
+msgid "Add to Cart"
+msgstr "Ajouter au panier"
+
+#: templates/shop/product_detail.html:74
+msgid "View Cart"
+msgstr "Voir le panier"
+
+#: templates/shop/product_detail.html:78 templates/shop/product_list.html:122
+msgid "Out of Stock"
+msgstr "Rupture de stock"
+
+#: templates/shop/product_detail.html:152
+msgid "Added to cart!"
+msgstr "Ajouté au panier !"
+
+#: templates/shop/product_list.html:19
+msgid "Stock Status"
+msgstr "Statut du stock"
+
+#: templates/shop/product_list.html:77
+msgid "Clear all"
+msgstr "Tout effacer"
+
+#: templates/shop/product_list.html:89
+msgid "Refine selection"
+msgstr "Affiner la sélection"
+
+#: templates/shop/product_list.html:94
+msgid "Sort by"
+msgstr "Trier par"
+
+#: templates/shop/product_list.html:96
+msgid "New in Shop"
+msgstr "Nouveautés"
+
+#: templates/shop/product_list.html:99
+msgid "Lowest Price"
+msgstr "Prix le plus bas"
+
+#: templates/shop/product_list.html:102
+msgid "Highest Price"
+msgstr "Prix le plus élevé"
+
+#: templates/shop/product_list.html:141
+msgid "No products found."
+msgstr "Aucun produit trouvé."
+
+#: templates/shop/product_list.html:149
+msgid "Previous"
+msgstr "Précédent"
+
+#: templates/shop/product_list.html:152
+#, python-format
+msgid "Page %(current)s of %(total)s"
+msgstr "Page %(current)s sur %(total)s"
+
+#: templates/shop/product_list.html:155
+msgid "Next"
+msgstr "Suivant"
+
+#: tetote/settings.py:134
+msgid "English"
+msgstr "Anglais"
+
+#: tetote/settings.py:135
+msgid "German"
+msgstr "Allemand"
+
+#: tetote/settings.py:136
+msgid "French"
+msgstr "Français"
+
+#: tetote/settings.py:137
+msgid "Japanese"
+msgstr "Japonais"

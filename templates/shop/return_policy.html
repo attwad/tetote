@@ -1,12 +1,10 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n content_tags %}
 
 {% block title %}{% translate "Return Policy" %} - Tetote{% endblock %}
 
 {% block content %}
-<div class="max-w-[800px] mx-auto leading-relaxed">
-    <h1 class="mb-8">{% translate "Return Policy" %}</h1>
-    <p class="mb-4">{% translate "We want you to be completely satisfied with your purchase from Tetote. If you are not satisfied, we are here to help." %}</p>
-    <p>{% translate "This is a placeholder for our full Return Policy content. Specific details regarding returns, exchanges, and refunds will be provided here." %}</p>
+<div class="max-w-[800px] mx-auto leading-relaxed markdown-content">
+    {% include_content "return_policy" %}
 </div>
 {% endblock %}

@@ -1,24 +1,10 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n content_tags %}
 
 {% block title %}{% translate "Contact" %} - Tetote{% endblock %}
 
 {% block content %}
-<div class="max-w-[800px] mx-auto leading-relaxed">
-    <h1 class="mb-8">{% translate "Contact" %}</h1>
-    <p class="mb-8">{% translate "If you have any questions or inquiries, please feel free to reach out to us." %}</p>
-
-    <div class="mb-12">
-        <h3 class="mb-4">{% translate "Our Address" %}</h3>
-        <p>Tetote Boutique</p>
-        <p>Kyoto, Japan</p>
-    </div>
-
-    <div class="mb-12">
-        <h3 class="mb-4">{% translate "Email" %}</h3>
-        <p>hello@tetote.example.com</p>
-    </div>
-
-    <p>{% translate "We'll get back to you as soon as possible." %}</p>
+<div class="max-w-[800px] mx-auto leading-relaxed markdown-content">
+    {% include_content "contact" %}
 </div>
 {% endblock %}

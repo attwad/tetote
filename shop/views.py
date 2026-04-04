@@ -176,10 +176,10 @@ class CreateCheckoutSessionView(View):
             data = json.loads(request.body)
             items = data.get("items", [])
         except (json.JSONDecodeError, KeyError):
-            return JsonResponse({"error": "Invalid request data"}, status=400)
+            return JsonResponse({"error": _("Invalid request data")}, status=400)
 
         if not items:
-            return JsonResponse({"error": "Cart is empty"}, status=400)
+            return JsonResponse({"error": _("Cart is empty")}, status=400)
 
         # Aggregate quantities by price_id for robustness and atomic check
         aggregated_items = {}
@@ -194,7 +194,7 @@ class CreateCheckoutSessionView(View):
                 continue
 
         if not aggregated_items:
-            return JsonResponse({"error": "Invalid cart items"}, status=400)
+            return JsonResponse({"error": _("Invalid cart items")}, status=400)
 
         line_items = []
         # Atomic check: fetch all relevant products and lock them for the duration of the check
@@ -209,14 +209,18 @@ class CreateCheckoutSessionView(View):
                 product = product_map.get(price_id)
                 if not product:
                     return JsonResponse(
-                        {"error": f"Product with price {price_id} not found"},
+                        {
+                            "error": _("Product with price %(price_id)s not found")
+                            % {"price_id": price_id}
+                        },
                         status=400,
                     )
 
                 if product.stock_quantity < total_qty:
                     return JsonResponse(
                         {
-                            "error": f"Only {product.stock_quantity} left of {product.name}"
+                            "error": _("Only %(qty)s left of %(name)s")
+                            % {"qty": product.stock_quantity, "name": product.name}
                         },
                         status=400,
                     )
