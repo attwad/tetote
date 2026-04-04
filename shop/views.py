@@ -64,6 +64,10 @@ class ReturnPolicyView(TemplateView):
     template_name = "shop/return_policy.html"
 
 
+class CareInstructionsView(TemplateView):
+    template_name = "shop/care_instructions.html"
+
+
 class CheckoutSuccessView(TemplateView):
     template_name = "shop/checkout_success.html"
 

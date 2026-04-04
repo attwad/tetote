@@ -19,6 +19,11 @@ urlpatterns = [
     ),
     path("return-policy/", views.ReturnPolicyView.as_view(), name="return_policy"),
     path("terms/", views.TermsConditionsView.as_view(), name="terms"),
+    path(
+        "care-instructions/",
+        views.CareInstructionsView.as_view(),
+        name="care_instructions",
+    ),
     path("api/product-info/", views.ProductInfoView.as_view(), name="product_info"),
     path(
         "products/<slug:product_slug>/",

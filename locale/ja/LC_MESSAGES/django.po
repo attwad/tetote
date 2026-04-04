@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-04 16:08+0000\n"
+"POT-Creation-Date: 2026-04-04 16:22+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -193,28 +193,28 @@ msgstr "販売停止中"
 msgid "Store Settings"
 msgstr "ショップ設定"
 
-#: shop/views.py:171
+#: shop/views.py:175
 msgid "Checkout is temporarily disabled"
 msgstr "現在、お支払いは一時的にご利用いただけません"
 
-#: shop/views.py:179
+#: shop/views.py:183
 msgid "Invalid request data"
 msgstr "不正なリクエストデータです"
 
-#: shop/views.py:182
+#: shop/views.py:186
 msgid "Cart is empty"
 msgstr "カートは空です"
 
-#: shop/views.py:197
+#: shop/views.py:201
 msgid "Invalid cart items"
 msgstr "カート内の商品が不正です"
 
-#: shop/views.py:212
+#: shop/views.py:217
 #, python-format
 msgid "Product with price %(price_id)s not found"
 msgstr "価格ID %(price_id)s の商品が見つかりません"
 
-#: shop/views.py:219
+#: shop/views.py:226
 #, python-format
 msgid "Only %(qty)s left of %(name)s"
 msgstr "%(name)s の在庫は残り %(qty)s 点です"
@@ -317,6 +317,12 @@ msgstr "焼成プロセス"
 msgid "View the Collection"
 msgstr "コレクションを見る"
 
+#: templates/shop/care_instructions.html:4
+#, fuzzy
+#| msgid "Clear selection"
+msgid "Care Instructions"
+msgstr "選択を解除"
+
 #: templates/shop/cart.html:4 templates/shop/cart.html:7
 msgid "Your selection"
 msgstr "選択した商品"
@@ -383,7 +389,8 @@ msgid ""
 "Your transaction was successful. We are now carefully preparing your "
 "artisanal ceramics for their journey to you."
 msgstr ""
-"お支払いが完了しました。現在、お客様のもとへお届けする職人仕立ての陶器を慎重に準備しております。"
+"お支払いが完了しました。現在、お客様のもとへお届けする職人仕立ての陶器を慎重"
+"に準備しております。"
 
 #: templates/shop/checkout_success.html:24
 msgid "Continue Shopping"
@@ -481,3 +488,7 @@ msgstr "フランス語"
 #: tetote/settings.py:137
 msgid "Japanese"
 msgstr "日本語"
+
+#: templates/shop/care_instructions.html:4
+msgid "Care Instructions"
+msgstr "お手入れ方法"

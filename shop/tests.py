@@ -82,13 +82,16 @@ class StoreSettingsTests(TestCase):
         )
 
     def test_sales_paused_prevents_checkout(self):
-        url = reverse("shop:create_checkout_session")
-        data = {"items": [{"price_id": "price_test", "qty": 1}]}
-        response = self.client.post(
-            url, data=json.dumps(data), content_type="application/json"
-        )
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json()["error"], "Checkout is temporarily disabled")
+        with translation.override("en"):
+            url = reverse("shop:create_checkout_session")
+            data = {"items": [{"price_id": "price_test", "qty": 1}]}
+            response = self.client.post(
+                url, data=json.dumps(data), content_type="application/json"
+            )
+            self.assertEqual(response.status_code, 403)
+            self.assertEqual(
+                response.json()["error"], "Checkout is temporarily disabled"
+            )
 
     def test_sales_not_paused_allows_checkout(self):
         self.settings.sales_paused = False
@@ -104,21 +107,23 @@ class StoreSettingsTests(TestCase):
             self.assertEqual(response.status_code, 200)
 
     def test_cart_page_shows_paused_message(self):
-        url = reverse("shop:cart")
-        response = self.client.get(url)
-        self.assertContains(response, "Checkout Paused")
-        self.assertContains(
-            response,
-            "We have temporarily paused online sales. Please check back later!",
-        )
+        with translation.override("en"):
+            url = reverse("shop:cart")
+            response = self.client.get(url)
+            self.assertContains(response, "Checkout Paused")
+            self.assertContains(
+                response,
+                "We have temporarily paused online sales. Please check back later!",
+            )
 
     def test_cart_page_shows_checkout_when_not_paused(self):
-        self.settings.sales_paused = False
-        self.settings.save()
-        url = reverse("shop:cart")
-        response = self.client.get(url)
-        self.assertContains(response, "Checkout")
-        self.assertNotContains(response, "Checkout Paused")
+        with translation.override("en"):
+            self.settings.sales_paused = False
+            self.settings.save()
+            url = reverse("shop:cart")
+            response = self.client.get(url)
+            self.assertContains(response, "Checkout")
+            self.assertNotContains(response, "Checkout Paused")
 
 
 class TranslationTests(TestCase):
@@ -382,13 +387,14 @@ class CheckoutViewTests(TestCase):
         self.assertTrue(kwargs.get("allow_promotion_codes"))
 
     def test_create_checkout_session_out_of_stock(self):
-        url = reverse("shop:create_checkout_session")
-        data = {"items": [{"price_id": "price_test", "qty": 11}]}
-        response = self.client.post(
-            url, data=json.dumps(data), content_type="application/json"
-        )
-        self.assertEqual(response.status_code, 400)
-        self.assertIn("Only 10 left", response.json()["error"])
+        with translation.override("en"):
+            url = reverse("shop:create_checkout_session")
+            data = {"items": [{"price_id": "price_test", "qty": 11}]}
+            response = self.client.post(
+                url, data=json.dumps(data), content_type="application/json"
+            )
+            self.assertEqual(response.status_code, 400)
+            self.assertIn("Only 10 left", response.json()["error"])
 
     def test_create_checkout_session_empty_cart(self):
         url = reverse("shop:create_checkout_session")
@@ -407,15 +413,16 @@ class CheckoutViewTests(TestCase):
 
     def test_create_checkout_session_aggregate_quantities(self):
         # Product has 10 in stock. Request 6 + 6 of the same product.
-        url = reverse("shop:create_checkout_session")
-        data = {
-            "items": [
-                {"price_id": "price_test", "qty": 6},
-                {"price_id": "price_test", "qty": 6},
-            ]
-        }
-        response = self.client.post(
-            url, data=json.dumps(data), content_type="application/json"
-        )
-        self.assertEqual(response.status_code, 400)
-        self.assertIn("Only 10 left", response.json()["error"])
+        with translation.override("en"):
+            url = reverse("shop:create_checkout_session")
+            data = {
+                "items": [
+                    {"price_id": "price_test", "qty": 6},
+                    {"price_id": "price_test", "qty": 6},
+                ]
+            }
+            response = self.client.post(
+                url, data=json.dumps(data), content_type="application/json"
+            )
+            self.assertEqual(response.status_code, 400)
+            self.assertIn("Only 10 left", response.json()["error"])

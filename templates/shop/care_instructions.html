@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load i18n content_tags %}
+
+{% block title %}{% translate "Care Instructions" %} - Tetote{% endblock %}
+
+{% block content %}
+<div class="max-w-[800px] mx-auto leading-relaxed markdown-content">
+    {% include_content "care_instructions" %}
+</div>
+{% endblock %}

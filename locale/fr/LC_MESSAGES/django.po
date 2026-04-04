@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-04 15:19+0000\n"
+"POT-Creation-Date: 2026-04-04 16:22+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -193,28 +193,28 @@ msgstr "Ventes suspendues"
 msgid "Store Settings"
 msgstr "Paramètres de la boutique"
 
-#: shop/views.py:171
+#: shop/views.py:175
 msgid "Checkout is temporarily disabled"
 msgstr "Le paiement est temporairement désactivé"
 
-#: shop/views.py:179
+#: shop/views.py:183
 msgid "Invalid request data"
 msgstr "Données de requête invalides"
 
-#: shop/views.py:182
+#: shop/views.py:186
 msgid "Cart is empty"
 msgstr "Votre panier est vide."
 
-#: shop/views.py:197
+#: shop/views.py:201
 msgid "Invalid cart items"
 msgstr "Articles du panier invalides"
 
-#: shop/views.py:212
+#: shop/views.py:217
 #, python-format
 msgid "Product with price %(price_id)s not found"
 msgstr "Produit avec le prix %(price_id)s non trouvé"
 
-#: shop/views.py:219
+#: shop/views.py:226
 #, python-format
 msgid "Only %(qty)s left of %(name)s"
 msgstr "Seulement %(qty)s restant(s) pour %(name)s"
@@ -316,6 +316,10 @@ msgstr "Le processus de cuisson"
 #: templates/shop/brand_detail.html:69
 msgid "View the Collection"
 msgstr "Voir la collection"
+
+#: templates/shop/care_instructions.html:4
+msgid "Care Instructions"
+msgstr "Conseils d'entretien"
 
 #: templates/shop/cart.html:4 templates/shop/cart.html:7
 msgid "Your selection"
