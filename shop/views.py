@@ -101,7 +101,13 @@ class ProductListView(ListView):
     paginate_by = 24
 
     def get_queryset(self):
-        queryset = super().get_queryset().filter(public=True)
+        queryset = (
+            super()
+            .get_queryset()
+            .filter(public=True)
+            .prefetch_related("images")
+            .select_related("brand", "glaze", "product_type")
+        )
 
         # Multiple selections
         brands = self.request.GET.getlist("brand")

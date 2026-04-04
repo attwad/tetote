@@ -72,7 +72,16 @@
     @apply relative aspect-square overflow-hidden;
   }
   .product-card img {
-    @apply w-full h-full object-cover rounded-[2px] grayscale-[10%] contrast-[95%] block;
+    @apply w-full h-full object-cover rounded-[2px] grayscale-[10%] contrast-[95%] block transition-opacity duration-500 ease-in-out;
+  }
+  .product-image-secondary {
+    @apply absolute inset-0 opacity-0 pointer-events-none;
+  }
+  .product-card-image-wrapper.has-secondary-image:hover .product-image-secondary {
+    @apply opacity-100;
+  }
+  .product-card-image-wrapper.has-secondary-image:hover .product-image-primary {
+    @apply opacity-0;
   }
   .stock-badge {
     @apply absolute bottom-2.5 right-2.5 bg-white/90 px-[0.6rem] py-[0.3rem] text-[0.8rem] text-[#9a7b76] rounded-[2px] tracking-[0.05rem] font-medium;

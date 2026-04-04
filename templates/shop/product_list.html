@@ -108,15 +108,21 @@
         {% for product in products %}
             <div class="product-card">
                 <a href="{% url 'shop:product_detail' product_slug=product.slug %}">
-                    <div class="product-card-image-wrapper">
+                    {% with secondary_image=product.images.all.1 %}
+                    <div class="product-card-image-wrapper {% if secondary_image %}has-secondary-image{% endif %}">
                         {% if product.main_photo %}
-                            <img src="{{ product.main_photo }}" alt="{{ product.name }}">
+                            <img src="{{ product.main_photo }}" alt="{{ product.name }}" class="product-image-primary">
+                        {% endif %}
+
+                        {% if secondary_image %}
+                            <img src="{{ secondary_image.url }}" alt="{{ product.name }}" class="product-image-secondary">
                         {% endif %}
 
                         {% if not product.is_in_stock %}
                             <div class="stock-badge">{% translate "Out of Stock" %}</div>
                         {% endif %}
                     </div>
+                    {% endwith %}
                 </a>
                 <div class="mt-2 text-center flex flex-col gap-1">
                     {% if product.brand %}

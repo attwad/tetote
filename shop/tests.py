@@ -275,6 +275,50 @@ class ShopViewTests(TestCase):
         self.assertEqual(response.context["active_glazes"], ["g1"])
         self.assertEqual(response.context["total_active_filters"], 4)
 
+    def test_product_list_secondary_image(self):
+        from .models import ProductImage
+
+        # Create a product with a main photo and two additional images
+        product = Product.objects.create(
+            stripe_product_id="prod_with_img",
+            stripe_price_id="price_with_img",
+            name="Image Product",
+            slug="img-prod",
+            main_photo="https://example.com/main.jpg",
+            price=100,
+            stock_quantity=1,
+            public=True,
+        )
+        ProductImage.objects.create(
+            product=product, url="https://example.com/main.jpg", order=0
+        )
+        ProductImage.objects.create(
+            product=product, url="https://example.com/secondary.jpg", order=1
+        )
+
+        # Create a product without a secondary image
+        Product.objects.create(
+            stripe_product_id="prod_no_img",
+            stripe_price_id="price_no_img",
+            name="No Image Product",
+            slug="no-img-prod",
+            main_photo="https://example.com/only-one.jpg",
+            price=100,
+            stock_quantity=1,
+            public=True,
+        )
+
+        url = reverse("shop:product_list")
+        response = self.client.get(url)
+        content = response.content.decode()
+
+        self.assertContains(response, "product-image-primary")
+        self.assertContains(response, "product-image-secondary")
+
+        # Verify that only the product with a secondary image has the class
+        # We expect exactly one occurrence of the class in the entire HTML
+        self.assertEqual(content.count("has-secondary-image"), 1)
+
 
 class CartViewTests(TestCase):
     def setUp(self):
