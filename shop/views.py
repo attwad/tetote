@@ -142,9 +142,11 @@ class ProductListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["brands"] = Brand.objects.all()
-        context["glazes"] = Glaze.objects.all()
-        context["product_types"] = ProductType.objects.all()
+        context["brands"] = Brand.objects.filter(products__public=True).distinct()
+        context["glazes"] = Glaze.objects.filter(products__public=True).distinct()
+        context["product_types"] = ProductType.objects.filter(
+            products__public=True
+        ).distinct()
 
         # Pass active filter lists for template comparison
         context["active_brands"] = self.request.GET.getlist("brand")

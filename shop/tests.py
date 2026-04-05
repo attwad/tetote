@@ -252,6 +252,64 @@ class ShopViewTests(TestCase):
         self.assertContains(response, "Brand Product")
         self.assertNotContains(response, "Out of Stock Prod")
 
+    def test_brand_filter_only_shows_brands_with_public_products(self):
+        # Create a brand with only a private product
+        private_brand = Brand.objects.create(name="Private Brand", slug="private-brand")
+        Product.objects.create(
+            stripe_product_id="prod_private_brand",
+            stripe_price_id="price_pb",
+            name="Private Brand Product",
+            slug="pb-prod",
+            price=100,
+            stock_quantity=1,
+            brand=private_brand,
+            public=False,
+        )
+
+        # Create a brand with no products at all
+        Brand.objects.create(name="Empty Brand", slug="empty-brand")
+
+        url = reverse("shop:product_list")
+        response = self.client.get(url)
+
+        self.assertContains(response, "Bizen")  # Has a public product
+        self.assertNotContains(response, "Private Brand")
+        self.assertNotContains(response, "Empty Brand")
+
+    def test_glaze_filter_only_shows_glazes_with_public_products(self):
+        private_glaze = Glaze.objects.create(name="Private Glaze", slug="private-glaze")
+        Product.objects.create(
+            stripe_product_id="prod_pg",
+            stripe_price_id="price_pg",
+            name="Private Glaze Product",
+            slug="pg-prod",
+            price=100,
+            stock_quantity=1,
+            glaze=private_glaze,
+            public=False,
+        )
+        url = reverse("shop:product_list")
+        response = self.client.get(url)
+        self.assertNotContains(response, "Private Glaze")
+
+    def test_type_filter_only_shows_types_with_public_products(self):
+        private_type = ProductType.objects.create(
+            name="Private Type", slug="private-type"
+        )
+        Product.objects.create(
+            stripe_product_id="prod_pt",
+            stripe_price_id="price_pt",
+            name="Private Type Product",
+            slug="pt-prod",
+            price=100,
+            stock_quantity=1,
+            product_type=private_type,
+            public=False,
+        )
+        url = reverse("shop:product_list")
+        response = self.client.get(url)
+        self.assertNotContains(response, "Private Type")
+
     def test_product_list_multi_filter(self):
         b2 = Brand.objects.create(name="Seto", slug="seto")
         Product.objects.create(
