@@ -251,7 +251,15 @@ class CreateCheckoutSessionView(View):
             )
             return JsonResponse({"url": checkout_session.url})
         except Exception as e:
-            return JsonResponse({"error": str(e)}, status=500)
+            # Import logging and use it for internal debugging
+            import logging
+
+            logger = logging.getLogger(__name__)
+            logger.error(f"Error creating Stripe checkout session: {e}")
+            return JsonResponse(
+                {"error": _("An error occurred while creating the checkout session")},
+                status=500,
+            )
 
 
 class CartView(TemplateView):
