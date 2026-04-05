@@ -79,7 +79,7 @@ export function toggleMobileMenu() {
  * Filter Logic
  */
 
-export function getNewURL(currentUrlStr, type, name, value) {
+export function getNewURL(currentUrlStr, type, name, value, shouldBeExpanded = null) {
     const url = new URL(currentUrlStr);
     const params = url.searchParams;
 
@@ -88,9 +88,16 @@ export function getNewURL(currentUrlStr, type, name, value) {
         if (currentlyExpanded) params.delete('expanded');
         else params.set('expanded', 'true');
     } else {
-        // For filters, stock, and sort: preserve the expanded state if it's already true
-        // This keeps the drawer open on mobile after reload
-        const currentlyExpanded = params.get('expanded') === 'true';
+        // If shouldBeExpanded is provided, use it. Otherwise, keep current state.
+        const currentlyExpanded = (shouldBeExpanded !== null)
+            ? shouldBeExpanded
+            : (params.get('expanded') === 'true');
+
+        if (currentlyExpanded) {
+            params.set('expanded', 'true');
+        } else {
+            params.delete('expanded');
+        }
 
         if (type === 'filter') {
             const currentValues = params.getAll(name);
@@ -108,10 +115,6 @@ export function getNewURL(currentUrlStr, type, name, value) {
             if (value) params.set('sort', value);
             else params.delete('sort');
         }
-
-        if (currentlyExpanded) {
-            params.set('expanded', 'true');
-        }
     }
 
     // Always reset page on filter change
@@ -128,6 +131,10 @@ export function toggleDrawer() {
     const isMobile = window.innerWidth < 768;
 
     if (isMobile && drawer && overlay) {
+        // Update URL state without reload to keep it in sync
+        const newUrl = getNewURL(window.location.href, 'drawer');
+        window.history.replaceState(null, '', newUrl);
+
         if (drawer.classList.contains('open')) {
             // Close
             drawer.classList.remove('open');
@@ -169,14 +176,20 @@ if (typeof window !== 'undefined') {
 
 export function toggleFilter(event, name, value) {
     if (event) event.preventDefault();
-    window.location.href = getNewURL(window.location.href, 'filter', name, value);
+    const drawer = document.getElementById('filter-drawer');
+    const isExpanded = drawer && drawer.classList.contains('open');
+    window.location.href = getNewURL(window.location.href, 'filter', name, value, isExpanded);
 }
 
 export function toggleStock(event) {
     if (event) event.preventDefault();
-    window.location.href = getNewURL(window.location.href, 'stock');
+    const drawer = document.getElementById('filter-drawer');
+    const isExpanded = drawer && drawer.classList.contains('open');
+    window.location.href = getNewURL(window.location.href, 'stock', null, null, isExpanded);
 }
 
 export function toggleSort(value) {
-    window.location.href = getNewURL(window.location.href, 'sort', null, value);
+    const drawer = document.getElementById('filter-drawer');
+    const isExpanded = drawer && drawer.classList.contains('open');
+    window.location.href = getNewURL(window.location.href, 'sort', null, value, isExpanded);
 }

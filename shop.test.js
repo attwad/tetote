@@ -40,9 +40,15 @@ describe('Shop Logic Tests', () => {
 
         it('getNewURL should preserve expanded=true when toggling filters', () => {
             const start = baseUrl + '?expanded=true';
-            const result = getNewURL(start, 'filter', 'brand', 'bizen');
+            const result = getNewURL(start, 'filter', 'brand', 'bizen', true);
             expect(result).toContain('expanded=true');
             expect(result).toContain('brand=bizen');
+        });
+
+        it('getNewURL should remove expanded when passed false', () => {
+            const start = baseUrl + '?expanded=true';
+            const result = getNewURL(start, 'filter', 'brand', 'bizen', false);
+            expect(result).not.toContain('expanded=true');
         });
 
         it('toggleFilter should remove existing value', () => {
