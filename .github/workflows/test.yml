@@ -45,3 +45,6 @@ jobs:
 
     - name: Run Frontend Tests
       run: npm test
+
+    - uses: atos-actions/clean-self-hosted-runner@v1
+      if: ${{ always() }} # Run even if previous steps in the job fail or are canceled
