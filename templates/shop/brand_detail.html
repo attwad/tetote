@@ -1,67 +1,18 @@
 {% extends "base.html" %}
-{% load i18n %}
-{% load static %}
+{% load i18n content_tags %}
 
 {% block title %}{{ brand.name }} - Tetote{% endblock %}
 
 {% block content %}
 <article class="brand-page">
-    <!-- Hero Section -->
-    {% if brand.hero_image %}
-    <div class="brand-hero">
-        <img src="{{ brand.hero_image }}" alt="{{ brand.name }}">
-    </div>
-    {% endif %}
-
-    <!-- Header -->
-    <header class="brand-header">
-        <h1>{{ brand.name }}</h1>
-        {% if brand.location %}
-        <div class="location">{{ brand.location }}</div>
-        {% endif %}
-    </header>
-
-    <!-- The Story -->
-    <div class="story-section">
-        <div class="story-text">
-            {{ brand.story_body|linebreaks }}
-        </div>
-        {% if brand.story_side_image %}
-        <div class="story-image-side">
-            <img src="{{ brand.story_side_image }}" alt="{{ brand.name }} workshop">
-        </div>
+    <div class="max-w-[800px] mx-auto leading-relaxed markdown-content">
+        {% if brand.content_slug %}
+            {% include_content brand.content_slug %}
+        {% else %}
+            <h1>{{ brand.name }}</h1>
+            <p>{% translate "No description available for this brand." %}</p>
         {% endif %}
     </div>
-
-    <!-- Gallery (if any) -->
-    {% if brand.gallery_images.exists %}
-    <div class="gallery-grid">
-        {% for img in brand.gallery_images.all %}
-            {% if forloop.first %}
-            <img src="{{ img.url }}" alt="{{ img.caption|default:brand.name }}">
-            <div class="flex flex-col justify-center p-8">
-                <h3 class="text-[1.8rem] mb-6">{% translate "The Firing Process" %}</h3>
-                <p class="text-brand-muted">
-                    {{ brand.craftsmanship_body|linebreaks }}
-                </p>
-            </div>
-            {% else %}
-            <!-- Additional gallery images can be rendered here -->
-            <img src="{{ img.url }}" alt="{{ img.caption|default:brand.name }}">
-            {% endif %}
-        {% endfor %}
-    </div>
-    {% endif %}
-
-    <!-- Craftsmanship -->
-    {% if brand.wares_summary %}
-    <section class="craft-details">
-        <h2>{% translate "The Wares" %}</h2>
-        <p>
-            {{ brand.wares_summary|linebreaks }}
-        </p>
-    </section>
-    {% endif %}
 
     <!-- Shop CTA -->
     <div class="shop-cta">

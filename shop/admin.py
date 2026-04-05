@@ -35,7 +35,7 @@ class ProductImageInline(admin.TabularInline):
 
 @admin.register(Brand)
 class BrandAdmin(TranslationAdmin):
-    list_display = ("name", "slug")
+    list_display = ("name", "slug", "content_slug")
     prepopulated_fields = {"slug": ("name",)}
 
 

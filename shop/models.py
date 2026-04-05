@@ -8,14 +8,11 @@ from django.urls import reverse
 class Brand(models.Model):
     name = models.CharField(_("Name"), max_length=255)
     slug = models.SlugField(_("Slug"), unique=True)
-    description = models.TextField(_("Description"), blank=True)
-    location = models.CharField(_("Location"), max_length=255, blank=True)
-    hero_image = models.URLField(_("Hero Image URL"), max_length=500, blank=True)
-    story_body = models.TextField(_("The Story"), blank=True)
-    craftsmanship_body = models.TextField(_("The Craft"), blank=True)
-    wares_summary = models.TextField(_("The Wares"), blank=True)
-    story_side_image = models.URLField(
-        _("Story Side Image URL"), max_length=500, blank=True
+    content_slug = models.SlugField(
+        _("Content Slug"),
+        max_length=255,
+        blank=True,
+        help_text=_("The slug for the static markdown page (e.g., brands/bizen)"),
     )
 
     class Meta:
@@ -28,26 +25,6 @@ class Brand(models.Model):
 
     def get_absolute_url(self):
         return reverse("shop:brand_detail", kwargs={"brand_slug": self.slug})
-
-
-class BrandImage(models.Model):
-    brand = models.ForeignKey(
-        Brand,
-        on_delete=models.CASCADE,
-        related_name="gallery_images",
-        verbose_name=_("Brand"),
-    )
-    url = models.URLField(_("Image URL"), max_length=500)
-    order = models.PositiveIntegerField(_("Order"), default=0)
-    caption = models.CharField(_("Caption"), max_length=255, blank=True)
-
-    class Meta:
-        verbose_name = _("Brand Image")
-        verbose_name_plural = _("Brand Images")
-        ordering = ["order"]
-
-    def __str__(self):
-        return f"Gallery image for {self.brand.name}"
 
 
 class Glaze(models.Model):

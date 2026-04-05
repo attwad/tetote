@@ -1,6 +1,8 @@
+import os
 from django.test import TestCase
 from django.urls import reverse
-from shop.models import Brand, BrandImage
+from django.conf import settings
+from shop.models import Brand
 
 
 class BrandDetailViewTest(TestCase):
@@ -8,14 +10,24 @@ class BrandDetailViewTest(TestCase):
         self.brand = Brand.objects.create(
             name="Test Brand",
             slug="test-brand",
-            location="Zurich, Switzerland",
-            story_body="A long story about testing.",
-            craftsmanship_body="The craft of writing tests.",
-            wares_summary="High-quality test cases.",
+            content_slug="brands/test-brand",
         )
-        self.brand_image = BrandImage.objects.create(
-            brand=self.brand, url="/static/test_image.png", caption="Test Caption"
+        # Create a dummy markdown file for testing
+        templates_dir = settings.TEMPLATES[0]["DIRS"][0]
+        self.content_dir = os.path.join(
+            templates_dir, "shop", "content", "brands", "test-brand"
         )
+        os.makedirs(self.content_dir, exist_ok=True)
+        self.en_file = os.path.join(self.content_dir, "en.md")
+        with open(self.en_file, "w", encoding="utf-8") as f:
+            f.write("# Test Brand Content\nThis is a test description.")
+
+    def tearDown(self):
+        # Clean up dummy markdown file
+        if os.path.exists(self.en_file):
+            os.remove(self.en_file)
+        if os.path.exists(self.content_dir):
+            os.removedirs(self.content_dir)
 
     def test_brand_detail_view_status_code(self):
         url = reverse("shop:brand_detail", kwargs={"brand_slug": self.brand.slug})
@@ -36,11 +48,8 @@ class BrandDetailViewTest(TestCase):
         url = reverse("shop:brand_detail", kwargs={"brand_slug": self.brand.slug})
         response = self.client.get(url)
         self.assertContains(response, self.brand.name)
-        self.assertContains(response, self.brand.location)
-        self.assertContains(response, self.brand.story_body)
-        self.assertContains(response, self.brand.craftsmanship_body)
-        self.assertContains(response, self.brand.wares_summary)
-        self.assertContains(response, self.brand_image.url)
+        self.assertContains(response, "Test Brand Content")
+        self.assertContains(response, "This is a test description.")
 
     def test_brand_detail_view_404(self):
         url = reverse("shop:brand_detail", kwargs={"brand_slug": "non-existent"})
