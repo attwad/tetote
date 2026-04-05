@@ -149,8 +149,32 @@ class StripeIntegrationTest(TestCase):
         sync_price(price_data)
 
         product = Product.objects.get(stripe_product_id="prod_test")
-        self.assertEqual(product.price, 5000)
         self.assertEqual(product.stripe_price_id, "price_test")
+        self.assertEqual(product.price, 5000)
+
+    def test_sync_price_ignores_inactive(self):
+        product = Product.objects.create(
+            stripe_product_id="prod_test",
+            name="Test",
+            slug="test",
+            price=1000,
+            stripe_price_id="price_active",
+            stock_quantity=0,
+        )
+
+        # Inactive price data
+        price_data = {
+            "id": "price_inactive",
+            "product": "prod_test",
+            "unit_amount": 5000,
+            "active": False,
+        }
+
+        sync_price(price_data)
+
+        product.refresh_from_db()
+        self.assertEqual(product.stripe_price_id, "price_active")
+        self.assertEqual(product.price, 1000)
 
     @patch("stripe.Webhook.construct_event")
     def test_stripe_webhook_product_updated(self, mock_construct):

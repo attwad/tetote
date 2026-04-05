@@ -92,7 +92,14 @@ def sync_product(product_data):
 def sync_price(price_data):
     """
     Syncs price info for a product.
+    Only updates if the price is active.
     """
+    if not price_data.get("active", True):
+        logger.info(
+            f"Ignoring inactive price {price_data['id']} for product {price_data['product']}"
+        )
+        return
+
     product_id = price_data["product"]
     try:
         product = Product.objects.get(stripe_product_id=product_id)
