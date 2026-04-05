@@ -3,6 +3,7 @@ import os
 from django.conf import settings
 from django.contrib import admin
 from django.utils.html import format_html
+from django.utils.translation import gettext_lazy as _
 from modeltranslation.admin import TranslationAdmin, TabbedTranslationAdmin
 from .models import (
     Brand,
@@ -85,14 +86,27 @@ class ProductAdmin(TabbedTranslationAdmin):
     search_fields = ("name", "stripe_name", "description", "stripe_product_id")
     readonly_fields = (
         "stripe_product_id",
+        "stripe_dashboard_url",
         "stripe_price_id",
         "stripe_name",
+        "main_photo",
+        "price",
         "date_added",
     )
     inlines = [ProductImageInline]
 
     def has_add_permission(self, request):
         return True
+
+    @admin.display(description=_("Stripe Dashboard URL"))
+    def stripe_dashboard_url(self, obj):
+        if obj.stripe_product_id:
+            url = f"https://dashboard.stripe.com/products/{obj.stripe_product_id}"
+            return format_html(
+                '<a href="{url}" target="_blank">{url}</a>',
+                url=url,
+            )
+        return "-"
 
     def save_related(self, request, form, formsets, change):
         """
@@ -166,6 +180,7 @@ class ProductAdmin(TabbedTranslationAdmin):
             {
                 "fields": (
                     "stripe_product_id",
+                    "stripe_dashboard_url",
                     "stripe_price_id",
                     "stripe_name",
                     "name",

@@ -357,3 +357,11 @@ class ProductAdminTest(TestCase):
         self.assertEqual(len(kwargs["images"]), 8)
         self.assertEqual(kwargs["images"][0], "http://test.com/0.jpg")
         self.assertEqual(kwargs["images"][7], "http://test.com/7.jpg")
+
+    def test_stripe_dashboard_url_returns_link(self):
+        url = self.admin.stripe_dashboard_url(self.product)
+        expected_url = (
+            f"https://dashboard.stripe.com/products/{self.product.stripe_product_id}"
+        )
+        self.assertIn(expected_url, url)
+        self.assertIn('target="_blank"', url)
