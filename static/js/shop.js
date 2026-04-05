@@ -87,21 +87,31 @@ export function getNewURL(currentUrlStr, type, name, value) {
         const currentlyExpanded = params.get('expanded') === 'true';
         if (currentlyExpanded) params.delete('expanded');
         else params.set('expanded', 'true');
-    } else if (type === 'filter') {
-        const currentValues = params.getAll(name);
-        if (currentValues.includes(value)) {
-            const newValues = currentValues.filter(v => v !== value);
-            params.delete(name);
-            newValues.forEach(v => params.append(name, v));
-        } else {
-            params.append(name, value);
+    } else {
+        // For filters, stock, and sort: preserve the expanded state if it's already true
+        // This keeps the drawer open on mobile after reload
+        const currentlyExpanded = params.get('expanded') === 'true';
+
+        if (type === 'filter') {
+            const currentValues = params.getAll(name);
+            if (currentValues.includes(value)) {
+                const newValues = currentValues.filter(v => v !== value);
+                params.delete(name);
+                newValues.forEach(v => params.append(name, v));
+            } else {
+                params.append(name, value);
+            }
+        } else if (type === 'stock') {
+            if (params.get('stock') === 'in_stock') params.delete('stock');
+            else params.set('stock', 'in_stock');
+        } else if (type === 'sort') {
+            if (value) params.set('sort', value);
+            else params.delete('sort');
         }
-    } else if (type === 'stock') {
-        if (params.get('stock') === 'in_stock') params.delete('stock');
-        else params.set('stock', 'in_stock');
-    } else if (type === 'sort') {
-        if (value) params.set('sort', value);
-        else params.delete('sort');
+
+        if (currentlyExpanded) {
+            params.set('expanded', 'true');
+        }
     }
 
     // Always reset page on filter change

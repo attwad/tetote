@@ -38,6 +38,13 @@ describe('Shop Logic Tests', () => {
             expect(params.getAll('brand')).toEqual(['bizen', 'seto']);
         });
 
+        it('getNewURL should preserve expanded=true when toggling filters', () => {
+            const start = baseUrl + '?expanded=true';
+            const result = getNewURL(start, 'filter', 'brand', 'bizen');
+            expect(result).toContain('expanded=true');
+            expect(result).toContain('brand=bizen');
+        });
+
         it('toggleFilter should remove existing value', () => {
             const start = baseUrl + '?brand=bizen&brand=seto';
             const result = getNewURL(start, 'filter', 'brand', 'bizen');
@@ -52,6 +59,13 @@ describe('Shop Logic Tests', () => {
             expect(back).not.toContain('stock=in_stock');
         });
 
+        it('toggleStock should preserve expanded=true', () => {
+            const start = baseUrl + '?expanded=true';
+            const result = getNewURL(start, 'stock');
+            expect(result).toContain('expanded=true');
+            expect(result).toContain('stock=in_stock');
+        });
+
         it('any filter change should reset pagination', () => {
             const start = baseUrl + '?page=2';
             const result = getNewURL(start, 'filter', 'brand', 'bizen');
@@ -60,6 +74,13 @@ describe('Shop Logic Tests', () => {
 
         it('toggleSort should add sort parameter', () => {
             const result = getNewURL(baseUrl, 'sort', null, 'price_asc');
+            expect(result).toContain('sort=price_asc');
+        });
+
+        it('toggleSort should preserve expanded=true', () => {
+            const start = baseUrl + '?expanded=true';
+            const result = getNewURL(start, 'sort', null, 'price_asc');
+            expect(result).toContain('expanded=true');
             expect(result).toContain('sort=price_asc');
         });
     });
