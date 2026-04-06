@@ -143,7 +143,7 @@ msgstr "URL de la photo principale"
 
 #: shop/models.py:88
 msgid "Stock Quantity"
-msgstr "Quantité en stock"
+msgstr "Quantité disponible"
 
 #: shop/models.py:89
 msgid "Public"
@@ -237,7 +237,7 @@ msgstr "Retour à la boutique"
 
 #: templates/base.html:47 templates/base.html:84 templates/shop/about_us.html:4
 msgid "About us"
-msgstr "À propos"
+msgstr "À propos de nous"
 
 #: templates/base.html:48 templates/base.html:85
 msgid "Shop"
@@ -346,10 +346,10 @@ msgid "Checkout"
 msgstr "Paiement"
 
 #: templates/shop/cart.html:32
-msgid "We have temporarily paused online sales. Please check back later!"
+msgid "We have temporarily paused online sales. Please check back later."
 msgstr ""
-"Nous avons temporairement suspendu les ventes en ligne. Veuillez revenir "
-"plus tard !"
+"Nous avons temporairement suspendu les ventes en ligne. Merci de revenir "
+"plus tard"
 
 #: templates/shop/cart.html:38
 msgid "Your cart is empty."
@@ -408,7 +408,7 @@ msgstr "Type"
 
 #: templates/shop/product_detail.html:64 templates/shop/product_list.html:26
 msgid "In Stock"
-msgstr "En stock"
+msgstr "Disponible"
 
 #: templates/shop/product_detail.html:64
 msgid "available"
@@ -424,11 +424,11 @@ msgstr "Voir le panier"
 
 #: templates/shop/product_detail.html:78 templates/shop/product_list.html:122
 msgid "Out of Stock"
-msgstr "Rupture de stock"
+msgstr "Non disponible"
 
 #: templates/shop/product_detail.html:152
-msgid "Added to cart!"
-msgstr "Ajouté au panier !"
+msgid "Added to cart."
+msgstr "Ajouté au panier"
 
 #: templates/shop/product_list.html:19
 msgid "Stock Status"

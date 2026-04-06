@@ -113,7 +113,7 @@ class StoreSettingsTests(TestCase):
             self.assertContains(response, "Checkout Paused")
             self.assertContains(
                 response,
-                "We have temporarily paused online sales. Please check back later!",
+                "We have temporarily paused online sales. Please check back later.",
             )
 
     def test_cart_page_shows_checkout_when_not_paused(self):
@@ -443,6 +443,23 @@ class CheckoutViewTests(TestCase):
         # Verify that allow_promotion_codes is True
         args, kwargs = mock_create.call_args
         self.assertTrue(kwargs.get("allow_promotion_codes"))
+        self.assertNotIn("locale", kwargs)
+
+    @patch("stripe.checkout.Session.create")
+    def test_create_checkout_session_locale_japanese(self, mock_create):
+        from django.utils import translation
+
+        mock_create.return_value.url = "https://checkout.stripe.com/test"
+        data = {"items": [{"price_id": "price_test", "qty": 1}]}
+
+        with translation.override("ja"):
+            url = reverse("shop:create_checkout_session")
+            self.client.post(
+                url, data=json.dumps(data), content_type="application/json"
+            )
+
+        args, kwargs = mock_create.call_args
+        self.assertEqual(kwargs.get("locale"), "ja")
 
     def test_create_checkout_session_out_of_stock(self):
         with translation.override("en"):

@@ -317,12 +317,6 @@ msgstr "焼成プロセス"
 msgid "View the Collection"
 msgstr "コレクションを見る"
 
-#: templates/shop/care_instructions.html:4
-#, fuzzy
-#| msgid "Clear selection"
-msgid "Care Instructions"
-msgstr "選択を解除"
-
 #: templates/shop/cart.html:4 templates/shop/cart.html:7
 msgid "Your selection"
 msgstr "選択した商品"
@@ -348,7 +342,7 @@ msgid "Checkout"
 msgstr "購入手続きへ"
 
 #: templates/shop/cart.html:32
-msgid "We have temporarily paused online sales. Please check back later!"
+msgid "We have temporarily paused online sales. Please check back later."
 msgstr "現在、オンライン販売を一時停止しております。後ほど再度ご確認ください。"
 
 #: templates/shop/cart.html:38
@@ -425,7 +419,7 @@ msgid "Out of Stock"
 msgstr "在庫切れ"
 
 #: templates/shop/product_detail.html:152
-msgid "Added to cart!"
+msgid "Added to cart."
 msgstr "カートに追加されました"
 
 #: templates/shop/product_list.html:19

@@ -4,7 +4,7 @@ from django.views.generic import ListView, DetailView, View, TemplateView
 from django.http import JsonResponse
 from django.urls import reverse
 from django.db import transaction
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext as _, get_language
 from .models import Product, Brand, Glaze, ProductType, StoreSettings
 import json
 
@@ -240,17 +240,23 @@ class CreateCheckoutSessionView(View):
 
         # Call Stripe outside the atomic block to avoid holding DB locks during network IO
         try:
-            checkout_session = stripe.checkout.Session.create(
-                payment_method_types=["card"],
-                line_items=line_items,
-                mode="payment",
-                allow_promotion_codes=True,
-                success_url=request.build_absolute_uri(
+            current_language = get_language()
+            session_kwargs = {
+                "payment_method_types": ["card"],
+                "line_items": line_items,
+                "mode": "payment",
+                "allow_promotion_codes": True,
+                "success_url": request.build_absolute_uri(
                     reverse("shop:checkout_success")
                 ),
-                cancel_url=request.build_absolute_uri(reverse("shop:product_list"))
+                "cancel_url": request.build_absolute_uri(reverse("shop:product_list"))
                 + "?canceled=true",
-            )
+            }
+
+            if current_language != "en":
+                session_kwargs["locale"] = current_language
+
+            checkout_session = stripe.checkout.Session.create(**session_kwargs)
             return JsonResponse({"url": checkout_session.url})
         except Exception as e:
             # Import logging and use it for internal debugging
