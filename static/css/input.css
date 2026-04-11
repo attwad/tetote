@@ -11,8 +11,8 @@
 
   --font-serif: "Cormorant Garamond", serif;
 
-  --animate-slide-down: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  --animate-fade-out: fadeOut 0.4s ease-out;
+  --animate-slide-down: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-fade-out: fadeOut 0.4s ease-out forwards;
 
   @keyframes slideDown {
     from { transform: translateY(-20px); opacity: 0; }
@@ -91,7 +91,7 @@
     @apply block;
   }
 
-  .grid {
+  .product-grid {
     @apply grid gap-x-16 gap-y-12;
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 185px), 1fr));
   }
@@ -187,9 +187,7 @@
     @apply max-w-[95vw] max-h-[85vh] object-contain;
   }
   .close-modal {
-    @apply absolute top-2 right-4 bg-transparent border-none p-4 text-white text-[2.5rem] cursor-pointer font-sans opacity-80 hover:opacity-100 transition-opacity;
-    appearance: none;
-    line-height: 1;
+    @apply absolute top-2 right-4 bg-transparent border-none p-4 text-white text-[2.5rem] cursor-pointer font-sans opacity-80 hover:opacity-100 transition-opacity appearance-none leading-none;
   }
 
   /* Cart Styles */
@@ -315,7 +313,7 @@
     @apply fixed top-[100px] right-[30px] z-[1000] flex flex-col gap-3;
   }
   .toast {
-    @apply min-w-[280px] p-[1.2rem] bg-white text-brand-text border border-brand-border shadow-[0_10px_30px_rgba(0,0,0,0.05)] flex justify-between items-center animate-slide-down text-base;
+    @apply min-w-[280px] p-[1.2rem] bg-white text-brand-text border border-brand-border shadow-[0_10px_30px_rgba(0,0_0,0.05)] flex justify-between items-center animate-slide-down text-base;
   }
   .toast.error {
     @apply border-l-4 border-l-[#c9a09a];
@@ -326,6 +324,13 @@
   .toast-close {
     @apply bg-none border-none text-brand-muted cursor-pointer text-[1.4rem];
   }
+
+  /* Blog Post Content */
+  .post-content img {
+    @apply max-w-full h-auto rounded-[2px] my-8 mx-auto block;
+  }
+  .post-content h2 { @apply text-2xl font-semibold mt-8 mb-4; }
+  .post-content p { @apply mb-4 leading-relaxed; }
 
   /* Markdown Content Styling */
   .markdown-content h1 {

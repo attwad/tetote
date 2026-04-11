@@ -18,7 +18,6 @@ export function showToast(message, type = 'info', duration = 3000) {
     if (duration > 0) {
         setTimeout(() => {
             toast.classList.add('animate-fade-out');
-            toast.style.animationFillMode = 'forwards';
             toast.addEventListener('animationend', () => toast.remove());
         }, duration);
     }
@@ -40,7 +39,6 @@ export function updateCartUI() {
     const badge = document.getElementById('cart-count');
     if (badge) {
         badge.textContent = count > 0 ? ` (${count})` : "";
-        badge.style.display = 'inline-block';
     }
     const mobileBadge = document.getElementById('cart-count-mobile');
     if (mobileBadge) {
@@ -61,7 +59,7 @@ export function toggleMobileMenu() {
         setTimeout(() => {
             overlay.classList.remove('opacity-0');
         }, 10);
-        document.body.style.overflow = 'hidden';
+        document.body.classList.add('overflow-hidden');
     } else {
         // Close
         drawer.classList.add('-translate-x-full');
@@ -71,7 +69,7 @@ export function toggleMobileMenu() {
             overlay.removeEventListener('transitionend', transitionHandler);
         };
         overlay.addEventListener('transitionend', transitionHandler);
-        document.body.style.overflow = '';
+        document.body.classList.remove('overflow-hidden');
     }
 }
 
@@ -145,7 +143,7 @@ export function toggleDrawer() {
                 overlay.removeEventListener('transitionend', transitionHandler);
             };
             overlay.addEventListener('transitionend', transitionHandler);
-            document.body.style.overflow = '';
+            document.body.classList.remove('overflow-hidden');
         } else {
             // Open
             drawer.classList.add('open');
@@ -154,7 +152,7 @@ export function toggleDrawer() {
             setTimeout(() => {
                 overlay.classList.remove('opacity-0');
             }, 10);
-            document.body.style.overflow = 'hidden';
+            document.body.classList.add('overflow-hidden');
         }
     } else {
         window.location.href = getNewURL(window.location.href, 'drawer');
@@ -169,7 +167,7 @@ if (typeof window !== 'undefined') {
         const isMobile = window.innerWidth < 768;
         if (isMobile && drawer && drawer.classList.contains('open')) {
             if (overlay) overlay.classList.add('show');
-            document.body.style.overflow = 'hidden';
+            document.body.classList.add('overflow-hidden');
         }
     });
 }

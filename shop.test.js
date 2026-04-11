@@ -165,7 +165,7 @@ describe('Shop Logic Tests', () => {
 
             vi.advanceTimersByTime(20);
             expect(overlay.classList.contains('opacity-0')).toBe(false);
-            expect(document.body.style.overflow).toBe('hidden');
+            expect(document.body.classList.contains('overflow-hidden')).toBe(true);
         });
 
         it('toggleMobileMenu should close the menu if open', () => {
@@ -175,13 +175,13 @@ describe('Shop Logic Tests', () => {
             // Set up as open
             drawer.classList.remove('-translate-x-full');
             overlay.classList.remove('hidden', 'opacity-0');
-            document.body.style.overflow = 'hidden';
+            document.body.classList.add('overflow-hidden');
 
             toggleMobileMenu();
 
             expect(drawer.classList.contains('-translate-x-full')).toBe(true);
             expect(overlay.classList.contains('opacity-0')).toBe(true);
-            expect(document.body.style.overflow).toBe('');
+            expect(document.body.classList.contains('overflow-hidden')).toBe(false);
         });
     });
 });

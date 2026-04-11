@@ -17,6 +17,11 @@ from .models import (
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
+# tetote Admin Branding
+admin.site.site_header = _("tetote admin room")
+admin.site.site_title = _("tetote Admin")
+admin.site.index_title = _("tetote admin room")
+
 
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
