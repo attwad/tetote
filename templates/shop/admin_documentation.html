@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load i18n %}{% load content_tags %}
+
+{% block title %}
+Admin Documentation - Tetote{% endblock %}
+
+{% block content %}
+    <article class="max-w-[900px] mx-auto py-8">
+        <div class="markdown-content">
+            {% include_content "admin_documentation" %}
+        </div>
+    </article>
+{% endblock %}

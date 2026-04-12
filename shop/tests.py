@@ -198,12 +198,38 @@ class ShopViewTests(TestCase):
             price=100,
             stock_quantity=1,
             glaze=g,
-            public=True,
         )
         url = reverse("shop:product_list") + "?glaze=special"
         response = self.client.get(url)
         self.assertContains(response, "Glaze Product")
         self.assertNotContains(response, "Brand Product")
+
+    def test_admin_help_view_restricted(self):
+        url = reverse("shop:admin_help")
+        # Non-logged in - should redirect to login
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 302)
+
+        # Logged in as non-staff - should return 403
+        from django.contrib.auth.models import User
+
+        User.objects.create_user(username="testuser", password="password")
+        self.client.login(username="testuser", password="password")
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 403)
+
+    def test_admin_help_view_staff(self):
+        url = reverse("shop:admin_help")
+        from django.contrib.auth.models import User
+
+        User.objects.create_superuser(
+            username="admin", password="password", email="admin@test.com"
+        )
+        self.client.login(username="admin", password="password")
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Admin Documentation")
+        self.assertContains(response, "Quick Links")
 
     def test_product_list_filter_type(self):
         t = ProductType.objects.create(name="Bowl", slug="bowl")

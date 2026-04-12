@@ -15,7 +15,7 @@
             {% translate "Published on" %} {{ post.created_at|date:"F j, Y" }}
         </p>
         <hr class="border-none border-t border-brand-border my-6">
-        <div class="post-content">
+        <div class="markdown-content">
             {{ post.content|markdownify }}
         </div>
         <hr class="border-none border-t border-brand-border my-6">

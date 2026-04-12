@@ -25,6 +25,7 @@ urlpatterns = [
         name="care_instructions",
     ),
     path("api/product-info/", views.ProductInfoView.as_view(), name="product_info"),
+    path("help/", views.AdminHelpView.as_view(), name="admin_help"),
     path(
         "products/<slug:product_slug>/",
         views.ProductDetailView.as_view(),

@@ -325,14 +325,10 @@
     @apply bg-none border-none text-brand-muted cursor-pointer text-[1.4rem];
   }
 
-  /* Blog Post Content */
-  .post-content img {
+  /* Markdown Content Styling */
+  .markdown-content img {
     @apply max-w-full h-auto rounded-[2px] my-8 mx-auto block;
   }
-  .post-content h2 { @apply text-2xl font-semibold mt-8 mb-4; }
-  .post-content p { @apply mb-4 leading-relaxed; }
-
-  /* Markdown Content Styling */
   .markdown-content h1 {
     @apply text-[2.5rem] font-medium mb-8 mt-12 first:mt-0 tracking-[0.05rem];
   }
@@ -359,6 +355,9 @@
   }
   .markdown-content strong {
     @apply font-bold text-brand-text;
+  }
+  .markdown-content a {
+    @apply underline underline-offset-[3px] decoration-brand-border hover:decoration-brand-muted transition-colors duration-200;
   }
   .markdown-content em {
     @apply italic;

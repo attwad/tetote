@@ -1,6 +1,7 @@
 from django.conf import settings
 import stripe
 from django.views.generic import ListView, DetailView, View, TemplateView
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.http import JsonResponse
 from django.urls import reverse
 from django.db import transaction
@@ -70,6 +71,13 @@ class CareInstructionsView(TemplateView):
 
 class CheckoutSuccessView(TemplateView):
     template_name = "shop/checkout_success.html"
+
+
+class AdminHelpView(UserPassesTestMixin, TemplateView):
+    template_name = "shop/admin_documentation.html"
+
+    def test_func(self):
+        return self.request.user.is_staff
 
 
 class ProductInfoView(View):
