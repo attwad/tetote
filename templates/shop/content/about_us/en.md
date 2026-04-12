@@ -1,4 +1,4 @@
-# "From Hand to Hand" — Connecting Japan's Master Craftsmanship with Sophisticated Global Lifestyles.
+## "From Hand to Hand" — Connecting Japan's Master Craftsmanship with Sophisticated Global Lifestyles.
 
 "tetote" means "hand to hand" in Japanese. Our mission is to deliver authentic Japanese handmade crafts directly from
 the artisans' hands to customers'. We bring high-quality products that fuse Japan's superior techniques with
