@@ -23,7 +23,7 @@ En principe, les produits défectueux seront remplacés par un produit conforme.
 
 En raison des caractéristiques propres à la céramique, des points noirs (particules de fer), des micro-trous, des irrégularités de la glaçure et de surface, ou des variations de couleur, de forme, de taille et de poids peuvent apparaître lors de la cuisson. Ces éléments font partie du caractère propre à la céramique et ne sont pas considérés comme des défauts.
 
-Si vous souhaitez retourner un produit pour ces raisons, il sera traité comme un « retour pour convenance personnelle ». Pour plus de détails, veuillez consulter la page d’information dédiée.
+Si vous souhaitez retourner un produit pour ces raisons, il sera traité comme un « retour pour convenance personnelle ». Pour plus de détails, veuillez consulter la [page d’information dédiée](/fr/care-instructions).
 
 ## 2\. En cas de dommage
 

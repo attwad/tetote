@@ -21,7 +21,7 @@ Defective products will be replaced with a non-defective item in principle. If r
 **Notes on the Condition of Tableware (Ceramics)**
 
 Due to the nature of ceramics, black spots (iron particles), pinholes (small holes), uneven glaze, slight surface irregularities, and variations in color, shape, and size may occur during firing. These are characteristics unique to ceramics and are not considered defects.
-If you want to return an item for these reasons, it will be treated as a “return for customer convenience.” Please refer to our separate information page for details.
+If you want to return an item for these reasons, it will be treated as a “return for customer convenience.” Please refer to [our separate information page for details](/care-instructions).
 
 ## **2\. Damaged Items**
 
