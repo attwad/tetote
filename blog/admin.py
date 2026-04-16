@@ -1,10 +1,10 @@
 from django.contrib import admin
-from markdownx.admin import MarkdownxModelAdmin
+from modeltranslation.admin import TabbedTranslationAdmin
 from .models import Post
 
 
 @admin.register(Post)
-class PostAdmin(MarkdownxModelAdmin):
+class PostAdmin(TabbedTranslationAdmin):
     list_display = ("title", "slug", "created_at")
     prepopulated_fields = {"slug": ("title",)}
     search_fields = ("title", "content")
