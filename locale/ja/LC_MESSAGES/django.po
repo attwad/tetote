@@ -483,6 +483,18 @@ msgstr "フランス語"
 msgid "Japanese"
 msgstr "日本語"
 
+msgid "Shop Coming Soon"
+msgstr "近日公開予定"
+
+msgid "Coming Soon"
+msgstr "カミングスーン"
+
+msgid "We are currently building our web store, please come back later."
+msgstr "現在オンラインショップを準備中です。恐れ入りますが、後ほど改めてお越しください。"
+
+msgid "Learn About Us"
+msgstr "私たちについて"
+
 #: templates/shop/care_instructions.html:4
 msgid "Care Instructions"
 msgstr "お手入れ方法"

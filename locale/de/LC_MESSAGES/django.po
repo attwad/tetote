@@ -1,0 +1,51 @@
+# German translations for Tetote.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: tetote\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-04-16 19:30+0000\n"
+"PO-Revision-Date: 2026-04-16 19:30+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Shop Coming Soon"
+msgstr "Shop bald verfügbar"
+
+msgid "Coming Soon"
+msgstr "Demnächst"
+
+msgid "We are currently building our web store, please come back later."
+msgstr "Wir bauen derzeit unseren Online-Shop auf, bitte schauen Sie später wieder vorbei."
+
+msgid "Learn About Us"
+msgstr "Über uns"
+
+msgid "English"
+msgstr "Englisch"
+
+msgid "German"
+msgstr "Deutsch"
+
+msgid "French"
+msgstr "Französisch"
+
+msgid "Japanese"
+msgstr "Japanisch"
+
+msgid "About us"
+msgstr "Über uns"
+
+msgid "Shop"
+msgstr "Shop"
+
+msgid "Blog"
+msgstr "Blog"
+
+msgid "Contact"
+msgstr "Kontakt"

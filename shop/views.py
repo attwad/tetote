@@ -280,3 +280,7 @@ class CreateCheckoutSessionView(View):
 
 class CartView(TemplateView):
     template_name = "shop/cart.html"
+
+
+class ShopWIPView(TemplateView):
+    template_name = "shop/wip.html"

@@ -25,3 +25,10 @@ def analytics(request):
     Returns the Umami website ID for analytics.
     """
     return {"UMAMI_WEBSITE_ID": getattr(settings, "UMAMI_WEBSITE_ID", "")}
+
+
+def shop_status(request):
+    """
+    Returns whether the shop is disabled via environment variable.
+    """
+    return {"SHOP_DISABLED": getattr(settings, "SHOP_DISABLED", False)}

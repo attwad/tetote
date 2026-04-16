@@ -490,3 +490,15 @@ msgstr "Français"
 #: tetote/settings.py:137
 msgid "Japanese"
 msgstr "Japonais"
+
+msgid "Shop Coming Soon"
+msgstr "Boutique en ligne bientôt disponible"
+
+msgid "Coming Soon"
+msgstr "Bientôt disponible"
+
+msgid "We are currently building our web store, please come back later."
+msgstr "Nous préparons actuellement notre boutique en ligne, merci de revenir plus tard."
+
+msgid "Learn About Us"
+msgstr "En savoir plus sur nous"
