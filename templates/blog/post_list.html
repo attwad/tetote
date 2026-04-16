@@ -5,16 +5,12 @@
 {% block content %}
     <div class="max-w-[800px] mx-auto">
         {% for post in posts %}
-            <article class="mb-12">
-                <h2 class="mb-2"><a href="{% url 'blog:post_detail' slug=post.slug %}" class="no-underline text-[#333] hover:underline">{{ post.title }}</a></h2>
-                <p class="text-[#666] text-[0.9rem] mb-4">{{ post.created_at|date:"F j, Y" }}</p>
-                <div class="excerpt mb-4 leading-relaxed">
-                    {{ post.content|markdownify|truncatewords_html:50 }}
-                </div>
-                <a href="{% url 'blog:post_detail' slug=post.slug %}" class="text-brand-text font-medium text-[0.95rem] no-underline hover:underline">{% translate "Read More" %} &raquo;</a>
+            <article class="mb-6">
+                <h2 class="mb-1"><a href="{% url 'blog:post_detail' slug=post.slug %}" class="no-underline text-[#333] hover:underline text-2xl">{{ post.title }}</a></h2>
+                <p class="text-[#666] text-[0.85rem] mb-0">{{ post.created_at|date:"F j, Y" }}</p>
             </article>
             {% if not forloop.last %}
-                <hr class="border-none border-t border-brand-border my-12">
+                <hr class="border-none border-t border-brand-border my-6">
             {% endif %}
         {% empty %}
             <div class="text-center py-20 text-brand-muted italic">
