@@ -14,17 +14,339 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid "Shop Coming Soon"
-msgstr "Shop bald verfügbar"
+msgid "Title"
+msgstr "Titel"
 
-msgid "Coming Soon"
-msgstr "Demnächst"
+msgid "Slug"
+msgstr "Slug"
 
-msgid "We are currently building our web store, please come back later."
-msgstr "Wir bauen derzeit unseren Online-Shop auf, bitte schauen Sie später wieder vorbei."
+msgid "Content"
+msgstr "Inhalt"
 
-msgid "Learn About Us"
+msgid "Created At"
+msgstr "Erstellt am"
+
+msgid "Post"
+msgstr "Beitrag"
+
+msgid "Posts"
+msgstr "Beiträge"
+
+msgid "Name"
+msgstr "Name"
+
+msgid "Description"
+msgstr "Beschreibung"
+
+msgid "Location"
+msgstr "Standort"
+
+msgid "Hero Image URL"
+msgstr "Hero-Bild URL"
+
+msgid "The Story"
+msgstr "Die Geschichte"
+
+msgid "The Craft"
+msgstr "Das Handwerk"
+
+msgid "The Wares"
+msgstr "Die Waren"
+
+msgid "Story Side Image URL"
+msgstr "Seitenbild URL (Geschichte)"
+
+msgid "Brand"
+msgstr "Marke"
+
+msgid "Brands"
+msgstr "Marken"
+
+msgid "Image URL"
+msgstr "Bild URL"
+
+msgid "Order"
+msgstr "Reihenfolge"
+
+msgid "Caption"
+msgstr "Bildunterschrift"
+
+msgid "Brand Image"
+msgstr "Markenbild"
+
+msgid "Brand Images"
+msgstr "Markenbilder"
+
+msgid "Glaze"
+msgstr "Glasur"
+
+msgid "Glazes"
+msgstr "Glasuren"
+
+msgid "Product Type"
+msgstr "Produkttyp"
+
+msgid "Product Types"
+msgstr "Produkttypen"
+
+msgid "Stripe Product ID"
+msgstr "Stripe Produkt-ID"
+
+msgid "Stripe Price ID"
+msgstr "Stripe Preis-ID"
+
+msgid "Stripe Name"
+msgstr "Stripe Name"
+
+msgid "Price (CHF cents)"
+msgstr "Preis (CHF Rappen)"
+
+msgid "Main Photo URL"
+msgstr "Hauptfoto URL"
+
+msgid "Stock Quantity"
+msgstr "Lagerbestand"
+
+msgid "Public"
+msgstr "Öffentlich"
+
+msgid "Date Added"
+msgstr "Hinzugefügt am"
+
+msgid "Product"
+msgstr "Produkt"
+
+msgid "Products"
+msgstr "Produkte"
+
+msgid "Product Image"
+msgstr "Produktbild"
+
+msgid "Product Images"
+msgstr "Produktbilder"
+
+msgid "Announcement Text"
+msgstr "Ankündigungstext"
+
+msgid "Is Active"
+msgstr "Aktiv"
+
+msgid "Store Announcement"
+msgstr "Shop-Ankündigung"
+
+msgid "Store Announcements"
+msgstr "Shop-Ankündigungen"
+
+msgid "Sales Paused"
+msgstr "Verkäufe pausiert"
+
+msgid "Store Settings"
+msgstr "Shop-Einstellungen"
+
+msgid "Checkout is temporarily disabled"
+msgstr "Bezahlvorgang ist vorübergehend deaktiviert"
+
+msgid "Invalid request data"
+msgstr "Ungültige Anforderungsdaten"
+
+msgid "Cart is empty"
+msgstr "Warenkorb ist leer"
+
+msgid "Invalid cart items"
+msgstr "Ungültige Artikel im Warenkorb"
+
+#, python-format
+msgid "Product with price %(price_id)s not found"
+msgstr "Produkt mit Preis %(price_id)s nicht gefunden"
+
+#, python-format
+msgid "Only %(qty)s left of %(name)s"
+msgstr "Nur noch %(qty)s von %(name)s verfügbar"
+
+msgid "Page Not Found"
+msgstr "Seite nicht gefunden"
+
+msgid "The page you are looking for does not exist."
+msgstr "Die von Ihnen gesuchte Seite existiert nicht."
+
+msgid "It may have been moved, or the link might be broken."
+msgstr "Sie wurde möglicherweise verschoben oder der Link ist fehlerhaft."
+
+msgid "Return to Shop"
+msgstr "Zurück zum Shop"
+
+msgid "About us"
 msgstr "Über uns"
+
+msgid "Shop"
+msgstr "Shop"
+
+msgid "Blog"
+msgstr "Blog"
+
+msgid "Contact"
+msgstr "Kontakt"
+
+msgid "Language"
+msgstr "Sprache"
+
+msgid "Privacy Policy"
+msgstr "Datenschutzerklärung"
+
+msgid "Terms and Conditions"
+msgstr "Allgemeine Geschäftsbedingungen"
+
+msgid "Delivery Policy"
+msgstr "Lieferbedingungen"
+
+msgid "Return Policy"
+msgstr "Rückgaberecht"
+
+msgid "Published on"
+msgstr "Veröffentlicht am"
+
+msgid "Back to Blog"
+msgstr "Zurück zum Blog"
+
+msgid "Read More"
+msgstr "Weiterlesen"
+
+msgid "We are sorry, there are no blog posts yet."
+msgstr "Es tut uns leid, es gibt noch keine Blog-Beiträge."
+
+msgid "first"
+msgstr "Erste"
+
+msgid "previous"
+msgstr "Vorherige"
+
+#, python-format
+msgid "Page %(number)s of %(num_pages)s."
+msgstr "Seite %(number)s von %(num_pages)s."
+
+msgid "next"
+msgstr "Nächste"
+
+msgid "last"
+msgstr "Letzte"
+
+msgid "The Firing Process"
+msgstr "Der Brennvorgang"
+
+msgid "View the Collection"
+msgstr "Kollektion ansehen"
+
+msgid "Care Instructions"
+msgstr "Pflegehinweise"
+
+msgid "Your selection"
+msgstr "Ihre Auswahl"
+
+msgid "Total"
+msgstr "Gesamt"
+
+msgid "shipping: calculated at checkout"
+msgstr "Versand: wird beim Checkout berechnet"
+
+msgid "Clear selection"
+msgstr "Auswahl leeren"
+
+msgid "Checkout Paused"
+msgstr "Bezahlvorgang pausiert"
+
+msgid "Checkout"
+msgstr "Bezahlen"
+
+msgid "We have temporarily paused online sales. Please check back later."
+msgstr "Wir haben den Online-Verkauf vorübergehend pausiert. Bitte schauen Sie später wieder vorbei."
+
+msgid "Your cart is empty."
+msgstr "Ihr Warenkorb ist leer."
+
+msgid "Go Shopping"
+msgstr "Einkaufen gehen"
+
+msgid "Qty"
+msgstr "Menge"
+
+msgid "Remove"
+msgstr "Entfernen"
+
+msgid "Only X items are available in stock. If you need more, please contact us!"
+msgstr "Nur noch X Artikel an Lager. Wenn Sie mehr benötigen, kontaktieren Sie uns bitte!"
+
+msgid "Are you sure you want to clear your cart?"
+msgstr "Sind Sie sicher, dass Sie den Warenkorb leeren möchten?"
+
+msgid "Thank You"
+msgstr "Vielen Dank"
+
+msgid "Thank You for Your Order!"
+msgstr "Vielen Dank für Ihre Bestellung!"
+
+msgid "Your transaction was successful. We are now carefully preparing your artisanal ceramics for their journey to you."
+msgstr "Ihre Transaktion war erfolgreich. Wir bereiten nun sorgfältig Ihre handgefertigten Keramiken für die Reise zu Ihnen vor."
+
+msgid "Continue Shopping"
+msgstr "Weiter einkaufen"
+
+msgid "A confirmation email will be sent to you shortly."
+msgstr "Eine Bestätigungs-E-Mail wird Ihnen in Kürze zugesandt."
+
+msgid "Type"
+msgstr "Typ"
+
+msgid "In Stock"
+msgstr "An Lager"
+
+msgid "available"
+msgstr "verfügbar"
+
+msgid "Add to Cart"
+msgstr "In den Warenkorb"
+
+msgid "View Cart"
+msgstr "Warenkorb anzeigen"
+
+msgid "Out of Stock"
+msgstr "Nicht vorrätig"
+
+msgid "Added to cart."
+msgstr "In den Warenkorb gelegt."
+
+msgid "Stock Status"
+msgstr "Lagerstatus"
+
+msgid "Clear all"
+msgstr "Alle löschen"
+
+msgid "Refine selection"
+msgstr "Auswahl verfeinern"
+
+msgid "Sort by"
+msgstr "Sortieren nach"
+
+msgid "New in Shop"
+msgstr "Neu im Shop"
+
+msgid "Lowest Price"
+msgstr "Niedrigster Preis"
+
+msgid "Highest Price"
+msgstr "Höchster Preis"
+
+msgid "No products found."
+msgstr "Keine Produkte gefunden."
+
+msgid "Previous"
+msgstr "Vorherige"
+
+#, python-format
+msgid "Page %(current)s of %(total)s"
+msgstr "Seite %(current)s von %(total)s"
+
+msgid "Next"
+msgstr "Nächste"
 
 msgid "English"
 msgstr "Englisch"
@@ -38,14 +360,14 @@ msgstr "Französisch"
 msgid "Japanese"
 msgstr "Japanisch"
 
-msgid "About us"
+msgid "Shop Coming Soon"
+msgstr "Shop bald verfügbar"
+
+msgid "Coming Soon"
+msgstr "Demnächst"
+
+msgid "We are currently building our web store, please come back later."
+msgstr "Wir bauen derzeit unseren Online-Shop auf, bitte schauen Sie später wieder vorbei."
+
+msgid "Learn About Us"
 msgstr "Über uns"
-
-msgid "Shop"
-msgstr "Shop"
-
-msgid "Blog"
-msgstr "Blog"
-
-msgid "Contact"
-msgstr "Kontakt"
