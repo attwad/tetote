@@ -105,6 +105,7 @@ TEMPLATES = [
                 "shop.context_processors.store_settings",
                 "shop.context_processors.analytics",
                 "shop.context_processors.shop_status",
+                "shop.context_processors.brands",
             ],
         },
     },

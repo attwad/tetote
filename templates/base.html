@@ -44,10 +44,23 @@
 
             <!-- Centered Menu -->
             <nav class="flex items-center gap-10 flex-none">
-                <a href="{% url 'shop:about_us' %}" class="font-medium tracking-[0.05rem] text-brand-text no-underline transition-opacity duration-200 hover:opacity-70 {% if request.resolver_match.url_name == 'about_us' %}font-bold{% endif %}">{% translate "About us" %}</a>
-                <a href="{% url 'shop:product_list' %}" class="font-medium tracking-[0.05rem] text-brand-text no-underline transition-opacity duration-200 hover:opacity-70 {% if request.resolver_match.url_name == 'product_list' or request.resolver_match.url_name == 'product_detail' %}font-bold{% endif %}">{% translate "Shop" %}</a>
-                <a href="{% url 'blog:post_list' %}" class="font-medium tracking-[0.05rem] text-brand-text no-underline transition-opacity duration-200 hover:opacity-70 {% if request.resolver_match.app_name == 'blog' %}font-bold{% endif %}">{% translate "Blog" %}</a>
-                <a href="{% url 'shop:contact' %}" class="font-medium tracking-[0.05rem] text-brand-text no-underline transition-opacity duration-200 hover:opacity-70 {% if request.resolver_match.url_name == 'contact' %}font-bold{% endif %}">{% translate "Contact" %}</a>
+                <a href="{% url 'shop:about_us' %}" class="py-2 font-medium tracking-[0.05rem] text-brand-text no-underline transition-opacity duration-200 hover:opacity-70 {% if request.resolver_match.url_name == 'about_us' %}font-bold{% endif %}">{% translate "About us" %}</a>
+                <a href="{% url 'shop:product_list' %}" class="py-2 font-medium tracking-[0.05rem] text-brand-text no-underline transition-opacity duration-200 hover:opacity-70 {% if request.resolver_match.url_name == 'product_list' or request.resolver_match.url_name == 'product_detail' %}font-bold{% endif %}">{% translate "Shop" %}</a>
+
+                <div class="relative group py-2">
+                    <span class="font-medium tracking-[0.05rem] text-brand-text cursor-default transition-opacity duration-200 group-hover:opacity-70">{% translate "Brands" %}</span>
+                    <!-- Invisible bridge to prevent hover loss -->
+                    <div class="absolute left-1/2 -translate-x-1/2 top-full w-48 bg-white border border-brand-border shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible group-hover:pointer-events-auto pointer-events-none transition-all duration-200 z-50 py-3 flex flex-col mt-[1px]">
+                        {% for brand in all_brands %}
+                            <a href="{{ brand.get_absolute_url }}" class="px-6 py-2 text-[1rem] text-brand-text no-underline hover:bg-brand-bg transition-colors {% if request.resolver_match.kwargs.brand_slug == brand.slug %}font-bold{% endif %}">
+                                {{ brand.name }}
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <a href="{% url 'blog:post_list' %}" class="py-2 font-medium tracking-[0.05rem] text-brand-text no-underline transition-opacity duration-200 hover:opacity-70 {% if request.resolver_match.app_name == 'blog' %}font-bold{% endif %}">{% translate "Blog" %}</a>
+                <a href="{% url 'shop:contact' %}" class="py-2 font-medium tracking-[0.05rem] text-brand-text no-underline transition-opacity duration-200 hover:opacity-70 {% if request.resolver_match.url_name == 'contact' %}font-bold{% endif %}">{% translate "Contact" %}</a>
             </nav>
 
             <!-- Cart Icon -->
@@ -83,6 +96,18 @@
         <nav class="flex flex-col gap-8 mt-12">
             <a href="{% url 'shop:about_us' %}" class="text-[1.2rem] font-medium tracking-[0.05rem] text-brand-text no-underline {% if request.resolver_match.url_name == 'about_us' %}font-bold{% endif %}">{% translate "About us" %}</a>
             <a href="{% url 'shop:product_list' %}" class="text-[1.2rem] font-medium tracking-[0.05rem] text-brand-text no-underline {% if request.resolver_match.url_name == 'product_list' or request.resolver_match.url_name == 'product_detail' %}font-bold{% endif %}">{% translate "Shop" %}</a>
+
+            <div class="flex flex-col gap-4">
+                <span class="text-[1.2rem] font-medium tracking-[0.05rem] text-brand-text cursor-default">{% translate "Brands" %}</span>
+                <div class="flex flex-col gap-4 pl-4 border-l border-brand-border ml-2">
+                    {% for brand in all_brands %}
+                        <a href="{{ brand.get_absolute_url }}" class="text-[1.1rem] font-medium tracking-[0.05rem] text-brand-text no-underline {% if request.resolver_match.kwargs.brand_slug == brand.slug %}font-bold{% endif %}">
+                            {{ brand.name }}
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+
             <a href="{% url 'blog:post_list' %}" class="text-[1.2rem] font-medium tracking-[0.05rem] text-brand-text no-underline {% if request.resolver_match.app_name == 'blog' %}font-bold{% endif %}">{% translate "Blog" %}</a>
             <a href="{% url 'shop:contact' %}" class="text-[1.2rem] font-medium tracking-[0.05rem] text-brand-text no-underline {% if request.resolver_match.url_name == 'contact' %}font-bold{% endif %}">{% translate "Contact" %}</a>
         </nav>

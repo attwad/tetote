@@ -1,5 +1,6 @@
 from django.conf import settings
-from .models import StoreAnnouncement, StoreSettings
+from django.db.models import Count, Q
+from .models import StoreAnnouncement, StoreSettings, Brand
 
 
 def announcement(request):
@@ -32,3 +33,16 @@ def shop_status(request):
     Returns whether the shop is disabled via environment variable.
     """
     return {"SHOP_DISABLED": getattr(settings, "SHOP_DISABLED", False)}
+
+
+def brands(request):
+    """
+    Returns brands that have at least one public product.
+    """
+    return {
+        "all_brands": Brand.objects.annotate(
+            public_product_count=Count("products", filter=Q(products__public=True))
+        )
+        .filter(public_product_count__gt=0)
+        .order_by("name")
+    }
