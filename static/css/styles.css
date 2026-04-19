@@ -815,6 +815,9 @@
   .underline-offset-2 {
     text-underline-offset: 2px;
   }
+  .underline-offset-4 {
+    text-underline-offset: 4px;
+  }
   .underline-offset-\[3px\] {
     text-underline-offset: 3px;
   }
@@ -875,6 +878,13 @@
     &:is(:where(.group):hover *) {
       @media (hover: hover) {
         visibility: visible;
+      }
+    }
+  }
+  .group-hover\:underline {
+    &:is(:where(.group):hover *) {
+      @media (hover: hover) {
+        text-decoration-line: underline;
       }
     }
   }
