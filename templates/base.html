@@ -16,7 +16,7 @@
     {% block extra_head %}{% endblock %}
 </head>
 <body class="bg-brand-bg text-brand-text font-serif text-[1.15rem] leading-[1.6]">
-    <header class="bg-white text-brand-text pt-4 pb-4">
+    <header class="bg-white text-brand-text pt-4 site-header">
         <!-- Logo Row -->
         <div class="flex justify-center mb-4 relative px-8">
             <!-- Mobile Hamburger (Left) -->
@@ -83,6 +83,13 @@
                 </a>
             </div>
         </div>
+
+        <!-- Logo Threads / Red Lines -->
+        <div class="flex flex-col gap-[1px] mt-4">
+            <div class="h-[1px] w-full bg-[#ef454a]"></div>
+            <div class="h-[1px] w-full bg-[#ef454a]"></div>
+            <div class="h-[1px] w-full bg-[#ef454a]"></div>
+        </div>
     </header>
 
     <!-- Mobile Menu Drawer -->
@@ -126,13 +133,6 @@
                 </select>
             </form>
         </div>
-    </div>
-
-    <!-- Logo Threads / Red Lines -->
-    <div class="flex flex-col gap-[1px] mt-[1px] mb-4">
-        <div class="h-[1px] w-full bg-[#ef454a]"></div>
-        <div class="h-[1px] w-full bg-[#ef454a]"></div>
-        <div class="h-[1px] w-full bg-[#ef454a]"></div>
     </div>
 
     {% if active_announcement %}
@@ -182,7 +182,7 @@
 
     <script type="module">
         // Using a query param for simple cache busting
-        import { getCart, saveCart, updateCartUI, showToast, toggleMobileMenu } from "{% static 'js/shop.js' %}?v=1.1";
+        import { getCart, saveCart, updateCartUI, showToast, toggleMobileMenu, initHeaderScroll } from "{% static 'js/shop.js' %}?v=1.1";
 
         // Expose to window for existing inline onclick handlers in other templates
         window.getCart = getCart;
@@ -192,6 +192,7 @@
         window.toggleMobileMenu = toggleMobileMenu;
 
         updateCartUI();
+        initHeaderScroll();
         window.addEventListener('pageshow', (event) => {
             updateCartUI();
         });

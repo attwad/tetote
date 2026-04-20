@@ -191,3 +191,52 @@ export function toggleSort(value) {
     const isExpanded = drawer && drawer.classList.contains('open');
     window.location.href = getNewURL(window.location.href, 'sort', null, value, isExpanded);
 }
+
+/**
+ * Header Scroll Logic
+ */
+export function initHeaderScroll() {
+    const header = document.querySelector('.site-header');
+    if (!header) return;
+
+    let lastScrollY = window.scrollY;
+    let scrollUpAccumulator = 0;
+    const threshold = 150; // Initial distance from top
+    const hideThreshold = 300; // Total scroll before hiding starts
+    const showThreshold = 150; // Amount to scroll up before showing again
+
+    window.addEventListener('scroll', () => {
+        const currentScrollY = window.scrollY;
+        const delta = currentScrollY - lastScrollY;
+
+        // Add border/shadow if scrolled even a little
+        if (currentScrollY > 10) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+
+        // Hide/Show logic
+        if (currentScrollY > threshold) {
+            if (delta > 0) {
+                // Scrolling down
+                scrollUpAccumulator = 0; // Reset accumulator when scrolling down
+                if (currentScrollY > hideThreshold) {
+                    header.classList.add('hidden-up');
+                }
+            } else {
+                // Scrolling up
+                scrollUpAccumulator += Math.abs(delta);
+                if (scrollUpAccumulator > showThreshold) {
+                    header.classList.remove('hidden-up');
+                }
+            }
+        } else {
+            // Near top - always show
+            header.classList.remove('hidden-up');
+            scrollUpAccumulator = 0;
+        }
+
+        lastScrollY = currentScrollY;
+    }, { passive: true });
+}
