@@ -378,6 +378,12 @@
   .table {
     display: table;
   }
+  .h-6 {
+    height: calc(var(--spacing) * 6);
+  }
+  .h-8 {
+    height: calc(var(--spacing) * 8);
+  }
   .h-\[1px\] {
     height: 1px;
   }
@@ -1030,6 +1036,24 @@
     line-height: 1.6;
     color: var(--color-brand-text);
   }
+  h1 {
+    margin-bottom: calc(var(--spacing) * 6);
+    font-size: 2.2rem;
+    --tw-font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
+  }
+  h2 {
+    margin-bottom: calc(var(--spacing) * 4);
+    font-size: 1.5rem;
+    --tw-font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
+  }
+  h3 {
+    margin-bottom: calc(var(--spacing) * 3);
+    font-size: 1.3rem;
+    --tw-font-weight: var(--font-weight-semibold);
+    font-weight: var(--font-weight-semibold);
+  }
   select, input, button, textarea {
     border-style: var(--tw-border-style);
     border-width: 1px;
@@ -1603,7 +1627,7 @@
   }
   .brand-header h1 {
     margin-bottom: calc(var(--spacing) * 4);
-    font-size: 3.5rem;
+    font-size: 2.8rem;
     --tw-font-weight: var(--font-weight-light);
     font-weight: var(--font-weight-light);
     --tw-tracking: 0.1rem;
@@ -1670,7 +1694,7 @@
   }
   .craft-details h2 {
     margin-bottom: calc(var(--spacing) * 8);
-    font-size: 2.2rem;
+    font-size: 1.8rem;
     --tw-font-weight: var(--font-weight-normal);
     font-weight: var(--font-weight-normal);
   }
@@ -1689,7 +1713,7 @@
   }
   @media (max-width: 900px) {
     .brand-header h1 {
-      font-size: 2.5rem;
+      font-size: 2.2rem;
     }
   }
   .toast-container {
@@ -1738,16 +1762,16 @@
   }
   .markdown-content img {
     margin-inline: auto;
-    margin-block: calc(var(--spacing) * 8);
+    margin-block: calc(var(--spacing) * 6);
     display: block;
     height: auto;
     max-width: 100%;
     border-radius: 2px;
   }
   .markdown-content h1 {
-    margin-top: calc(var(--spacing) * 12);
-    margin-bottom: calc(var(--spacing) * 8);
-    font-size: 2.5rem;
+    margin-top: calc(var(--spacing) * 8);
+    margin-bottom: calc(var(--spacing) * 4);
+    font-size: 2.2rem;
     --tw-font-weight: var(--font-weight-medium);
     font-weight: var(--font-weight-medium);
     --tw-tracking: 0.05rem;
@@ -1757,29 +1781,29 @@
     }
   }
   .markdown-content h2 {
-    margin-top: calc(var(--spacing) * 10);
-    margin-bottom: calc(var(--spacing) * 6);
+    margin-top: calc(var(--spacing) * 6);
+    margin-bottom: calc(var(--spacing) * 3);
     border-bottom-style: var(--tw-border-style);
     border-bottom-width: 1px;
     border-color: var(--color-brand-border);
     padding-bottom: calc(var(--spacing) * 2);
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     --tw-font-weight: var(--font-weight-medium);
     font-weight: var(--font-weight-medium);
     --tw-tracking: 0.03rem;
     letter-spacing: 0.03rem;
   }
   .markdown-content h3 {
-    margin-top: calc(var(--spacing) * 8);
-    margin-bottom: calc(var(--spacing) * 4);
-    font-size: 1.4rem;
+    margin-top: calc(var(--spacing) * 4);
+    margin-bottom: calc(var(--spacing) * 2);
+    font-size: 1.3rem;
     --tw-font-weight: var(--font-weight-semibold);
     font-weight: var(--font-weight-semibold);
   }
   .markdown-content h4 {
-    margin-top: calc(var(--spacing) * 6);
-    margin-bottom: calc(var(--spacing) * 3);
-    font-size: 1.2rem;
+    margin-top: calc(var(--spacing) * 3);
+    margin-bottom: calc(var(--spacing) * 1);
+    font-size: 1.1rem;
     --tw-font-weight: var(--font-weight-bold);
     font-weight: var(--font-weight-bold);
     --tw-tracking: var(--tracking-wider);
@@ -1787,22 +1811,26 @@
     text-transform: uppercase;
   }
   .markdown-content p {
-    margin-bottom: calc(var(--spacing) * 6);
-    --tw-leading: 1.8;
-    line-height: 1.8;
+    margin-bottom: calc(var(--spacing) * 4);
+    --tw-leading: 1.5;
+    line-height: 1.5;
   }
   .markdown-content ul {
-    margin-bottom: calc(var(--spacing) * 6);
+    margin-bottom: calc(var(--spacing) * 4);
     list-style-type: disc;
     padding-left: calc(var(--spacing) * 8);
+    --tw-leading: 1.5;
+    line-height: 1.5;
   }
   .markdown-content ol {
-    margin-bottom: calc(var(--spacing) * 6);
+    margin-bottom: calc(var(--spacing) * 4);
     list-style-type: decimal;
     padding-left: calc(var(--spacing) * 8);
+    --tw-leading: 1.5;
+    line-height: 1.5;
   }
   .markdown-content li {
-    margin-bottom: calc(var(--spacing) * 2);
+    margin-bottom: calc(var(--spacing) * 0.5);
   }
   .markdown-content strong {
     --tw-font-weight: var(--font-weight-bold);
@@ -1828,7 +1856,7 @@
     font-style: italic;
   }
   .markdown-content blockquote {
-    margin-block: calc(var(--spacing) * 8);
+    margin-block: calc(var(--spacing) * 6);
     border-left-style: var(--tw-border-style);
     border-left-width: 4px;
     border-color: var(--color-brand-accent);
