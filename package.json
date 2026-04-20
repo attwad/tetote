@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "vitest run",
-    "build:css": "npx tailwindcss -i ./static/css/input.css -o ./static/css/styles.css",
-    "watch:css": "npx tailwindcss -i ./static/css/input.css -o ./static/css/styles.css --watch"
+    "build:css": "npx tailwindcss -i ./assets/css/input.css -o ./static/css/styles.css",
+    "watch:css": "npx tailwindcss -i ./assets/css/input.css -o ./static/css/styles.css --watch"
   },
   "keywords": [],
   "author": "",
