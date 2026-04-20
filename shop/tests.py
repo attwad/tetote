@@ -56,6 +56,7 @@ class ProductModelTest(TestCase):
             brand=self.brand,
             glaze=self.glaze,
             product_type=self.type,
+            public=True,
         )
 
     def test_price_in_chf(self):
@@ -151,6 +152,7 @@ class ShopViewTests(TestCase):
             price=1000,
             stock_quantity=5,
             brand=self.brand,
+            public=True,
         )
         self.unbranded_product = Product.objects.create(
             stripe_product_id="prod_2",
@@ -159,6 +161,7 @@ class ShopViewTests(TestCase):
             slug="unbranded-product",
             price=2000,
             stock_quantity=2,
+            public=True,
         )
 
     def test_product_list_view(self):
@@ -198,6 +201,7 @@ class ShopViewTests(TestCase):
             price=100,
             stock_quantity=1,
             glaze=g,
+            public=True,
         )
         url = reverse("shop:product_list") + "?glaze=special"
         response = self.client.get(url)

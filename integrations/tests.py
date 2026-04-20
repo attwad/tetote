@@ -84,6 +84,7 @@ class StripeIntegrationTest(TestCase):
             slug="original",
             price=9900,
             stock_quantity=5,
+            public=True,
         )
 
         # Update product (no price info in payload)
@@ -111,6 +112,7 @@ class StripeIntegrationTest(TestCase):
             slug="original",
             price=1000,
             main_photo="http://test.com/original_main.jpg",
+            public=True,
         )
         ProductImage.objects.create(
             product=product, url="http://test.com/original_gallery.jpg", order=0
@@ -142,6 +144,7 @@ class StripeIntegrationTest(TestCase):
             slug="test",
             price=0,
             stock_quantity=0,
+            public=True,
         )
 
         price_data = {"id": "price_test", "product": "prod_test", "unit_amount": 5000}
@@ -160,6 +163,7 @@ class StripeIntegrationTest(TestCase):
             price=1000,
             stripe_price_id="price_active",
             stock_quantity=0,
+            public=True,
         )
 
         # Inactive price data
@@ -211,6 +215,7 @@ class StripeIntegrationTest(TestCase):
             slug="test",
             price=1000,
             stock_quantity=10,
+            public=True,
         )
 
         mock_construct.return_value = {
@@ -269,6 +274,7 @@ class ProductAdminTest(TestCase):
             price=5000,
             main_photo="http://test.com/main.jpg",
             brand=self.brand,
+            public=True,
         )
 
     @patch("stripe.Product.modify")
