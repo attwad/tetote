@@ -12,27 +12,15 @@ jobs:
 
     env:
       SECRET_KEY: "dummy-secret-key-for-tests"
-      DEBUG: "True"
+      DEBUG: "False"
+      ALLOWED_HOSTS: "testserver"
       DATABASE_URL: "sqlite:///db.sqlite3"
       STRIPE_SECRET_KEY: "sk_test_dummy"
       STRIPE_PUBLISHABLE_KEY: "pk_test_dummy"
+      SECURE_SSL_REDIRECT: "False"
 
     steps:
     - uses: actions/checkout@v6
-
-    - name: Install uv
-      uses: astral-sh/setup-uv@v7
-      with:
-        enable-cache: true
-
-    - name: Install Python dependencies
-      run: uv sync --all-extras --dev
-
-    - name: Run Ruff Check
-      run: uv run ruff check .
-
-    - name: Run Django Tests
-      run: uv run python manage.py test
 
     - name: Set up Node.js
       uses: actions/setup-node@v6
@@ -42,6 +30,26 @@ jobs:
 
     - name: Install Node dependencies
       run: npm ci
+
+    - name: Build CSS
+      run: npm run build:css
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v7
+      with:
+        enable-cache: true
+
+    - name: Install Python dependencies
+      run: uv sync --all-extras --dev
+
+    - name: Collect Static Files
+      run: uv run python manage.py collectstatic --noinput
+
+    - name: Run Ruff Check
+      run: uv run ruff check .
+
+    - name: Run Django Tests
+      run: uv run python manage.py test
 
     - name: Run Frontend Tests
       run: npm test
