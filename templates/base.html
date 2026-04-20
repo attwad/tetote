@@ -25,7 +25,7 @@
             </button>
 
             <a href="{% url 'shop:product_list' %}" class="text-brand-text no-underline transition-opacity duration-200 hover:opacity-70">
-                <img src="{% static 'images/logo.min.svg' %}" alt="Tetote Logo" class="h-[60px] w-auto">
+                <img src="{% static 'images/logo.min.svg' %}" alt="Tetote Logo" class="w-20 h-20">
             </a>
 
             <!-- Mobile Cart (Right) -->
@@ -145,25 +145,25 @@
         {% block content %}{% endblock %}
     </main>
 
-    <footer class="bg-white pt-4 pb-4 px-8 text-center flex flex-col items-center gap-2">
+    <footer class="bg-brand-border h-[300px] px-8 text-center flex flex-col items-center justify-center gap-4">
         <!-- Social Link -->
         <a href="https://www.instagram.com/tetote.ch/" target="_blank" rel="noopener noreferrer" class="transition-opacity duration-200 hover:opacity-70">
-            <img src="{% static 'images/insta_icon.svg' %}" alt="Instagram" class="h-6 w-auto">
+            <img src="{% static 'images/insta_icon.svg' %}" alt="Instagram" class="h-10 w-auto">
         </a>
 
         <!-- Brand Name -->
-        <img src="{% static 'images/tetote_logo.svg' %}" alt="Tetote Logo" class="h-8 w-auto">
+        <img src="{% static 'images/tetote_logo.svg' %}" alt="Tetote Logo" class="w-30 h-7.5">
 
         <!-- Footer Menu Links -->
         <div class="flex flex-wrap justify-center items-center gap-y-2 text-[0.9rem]">
             <a href="{% url 'shop:privacy_policy' %}" class="text-brand-text no-underline hover:opacity-70 hover:underline underline-offset-4">{% translate "Privacy Policy" %}</a>
-            <span class="text-brand-border mx-2">|</span>
+            <span class="text-brand-muted mx-2">|</span>
             <a href="{% url 'shop:terms' %}" class="text-brand-text no-underline hover:opacity-70 hover:underline underline-offset-4">{% translate "Terms and Conditions" %}</a>
-            <span class="text-brand-border mx-2">|</span>
+            <span class="text-brand-muted mx-2">|</span>
             <a href="{% url 'shop:delivery_policy' %}" class="text-brand-text no-underline hover:opacity-70 hover:underline underline-offset-4">{% translate "Delivery Policy" %}</a>
-            <span class="text-brand-border mx-2">|</span>
+            <span class="text-brand-muted mx-2">|</span>
             <a href="{% url 'shop:return_policy' %}" class="text-brand-text no-underline hover:opacity-70 hover:underline underline-offset-4">{% translate "Return Policy" %}</a>
-            <span class="text-brand-border mx-2">|</span>
+            <span class="text-brand-muted mx-2">|</span>
             <a href="{% url 'shop:contact' %}" class="text-brand-text no-underline hover:opacity-70 hover:underline underline-offset-4">{% translate "Contact" %}</a>
         </div>
 
