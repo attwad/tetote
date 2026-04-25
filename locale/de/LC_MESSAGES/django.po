@@ -239,6 +239,18 @@ msgstr "Kollektion ansehen"
 msgid "Care Instructions"
 msgstr "Pflegehinweise"
 
+msgid "Product Characteristics"
+msgstr "Produkteigenschaften"
+
+msgid "Want to learn more about the unique features of our ceramics?"
+msgstr "Möchten Sie mehr über die einzigartigen Eigenschaften unserer Keramik erfahren?"
+
+msgid "View Product Characteristics"
+msgstr "Produkteigenschaften ansehen"
+
+msgid "For more information on how to maintain your ceramic pieces, please see our"
+msgstr "Weitere Informationen zur Pflege Ihrer Keramikstücke finden Sie in unseren"
+
 msgid "Your selection"
 msgstr "Ihre Auswahl"
 

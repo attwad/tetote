@@ -321,6 +321,9 @@ msgstr "Voir la collection"
 msgid "Care Instructions"
 msgstr "Conseils d'entretien"
 
+msgid "Product Characteristics"
+msgstr "Caractéristiques du produit"
+
 #: templates/shop/cart.html:4 templates/shop/cart.html:7
 msgid "Your selection"
 msgstr "Votre sélection"
@@ -502,3 +505,12 @@ msgstr "Nous préparons actuellement notre boutique en ligne, merci de revenir p
 
 msgid "Learn About Us"
 msgstr "En savoir plus sur nous"
+
+msgid "Want to learn more about the unique features of our ceramics?"
+msgstr "Vous souhaitez en savoir plus sur les caractéristiques uniques de nos céramiques ?"
+
+msgid "View Product Characteristics"
+msgstr "Voir les caractéristiques du produit"
+
+msgid "For more information on how to maintain your ceramic pieces, please see our"
+msgstr "Pour plus d'informations sur l'entretien de vos pièces en céramique, veuillez consulter nos"

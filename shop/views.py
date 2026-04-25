@@ -69,6 +69,10 @@ class CareInstructionsView(TemplateView):
     template_name = "shop/care_instructions.html"
 
 
+class ProductCharacteristicsView(TemplateView):
+    template_name = "shop/product_characteristics.html"
+
+
 class CheckoutSuccessView(TemplateView):
     template_name = "shop/checkout_success.html"
 

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load i18n content_tags %}
+
+{% block title %}{% translate "Product Characteristics" %} - Tetote{% endblock %}
+
+{% block content %}
+<div class="max-w-[800px] mx-auto markdown-content">
+    {% include_content "product_characteristics" %}
+
+    <div class="mt-12 pt-8 border-t border-brand-border">
+        <p class="text-brand-muted">
+            {% translate "For more information on how to maintain your ceramic pieces, please see our" %}
+            <a href="{% url 'shop:care_instructions' %}" class="underline underline-offset-4 hover:opacity-70 transition-opacity">
+                {% translate "Care Instructions" %}
+            </a>.
+        </p>
+    </div>
+</div>
+{% endblock %}

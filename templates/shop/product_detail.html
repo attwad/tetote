@@ -55,6 +55,10 @@
                 <a href="{% url 'shop:care_instructions' %}" class="text-brand-muted underline underline-offset-[3px] hover:opacity-70 transition-opacity">
                     {% translate "Care Instructions" %}
                 </a>
+                <span class="text-brand-muted mx-1">|</span>
+                <a href="{% url 'shop:product_characteristics' %}" class="text-brand-muted underline underline-offset-[3px] hover:opacity-70 transition-opacity">
+                    {% translate "Product Characteristics" %}
+                </a>
             </p>
 
             <p class="price text-[1.5rem] my-6">CHF {{ product.price_in_chf|floatformat:2 }}</p>

@@ -148,7 +148,7 @@
     <footer class="bg-brand-border h-[300px] px-8 text-center flex flex-col items-center justify-center gap-4">
         <!-- Social Link -->
         <a href="https://www.instagram.com/tetote.ch/" target="_blank" rel="noopener noreferrer" class="transition-opacity duration-200 hover:opacity-70">
-            <img src="{% static 'images/insta_icon.svg' %}" alt="Instagram" class="h-10 w-auto">
+            <img src="{% static 'images/insta_icon.svg' %}" alt="Instagram" class="w-10 h-10">
         </a>
 
         <!-- Brand Name -->
@@ -156,6 +156,10 @@
 
         <!-- Footer Menu Links -->
         <div class="flex flex-wrap justify-center items-center gap-y-2 text-[0.9rem]">
+            <a href="{% url 'shop:care_instructions' %}" class="text-brand-text no-underline hover:opacity-70 hover:underline underline-offset-4">{% translate "Care Instructions" %}</a>
+            <span class="text-brand-muted mx-2">|</span>
+            <a href="{% url 'shop:product_characteristics' %}" class="text-brand-text no-underline hover:opacity-70 hover:underline underline-offset-4">{% translate "Product Characteristics" %}</a>
+            <span class="text-brand-muted mx-2">|</span>
             <a href="{% url 'shop:privacy_policy' %}" class="text-brand-text no-underline hover:opacity-70 hover:underline underline-offset-4">{% translate "Privacy Policy" %}</a>
             <span class="text-brand-muted mx-2">|</span>
             <a href="{% url 'shop:terms' %}" class="text-brand-text no-underline hover:opacity-70 hover:underline underline-offset-4">{% translate "Terms and Conditions" %}</a>
