@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-04 16:22+0000\n"
+"POT-Creation-Date: 2026-05-01 15:34+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,8 +22,8 @@ msgstr ""
 msgid "Title"
 msgstr "タイトル"
 
-#: blog/models.py:9 shop/models.py:10 shop/models.py:55 shop/models.py:67
-#: shop/models.py:84
+#: blog/models.py:9 shop/models.py:10 shop/models.py:32 shop/models.py:44
+#: shop/models.py:61
 msgid "Slug"
 msgstr "スラッグ"
 
@@ -43,181 +43,177 @@ msgstr "投稿"
 msgid "Posts"
 msgstr "投稿一覧"
 
-#: shop/models.py:9 shop/models.py:54 shop/models.py:66 shop/models.py:83
+#: shop/admin.py:21 shop/admin.py:23
+msgid "tetote admin room"
+msgstr ""
+
+#: shop/admin.py:22
+msgid "tetote Admin"
+msgstr ""
+
+#: shop/admin.py:106
+msgid "Stripe Dashboard URL"
+msgstr ""
+
+#: shop/models.py:9 shop/models.py:31 shop/models.py:43 shop/models.py:60
 msgid "Name"
 msgstr "名前"
 
-#: shop/models.py:11 shop/models.py:85
-msgid "Description"
-msgstr "説明"
-
 #: shop/models.py:12
-msgid "Location"
-msgstr "場所"
-
-#: shop/models.py:13
-msgid "Hero Image URL"
-msgstr "ヒーロー画像URL"
-
-#: shop/models.py:14
-msgid "The Story"
-msgstr "ストーリー"
+#, fuzzy
+#| msgid "Content"
+msgid "Content Slug"
+msgstr "内容"
 
 #: shop/models.py:15
-msgid "The Craft"
-msgstr "職人技"
+msgid "The slug for the static markdown page (e.g., brands/bizen)"
+msgstr ""
 
-#: shop/models.py:16 templates/shop/brand_detail.html:59
-msgid "The Wares"
-msgstr "作品"
-
-#: shop/models.py:18
-msgid "Story Side Image URL"
-msgstr "ストーリーサイド画像URL"
-
-#: shop/models.py:22 shop/models.py:38 shop/models.py:96
-#: templates/shop/product_detail.html:46
+#: shop/models.py:19 shop/models.py:73 templates/shop/product_detail.html:49
 msgid "Brand"
 msgstr "ブランド"
 
-#: shop/models.py:23 templates/shop/product_list.html:32
+#: shop/models.py:20 templates/base.html:52 templates/base.html:108
+#: templates/shop/product_list.html:35
 msgid "Brands"
 msgstr "ブランド"
 
-#: shop/models.py:40 shop/models.py:143
-msgid "Image URL"
-msgstr "画像URL"
-
-#: shop/models.py:41 shop/models.py:144
-msgid "Order"
-msgstr "順序"
-
-#: shop/models.py:42
-msgid "Caption"
-msgstr "キャプション"
-
-#: shop/models.py:45
-msgid "Brand Image"
-msgstr "ブランド画像"
-
-#: shop/models.py:46
-msgid "Brand Images"
-msgstr "ブランド画像一覧"
-
-#: shop/models.py:58 shop/models.py:104 templates/shop/product_detail.html:49
-#: templates/shop/product_list.html:47
+#: shop/models.py:35 shop/models.py:81 templates/shop/product_detail.html:52
+#: templates/shop/product_list.html:50
 msgid "Glaze"
 msgstr "釉薬"
 
-#: shop/models.py:59
+#: shop/models.py:36
 msgid "Glazes"
 msgstr "釉薬一覧"
 
-#: shop/models.py:70 shop/models.py:112
+#: shop/models.py:47 shop/models.py:89
 msgid "Product Type"
 msgstr "商品タイプ"
 
-#: shop/models.py:71
+#: shop/models.py:48
 msgid "Product Types"
 msgstr "商品タイプ一覧"
 
-#: shop/models.py:79
+#: shop/models.py:56
 msgid "Stripe Product ID"
 msgstr "Stripe商品ID"
 
-#: shop/models.py:81
+#: shop/models.py:58
 msgid "Stripe Price ID"
 msgstr "Stripe価格ID"
 
-#: shop/models.py:82
+#: shop/models.py:59
 msgid "Stripe Name"
 msgstr "Stripe名称"
 
-#: shop/models.py:86
+#: shop/models.py:62
+msgid "Description"
+msgstr "説明"
+
+#: shop/models.py:63
 msgid "Price (CHF cents)"
 msgstr "価格 (CHF セント)"
 
-#: shop/models.py:87
+#: shop/models.py:64
 msgid "Main Photo URL"
 msgstr "メイン写真URL"
 
-#: shop/models.py:88
+#: shop/models.py:65
 msgid "Stock Quantity"
 msgstr "在庫数"
 
-#: shop/models.py:89
+#: shop/models.py:66
 msgid "Public"
 msgstr "公開"
 
-#: shop/models.py:114
+#: shop/models.py:91
 msgid "Date Added"
 msgstr "追加日"
 
-#: shop/models.py:117 shop/models.py:141
+#: shop/models.py:94 shop/models.py:118
 msgid "Product"
 msgstr "商品"
 
-#: shop/models.py:118
+#: shop/models.py:95
 msgid "Products"
 msgstr "商品一覧"
 
-#: shop/models.py:147
+#: shop/models.py:120
+msgid "Image URL"
+msgstr "画像URL"
+
+#: shop/models.py:122
+#, fuzzy
+#| msgid "Image URL"
+msgid "Image File"
+msgstr "画像URL"
+
+#: shop/models.py:124
+msgid "Order"
+msgstr "順序"
+
+#: shop/models.py:127
 msgid "Product Image"
 msgstr "商品画像"
 
-#: shop/models.py:148
+#: shop/models.py:128
 msgid "Product Images"
 msgstr "商品画像一覧"
 
-#: shop/models.py:156
+#: shop/models.py:136
 msgid "Announcement Text"
 msgstr "お知らせテキスト"
 
-#: shop/models.py:157
+#: shop/models.py:137
 msgid "Is Active"
 msgstr "有効"
 
-#: shop/models.py:161
+#: shop/models.py:141
 msgid "Store Announcement"
 msgstr "ショップのお知らせ"
 
-#: shop/models.py:162
+#: shop/models.py:142
 msgid "Store Announcements"
 msgstr "ショップのお知らせ一覧"
 
-#: shop/models.py:169
+#: shop/models.py:149
 msgid "Sales Paused"
 msgstr "販売停止中"
 
-#: shop/models.py:172 shop/models.py:173 shop/models.py:176
+#: shop/models.py:152 shop/models.py:153 shop/models.py:156
 msgid "Store Settings"
 msgstr "ショップ設定"
 
-#: shop/views.py:175
+#: shop/views.py:189
 msgid "Checkout is temporarily disabled"
 msgstr "現在、お支払いは一時的にご利用いただけません"
 
-#: shop/views.py:183
+#: shop/views.py:197
 msgid "Invalid request data"
 msgstr "不正なリクエストデータです"
 
-#: shop/views.py:186
+#: shop/views.py:200
 msgid "Cart is empty"
 msgstr "カートは空です"
 
-#: shop/views.py:201
+#: shop/views.py:215
 msgid "Invalid cart items"
 msgstr "カート内の商品が不正です"
 
-#: shop/views.py:217
+#: shop/views.py:231
 #, python-format
 msgid "Product with price %(price_id)s not found"
 msgstr "価格ID %(price_id)s の商品が見つかりません"
 
-#: shop/views.py:226
+#: shop/views.py:240
 #, python-format
 msgid "Only %(qty)s left of %(name)s"
 msgstr "%(name)s の在庫は残り %(qty)s 点です"
+
+#: shop/views.py:280
+msgid "An error occurred while creating the checkout session"
+msgstr ""
 
 #: templates/404.html:4
 msgid "Page Not Found"
@@ -235,138 +231,181 @@ msgstr "移動されたか、リンクが切れている可能性があります
 msgid "Return to Shop"
 msgstr "ショップに戻る"
 
-#: templates/base.html:47 templates/base.html:84 templates/shop/about_us.html:4
+#: templates/base.html:7
+msgid "Artisanal Japanese ceramics, handcrafted pottery, and tableware."
+msgstr ""
+
+#: templates/base.html:48 templates/base.html:104
+#: templates/shop/about_us.html:4
 msgid "About us"
 msgstr "私たちについて"
 
-#: templates/base.html:48 templates/base.html:85
+#: templates/base.html:49 templates/base.html:105
+#: templates/shop/product_list.html:4
 msgid "Shop"
 msgstr "ショップ"
 
-#: templates/base.html:49 templates/base.html:86
+#: templates/base.html:63 templates/base.html:118
+#: templates/blog/post_list.html:5
 msgid "Blog"
 msgstr "ブログ"
 
-#: templates/base.html:50 templates/base.html:87 templates/base.html:143
+#: templates/base.html:64 templates/base.html:119 templates/base.html:172
 #: templates/shop/contact.html:4
 msgid "Contact"
 msgstr "お問い合わせ"
 
-#: templates/base.html:92
+#: templates/base.html:124
 msgid "Language"
 msgstr "言語"
 
-#: templates/base.html:135 templates/shop/privacy_policy.html:4
+#: templates/base.html:160 templates/shop/care_instructions.html:4
+#: templates/shop/product_detail.html:59
+msgid "Care Instructions"
+msgstr "お手入れ方法"
+
+#: templates/base.html:162 templates/shop/product_characteristics.html:4
+#: templates/shop/product_detail.html:63
+msgid "Product Characteristics"
+msgstr "製品の特性について"
+
+#: templates/base.html:164 templates/shop/privacy_policy.html:4
 msgid "Privacy Policy"
 msgstr "プライバシーポリシー"
 
-#: templates/base.html:137 templates/shop/terms_conditions.html:4
+#: templates/base.html:166 templates/shop/terms_conditions.html:4
 msgid "Terms and Conditions"
 msgstr "利用規約"
 
-#: templates/base.html:139 templates/shop/delivery_policy.html:4
+#: templates/base.html:168 templates/shop/delivery_policy.html:4
 msgid "Delivery Policy"
 msgstr "配送ポリシー"
 
-#: templates/base.html:141 templates/shop/return_policy.html:4
+#: templates/base.html:170 templates/shop/return_policy.html:4
 msgid "Return Policy"
 msgstr "返品ポリシー"
 
-#: templates/blog/post_detail.html:22
+#: templates/blog/post_detail.html:17
 msgid "Published on"
 msgstr "公開日："
 
-#: templates/blog/post_detail.html:29
+#: templates/blog/post_detail.html:24
 msgid "Back to Blog"
 msgstr "ブログ一覧に戻る"
 
-#: templates/blog/post_list.html:14
-msgid "Read More"
-msgstr "続きを読む"
+#: templates/blog/post_list.html:6
+msgid "Stories about Japanese pottery, ceramic traditions, and artisans."
+msgstr ""
 
-#: templates/blog/post_list.html:21
+#: templates/blog/post_list.html:20
 msgid "We are sorry, there are no blog posts yet."
 msgstr "申し訳ありません。まだブログ記事がありません。"
 
-#: templates/blog/post_list.html:29
+#: templates/blog/post_list.html:28
 msgid "first"
 msgstr "最初"
 
-#: templates/blog/post_list.html:30
+#: templates/blog/post_list.html:29
 msgid "previous"
 msgstr "前へ"
 
-#: templates/blog/post_list.html:33
+#: templates/blog/post_list.html:32
 #, python-format
 msgid "Page %(number)s of %(num_pages)s."
 msgstr "%(num_pages)s ページ中 %(number)s ページ目"
 
-#: templates/blog/post_list.html:36
+#: templates/blog/post_list.html:35
 msgid "next"
 msgstr "次へ"
 
-#: templates/blog/post_list.html:37
+#: templates/blog/post_list.html:36
 msgid "last"
 msgstr "最後"
 
-#: templates/shop/brand_detail.html:43
-msgid "The Firing Process"
-msgstr "焼成プロセス"
+#: templates/shop/about_us.html:5
+msgid ""
+"Our mission: connecting traditional Japanese ceramic artists with the world."
+msgstr ""
 
-#: templates/shop/brand_detail.html:69
+#: templates/shop/brand_detail.html:5
+#, python-format
+msgid "Handcrafted Japanese ceramics and pottery by %(brand_name)s."
+msgstr ""
+
+#: templates/shop/brand_detail.html:14
+msgid "No description available for this brand."
+msgstr ""
+
+#: templates/shop/brand_detail.html:21
 msgid "View the Collection"
 msgstr "コレクションを見る"
 
-#: templates/shop/cart.html:4 templates/shop/cart.html:7
+#: templates/shop/care_instructions.html:5
+msgid "Care and maintenance tips for your Japanese ceramics."
+msgstr "日本の陶器のお手入れとメンテナンスのヒント。"
+
+#: templates/shop/care_instructions.html:13
+msgid "Want to learn more about the unique features of our ceramics?"
+msgstr "陶器ならではの独特な風合いや特徴について詳しく知りたいですか？"
+
+#: templates/shop/care_instructions.html:15
+msgid "View Product Characteristics"
+msgstr "製品の特性について見る"
+
+#: templates/shop/cart.html:4 templates/shop/cart.html:8
 msgid "Your selection"
 msgstr "選択した商品"
 
-#: templates/shop/cart.html:17
+#: templates/shop/cart.html:5
+msgid "Review your selection and proceed to checkout."
+msgstr "選択した商品を確認し、購入手続きに進みます。"
+
+#: templates/shop/cart.html:18
 msgid "Total"
 msgstr "合計"
 
-#: templates/shop/cart.html:19
+#: templates/shop/cart.html:20
 msgid "shipping: calculated at checkout"
 msgstr "送料：チェックアウト時に計算されます"
 
-#: templates/shop/cart.html:24
+#: templates/shop/cart.html:25
 msgid "Clear selection"
 msgstr "選択を解除"
 
-#: templates/shop/cart.html:26
+#: templates/shop/cart.html:27
 msgid "Checkout Paused"
 msgstr "お支払い停止中"
 
-#: templates/shop/cart.html:28
+#: templates/shop/cart.html:29
 msgid "Checkout"
 msgstr "購入手続きへ"
 
-#: templates/shop/cart.html:32
+#: templates/shop/cart.html:33
 msgid "We have temporarily paused online sales. Please check back later."
 msgstr "現在、オンライン販売を一時停止しております。後ほど再度ご確認ください。"
 
-#: templates/shop/cart.html:38
+#: templates/shop/cart.html:39
 msgid "Your cart is empty."
 msgstr "カートは空です。"
 
-#: templates/shop/cart.html:39
+#: templates/shop/cart.html:40
 msgid "Go Shopping"
 msgstr "買い物を続ける"
 
-#: templates/shop/cart.html:103
+#: templates/shop/cart.html:104
 msgid "Qty"
 msgstr "数量"
 
-#: templates/shop/cart.html:109
+#: templates/shop/cart.html:110
 msgid "Remove"
 msgstr "削除"
 
-#: templates/shop/cart.html:126 templates/shop/product_detail.html:143
+#: templates/shop/cart.html:127 templates/shop/product_detail.html:155
 msgid ""
 "Only X items are available in stock. If you need more, please contact us!"
 msgstr "在庫は残り X 点です。さらに多く必要な場合は、お問い合わせください。"
 
-#: templates/shop/cart.html:145
+#: templates/shop/cart.html:146
 msgid "Are you sure you want to clear your cart?"
 msgstr "カートを空にしてもよろしいですか？"
 
@@ -394,119 +433,188 @@ msgstr "買い物を続ける"
 msgid "A confirmation email will be sent to you shortly."
 msgstr "まもなく確認メールが送信されます。"
 
-#: templates/shop/product_detail.html:52 templates/shop/product_list.html:62
+#: templates/shop/contact.html:5
+msgid "Contact us for questions about our Japanese ceramics or your order."
+msgstr "陶器やご注文に関するお問い合わせはこちらから。"
+
+#: templates/shop/delivery_policy.html:5
+msgid "Shipping methods, costs, and delivery times."
+msgstr "配送方法、送料、お届け日数について。"
+
+#: templates/shop/privacy_policy.html:5
+msgid "How we handle and protect your personal information."
+msgstr "個人情報の取り扱いと保護について。"
+
+#: templates/shop/product_characteristics.html:5
+msgid ""
+"Unique qualities and natural variations of handcrafted Japanese pottery."
+msgstr "手作りの日本の陶器ならではの特性と自然な変化について。"
+
+#: templates/shop/product_characteristics.html:13
+msgid "Want to learn more about how to maintain your ceramic pieces?"
+msgstr "陶器のお手入れ方法について詳しく知りたいですか？"
+
+#: templates/shop/product_characteristics.html:15
+msgid "View Care Instructions"
+msgstr "お手入れ方法を見る"
+
+#: templates/shop/product_detail.html:55 templates/shop/product_list.html:65
 msgid "Type"
 msgstr "タイプ"
 
-#: templates/shop/product_detail.html:64 templates/shop/product_list.html:26
+#: templates/shop/product_detail.html:76 templates/shop/product_list.html:29
 msgid "In Stock"
 msgstr "在庫あり"
 
-#: templates/shop/product_detail.html:64
+#: templates/shop/product_detail.html:76
 msgid "available"
 msgstr "在庫あり"
 
-#: templates/shop/product_detail.html:70
+#: templates/shop/product_detail.html:82
 msgid "Add to Cart"
 msgstr "カートに追加"
 
-#: templates/shop/product_detail.html:74
+#: templates/shop/product_detail.html:86
 msgid "View Cart"
 msgstr "カートを見る"
 
-#: templates/shop/product_detail.html:78 templates/shop/product_list.html:122
+#: templates/shop/product_detail.html:90 templates/shop/product_list.html:125
 msgid "Out of Stock"
 msgstr "在庫切れ"
 
-#: templates/shop/product_detail.html:152
+#: templates/shop/product_detail.html:164
 msgid "Added to cart."
 msgstr "カートに追加されました"
 
-#: templates/shop/product_list.html:19
+#: templates/shop/product_list.html:5
+msgid ""
+"Curated collection of handcrafted Japanese ceramics, pottery, and tableware."
+msgstr ""
+
+#: templates/shop/product_list.html:22
 msgid "Stock Status"
 msgstr "在庫状況"
 
-#: templates/shop/product_list.html:77
+#: templates/shop/product_list.html:80
 msgid "Clear all"
 msgstr "すべてクリア"
 
-#: templates/shop/product_list.html:89
+#: templates/shop/product_list.html:92
 msgid "Refine selection"
 msgstr "絞り込み"
 
-#: templates/shop/product_list.html:94
+#: templates/shop/product_list.html:97
 msgid "Sort by"
 msgstr "並べ替え"
 
-#: templates/shop/product_list.html:96
+#: templates/shop/product_list.html:99
 msgid "New in Shop"
 msgstr "新着順"
 
-#: templates/shop/product_list.html:99
+#: templates/shop/product_list.html:102
 msgid "Lowest Price"
 msgstr "価格の安い順"
 
-#: templates/shop/product_list.html:102
+#: templates/shop/product_list.html:105
 msgid "Highest Price"
 msgstr "価格の高い順"
 
-#: templates/shop/product_list.html:141
+#: templates/shop/product_list.html:144
 msgid "No products found."
 msgstr "商品が見つかりませんでした。"
 
-#: templates/shop/product_list.html:149
+#: templates/shop/product_list.html:152
 msgid "Previous"
 msgstr "前へ"
 
-#: templates/shop/product_list.html:152
+#: templates/shop/product_list.html:155
 #, python-format
 msgid "Page %(current)s of %(total)s"
 msgstr "%(total)s ページ中 %(current)s ページ目"
 
-#: templates/shop/product_list.html:155
+#: templates/shop/product_list.html:158
 msgid "Next"
 msgstr "次へ"
 
-#: tetote/settings.py:134
-msgid "English"
-msgstr "英語"
+#: templates/shop/return_policy.html:5
+msgid "Returns and exchanges for your Tetote purchases."
+msgstr ""
 
-#: tetote/settings.py:135
-msgid "German"
-msgstr "ドイツ語"
+#: templates/shop/terms_conditions.html:5
+#, fuzzy
+#| msgid "Terms and Conditions"
+msgid "Terms and conditions for Tetote."
+msgstr "利用規約"
 
-#: tetote/settings.py:136
-msgid "French"
-msgstr "フランス語"
-
-#: tetote/settings.py:137
-msgid "Japanese"
-msgstr "日本語"
-
+#: templates/shop/wip.html:4
 msgid "Shop Coming Soon"
 msgstr "近日公開予定"
 
+#: templates/shop/wip.html:9
 msgid "Coming Soon"
 msgstr "カミングスーン"
 
+#: templates/shop/wip.html:11
 msgid "We are currently building our web store, please come back later."
-msgstr "現在オンラインショップを準備中です。恐れ入りますが、後ほど改めてお越しください。"
+msgstr ""
+"現在オンラインショップを準備中です。恐れ入りますが、後ほど改めてお越しくださ"
+"い。"
 
-msgid "Learn About Us"
-msgstr "私たちについて"
+#: tetote/settings.py:156
+msgid "English"
+msgstr "英語"
 
-#: templates/shop/care_instructions.html:4
-msgid "Care Instructions"
-msgstr "お手入れ方法"
+#: tetote/settings.py:157
+msgid "German"
+msgstr "ドイツ語"
 
-msgid "Product Characteristics"
-msgstr "製品の特性について"
+#: tetote/settings.py:158
+msgid "French"
+msgstr "フランス語"
 
-msgid "Want to learn more about the unique features of our ceramics?"
-msgstr "陶器ならではの独特な風合いや特徴について詳しく知りたいですか？"
+#: tetote/settings.py:159
+msgid "Japanese"
+msgstr "日本語"
 
-msgid "View Product Characteristics"
-msgstr "製品の特性について見る"
+#~ msgid "Location"
+#~ msgstr "場所"
 
-msgid "For more information on how to maintain your ceramic pieces, please see our"
-msgstr "陶器を長くお使いいただくためのお手入れ方法については、こちらをご覧ください："
+#~ msgid "Hero Image URL"
+#~ msgstr "ヒーロー画像URL"
+
+#~ msgid "The Story"
+#~ msgstr "ストーリー"
+
+#~ msgid "The Craft"
+#~ msgstr "職人技"
+
+#~ msgid "The Wares"
+#~ msgstr "作品"
+
+#~ msgid "Story Side Image URL"
+#~ msgstr "ストーリーサイド画像URL"
+
+#~ msgid "Caption"
+#~ msgstr "キャプション"
+
+#~ msgid "Brand Image"
+#~ msgstr "ブランド画像"
+
+#~ msgid "Brand Images"
+#~ msgstr "ブランド画像一覧"
+
+#~ msgid "Read More"
+#~ msgstr "続きを読む"
+
+#~ msgid "The Firing Process"
+#~ msgstr "焼成プロセス"
+
+#~ msgid "Learn About Us"
+#~ msgstr "私たちについて"
+
+#~ msgid ""
+#~ "For more information on how to maintain your ceramic pieces, please see "
+#~ "our"
+#~ msgstr ""
+#~ "陶器を長くお使いいただくためのお手入れ方法については、こちらをご覧くださ"
+#~ "い："
