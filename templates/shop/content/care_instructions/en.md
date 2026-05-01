@@ -22,6 +22,6 @@ The product has already undergone a sealing treatment (Mizudome\*1), so it is re
 * Damage: This product is delicate. Strong impacts may cause chips or cracks. If any damage occurs, stop use immediately to avoid injury.
 * Storage: Keep out of reach of children to prevent breakage from accidental falls.
 
-
+---
 
 \*1) **Mizudome** (Water-proofing treatment) is a specialized process used to prevent water absorption and leakage, which can naturally occur due to the porous nature of ceramics. The sealing agent used in this process is safe and complies with strict regulatory standards for food and food additives.

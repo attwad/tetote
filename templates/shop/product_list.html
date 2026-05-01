@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 {% load i18n %}{% load static %}
 
+{% block title %}{% translate "Shop" %} - Tetote{% endblock %}
+{% block meta_description %}{% translate "Curated collection of handcrafted Japanese ceramics, pottery, and tableware." %}{% endblock %}
+
 {% block content %}
     <!-- Sidebar for Desktop / Drawer for Mobile -->
     <div id="filter-overlay" class="filter-overlay {% if is_expanded %}show{% endif %}" onclick="toggleDrawer()"></div>

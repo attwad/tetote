@@ -8,6 +8,8 @@
 {% block title %}
 {{ post.title }} - Tetote{% endblock %}
 
+{% block meta_description %}{{ post.content|striptags|truncatechars:160 }}{% endblock %}
+
 {% block content %}
     <article class="max-w-[800px] mx-auto">
         <h1 class="mb-4">{{ post.title }}</h1>

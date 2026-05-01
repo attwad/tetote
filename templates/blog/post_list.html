@@ -2,6 +2,9 @@
 {% load i18n %}
 {% load markdown_extras %}
 
+{% block title %}{% translate "Blog" %} - Tetote{% endblock %}
+{% block meta_description %}{% translate "Stories about Japanese pottery, ceramic traditions, and artisans." %}{% endblock %}
+
 {% block content %}
     <div class="max-w-[800px] mx-auto">
         {% for post in posts %}

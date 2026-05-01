@@ -14,7 +14,6 @@ Il n'est pas nécessaire de l’imperméabiliser en le faisant bouillir dans de 
 * Feu direct : Interdit.
   Veuillez éviter les changements brusques de température. Cela peut provoquer des cassures ou des blessures.
 
-
 ### Entretien
 
 * Nettoyage : Laver à la main rapidement après usage avec un détergent et une éponge douce.
@@ -24,5 +23,6 @@ Il n'est pas nécessaire de l’imperméabiliser en le faisant bouillir dans de 
 * Dommages : Ce produit est délicat. Les chocs peuvent causer des fissures ou des ébréchés. En cas de dommage, cessez immédiatement l'utilisation.
 * Rangement : Conserver hors de portée des enfants pour éviter les chutes accidentelles.
 
+---
 
 \*1) **Mizudome** (traitement d'étanchéité) est un procédé spécial afin de prévenir l'absorption et la fuite de l’eau causées par la nature poreuse de la céramique. Le produit utilisé pour ce traitement est d’une grande sécurité et respecte les normes ​​strictes relatives aux aliments et aux additifs alimentaires.
