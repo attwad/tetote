@@ -8,7 +8,7 @@ on:
 jobs:
   deploy-dev:
     name: Deploy to Dev
-    runs-on: [self-hosted, pi-runner]
+    runs-on: self-hosted
     environment: dev
     steps:
       - name: Checkout Code
@@ -36,7 +36,7 @@ jobs:
   deploy-prod:
     name: Deploy to Prod
     needs: deploy-dev
-    runs-on: [self-hosted, pi-runner]
+    runs-on: self-hosted
     environment: prod
     steps:
       - name: Checkout Code
