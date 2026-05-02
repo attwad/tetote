@@ -25,6 +25,7 @@ class ShopDisabledMiddleware:
                         "return_policy",
                         "terms",
                         "care_instructions",
+                        "product_characteristics",
                         "admin_help",
                     ]
 

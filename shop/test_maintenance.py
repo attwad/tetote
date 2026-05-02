@@ -38,9 +38,21 @@ class ShopDisabledTests(TestCase):
     @override_settings(SHOP_DISABLED=True)
     def test_static_pages_remain_accessible(self):
         # Static pages like 'about-us' should remain accessible
-        response = self.client.get(reverse("shop:about_us"))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "shop/about_us.html")
+        for url_name in [
+            "about_us",
+            "contact",
+            "privacy_policy",
+            "delivery_policy",
+            "return_policy",
+            "terms",
+            "care_instructions",
+            "product_characteristics",
+        ]:
+            with self.subTest(url_name=url_name):
+                response = self.client.get(reverse(f"shop:{url_name}"))
+                self.assertEqual(response.status_code, 200)
+                # Check that it doesn't contain "Coming Soon" (WIP page)
+                self.assertNotContains(response, "Coming Soon")
 
     @override_settings(SHOP_DISABLED=True)
     def test_blog_remains_accessible(self):
