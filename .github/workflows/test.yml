@@ -5,10 +5,22 @@ on:
     branches: [ "main" ]
     paths-ignore:
       - ".github/workflows/deploy.yml"
+      - "README.md"
+      - "AGENTS.md"
+      - ".gitignore"
+      - ".pre-commit-config.yaml"
+      - ".gitattributes"
+      - "locale/**"
   pull_request:
     branches: [ "main" ]
     paths-ignore:
       - ".github/workflows/deploy.yml"
+      - "README.md"
+      - "AGENTS.md"
+      - ".gitignore"
+      - ".pre-commit-config.yaml"
+      - ".gitattributes"
+      - "locale/**"
 
 jobs:
   test:
