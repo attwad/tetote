@@ -18,13 +18,13 @@ class Command(BaseCommand):
         count = 0
         for p in products:
             self.stdout.write(f"Syncing product: {p.name} ({p.id})")
-            sync_product(p)
+            sync_product(p.to_dict())
             count += 1
 
             # Fetch all active prices for this product
             prices = stripe.Price.list(product=p.id, active=True).auto_paging_iter()
             for price in prices:
-                sync_price(price)
+                sync_price(price.to_dict())
 
         self.stdout.write(
             self.style.SUCCESS(f"Stripe sync completed! {count} products processed.")
