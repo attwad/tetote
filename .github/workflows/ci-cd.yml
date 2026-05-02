@@ -1,0 +1,131 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+    tags: [ "v*" ]
+    paths-ignore:
+      - "README.md"
+      - "AGENTS.md"
+      - ".gitignore"
+      - ".pre-commit-config.yaml"
+      - ".gitattributes"
+      - "locale/**"
+  pull_request:
+    branches: [ "main" ]
+    paths-ignore:
+      - "README.md"
+      - "AGENTS.md"
+      - ".gitignore"
+      - ".pre-commit-config.yaml"
+      - ".gitattributes"
+      - "locale/**"
+
+jobs:
+  test:
+    name: Run Tests & Linters
+    runs-on: self-hosted
+    env:
+      SECRET_KEY: "dummy-secret-key-for-tests"
+      DEBUG: "False"
+      ALLOWED_HOSTS: "testserver"
+      DATABASE_URL: "sqlite:///db.sqlite3"
+      STRIPE_SECRET_KEY: "sk_test_dummy"
+      STRIPE_PUBLISHABLE_KEY: "pk_test_dummy"
+      SECURE_SSL_REDIRECT: "False"
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "25"
+          cache: 'npm'
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Build CSS
+        run: npm run build:css
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+
+      - name: Install Python dependencies
+        run: uv sync --all-extras --dev
+
+      - name: Collect Static Files
+        run: uv run python manage.py collectstatic --noinput
+
+      - name: Run Ruff Check
+        run: uv run ruff check .
+
+      - name: Run Django Tests
+        run: uv run python manage.py test
+
+      - name: Run Frontend Tests
+        run: npm test
+
+      - uses: atos-actions/clean-self-hosted-runner@v1
+        if: ${{ always() }}
+
+  deploy-dev:
+    name: Deploy to Dev
+    needs: test
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: self-hosted
+    environment: dev
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v6
+
+      - name: Sync to Dev Directory
+        run: |
+          rsync -avz --delete \
+            --exclude '.venv' \
+            --exclude '.env' \
+            --exclude 'db.sqlite3' \
+            --exclude 'media' \
+            ./ /var/www/tetote-dev/
+
+      - name: Install Dependencies & Setup
+        working-directory: /var/www/tetote-dev
+        run: |
+          ~/.local/bin/uv sync
+          ~/.local/bin/uv run python manage.py migrate --noinput
+          ~/.local/bin/uv run python manage.py collectstatic --noinput
+
+      - name: Restart Dev Service
+        run: sudo systemctl restart tetote-dev
+
+  deploy-prod:
+    name: Deploy to Prod
+    needs: deploy-dev
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: self-hosted
+    environment: prod
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v6
+
+      - name: Sync to Prod Directory
+        run: |
+          rsync -avz --delete \
+            --exclude '.venv' \
+            --exclude '.env' \
+            --exclude 'db.sqlite3' \
+            --exclude 'media' \
+            ./ /var/www/tetote-prod/
+
+      - name: Install Dependencies & Setup
+        working-directory: /var/www/tetote-prod
+        run: |
+          ~/.local/bin/uv sync
+          ~/.local/bin/uv run python manage.py migrate --noinput
+          ~/.local/bin/uv run python manage.py collectstatic --noinput
+
+      - name: Restart Prod Service
+        run: sudo systemctl restart tetote-prod
