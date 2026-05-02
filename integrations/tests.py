@@ -18,6 +18,9 @@ class MockObject(dict):
         except KeyError:
             raise AttributeError(name)
 
+    def to_dict(self):
+        return self
+
 
 class StripeIntegrationTest(TestCase):
     @patch("stripe.Price.list")
