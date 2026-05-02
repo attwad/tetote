@@ -1,0 +1,62 @@
+name: Deploy Tetote
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  deploy-dev:
+    name: Deploy to Dev
+    runs-on: [self-hosted, pi-runner]
+    environment: dev
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Sync to Dev Directory
+        run: |
+          rsync -avz --delete \
+            --exclude '.venv' \
+            --exclude '.env' \
+            --exclude 'db.sqlite3' \
+            --exclude 'media' \
+            ./ /var/www/tetote-dev/
+
+      - name: Install Dependencies & Setup
+        working-directory: /var/www/tetote-dev
+        run: |
+          ~/.local/bin/uv sync
+          ~/.local/bin/uv run python manage.py migrate --noinput
+          ~/.local/bin/uv run python manage.py collectstatic --noinput
+
+      - name: Restart Dev Service
+        run: sudo systemctl restart tetote-dev
+
+  deploy-prod:
+    name: Deploy to Prod
+    needs: deploy-dev
+    runs-on: [self-hosted, pi-runner]
+    environment: prod
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Sync to Prod Directory
+        run: |
+          rsync -avz --delete \
+            --exclude '.venv' \
+            --exclude '.env' \
+            --exclude 'db.sqlite3' \
+            --exclude 'media' \
+            ./ /var/www/tetote-prod/
+
+      - name: Install Dependencies & Setup
+        working-directory: /var/www/tetote-prod
+        run: |
+          ~/.local/bin/uv sync
+          ~/.local/bin/uv run python manage.py migrate --noinput
+          ~/.local/bin/uv run python manage.py collectstatic --noinput
+
+      - name: Restart Prod Service
+        run: sudo systemctl restart tetote-prod
