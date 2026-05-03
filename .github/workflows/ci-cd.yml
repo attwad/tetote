@@ -21,6 +21,9 @@ on:
       - ".gitattributes"
       - "locale/**"
 
+permissions:
+  contents: read
+
 jobs:
   test:
     name: Run Tests & Linters
