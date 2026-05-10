@@ -11,9 +11,7 @@ class BlogTests(WagtailPageTestCase):
         self.root = Page.objects.get(id=1).get_first_child()
 
         # Create Blog Index Page
-        self.index = BlogIndexPage(
-            title="Blog", intro="Welcome to our blog", slug="blog"
-        )
+        self.index = BlogIndexPage(title="Blog", slug="blog")
         self.root.add_child(instance=self.index)
 
         # Create Blog Page
@@ -21,7 +19,7 @@ class BlogTests(WagtailPageTestCase):
             title="Test Post",
             slug="test-post",
             date=datetime.date.today(),
-            body="Hello world",
+            body=[("paragraph", "Hello world")],
         )
         self.index.add_child(instance=self.post)
 
