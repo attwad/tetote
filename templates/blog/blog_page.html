@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load i18n wagtailcore_tags %}
+
+{% block title %}{{ page.title }} - Tetote{% endblock %}
+
+{% block meta_description %}{{ page.body|striptags|truncatechars:160 }}{% endblock %}
+
+{% block content %}
+    <article class="max-w-[800px] mx-auto">
+        <h1 class="mb-4">{{ page.title }}</h1>
+        <p class="text-[#666] text-[0.9rem] mb-6">
+            {% translate "Published on" %} {{ page.date|date:"F j, Y" }}
+        </p>
+        <hr class="border-none border-t border-brand-border my-6">
+        <div class="markdown-content">
+            {% for block in page.body %}
+                {% include_block block %}
+            {% endfor %}
+        </div>
+        <hr class="border-none border-t border-brand-border my-6">
+        <p class="mt-8">
+            {% with page.get_parent as parent %}
+                <a href="{% pageurl parent %}" class="btn">&laquo; {% translate "Back to" %} {{ parent.title }}</a>
+            {% endwith %}
+        </p>
+    </article>
+{% endblock %}

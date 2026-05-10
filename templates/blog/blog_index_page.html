@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load i18n wagtailcore_tags %}
+
+{% block title %}{{ page.title }} - Tetote{% endblock %}
+
+{% block content %}
+    <div class="max-w-[800px] mx-auto">
+        <h1 class="mb-12">{{ page.title }}</h1>
+
+        {% for post in blogpages %}
+            <article class="mb-6">
+                <h2 class="mb-1"><a href="{% pageurl post %}" class="no-underline text-[#333] hover:underline text-2xl">{{ post.title }}</a></h2>
+                <p class="text-[#666] text-[0.85rem] mb-0">{{ post.specific.date|date:"F j, Y" }}</p>
+            </article>
+            {% if not forloop.last %}
+                <hr class="border-none border-t border-brand-border my-6">
+            {% endif %}
+        {% empty %}
+            <div class="text-center py-20 text-brand-muted italic">
+                {% translate "We are sorry, there are no blog posts yet." %}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

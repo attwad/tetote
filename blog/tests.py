@@ -1,30 +1,37 @@
-from django.test import TestCase
-from django.urls import reverse
-from .models import Post
+from wagtail.test.utils import WagtailPageTestCase
+from wagtail.models import Page
+from .models import BlogIndexPage, BlogPage
+import datetime
 
 
-class BlogViewTests(TestCase):
+class BlogTests(WagtailPageTestCase):
     def setUp(self):
-        self.post = Post.objects.create(
-            title="Test Post", slug="test-post", content="Hello **world**"
+        # Get the root page
+        # In a standard Wagtail setup, the root page is created by migrations
+        self.root = Page.objects.get(id=1).get_first_child()
+
+        # Create Blog Index Page
+        self.index = BlogIndexPage(
+            title="Blog", intro="Welcome to our blog", slug="blog"
         )
+        self.root.add_child(instance=self.index)
 
-    def test_post_list_view(self):
-        url = reverse("blog:post_list")
-        response = self.client.get(url)
+        # Create Blog Page
+        self.post = BlogPage(
+            title="Test Post",
+            slug="test-post",
+            date=datetime.date.today(),
+            body="Hello world",
+        )
+        self.index.add_child(instance=self.post)
+
+    def test_blog_index_view(self):
+        response = self.client.get(self.index.url)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Test Post")
 
-    def test_post_list_view_empty(self):
-        Post.objects.all().delete()
-        url = reverse("blog:post_list")
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "We are sorry, there are no blog posts yet.")
-
-    def test_post_detail_view(self):
-        url = reverse("blog:post_detail", kwargs={"slug": self.post.slug})
-        response = self.client.get(url)
+    def test_blog_page_view(self):
+        response = self.client.get(self.post.url)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Test Post")
-        self.assertContains(response, "<strong>world</strong>")
+        self.assertContains(response, "Hello world")

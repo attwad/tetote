@@ -6,11 +6,12 @@ dependencies = [
     "coverage>=7.13.4",
     "django>=6.0",
     "django-environ>=0.13.0",
-    "django-markdownx>=4.0.9",
     "django-modeltranslation>=0.19.19",
     "gunicorn>=25.3.0",
+    "markdown>=3.5.2",
     "pillow>=12.1.1",
     "stripe>=14.4.0",
+    "wagtail>=6.0",
 ]
 
 [dependency-groups]
