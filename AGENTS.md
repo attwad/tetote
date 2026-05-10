@@ -6,6 +6,7 @@ Welcome to Tetote. This document provides critical procedural and architectural 
 - **Hybrid Data Model:** Stripe is the source of truth for **Product IDs and Price amounts**. Django is the source of truth for all the rest.
 - **Surgical Syncing:** When handling Stripe webhooks or sync commands (see `integrations/views.py`), **NEVER** overwrite the `name` (translatable), `description`, or `stock_quantity` fields if the product already exists. Only look at fields that are part of the message sent in the webhook and update those fields only.
 - **Vanilla First:** Do not introduce frontend frameworks (React, Vue, etc.). Use Vanilla JS (ES Modules) and Tailwind for CSS.
+- **Tailwind Build:** When modifying templates and adding new Tailwind utility classes, you **MUST** run `npm run build:css` to update the static stylesheet.
 
 ## 🎨 Design System
 - **Palette:**
@@ -17,17 +18,25 @@ Welcome to Tetote. This document provides critical procedural and architectural 
 
 ## 🛠 Engineering Standards
 - **Test Coverage:** Maintain 95%+ coverage.
-    - Use Django standard tests for backend logic.
+    - Use Django standard tests (including `WagtailPageTestCase` for blog logic) for backend logic.
     - Use **Vitest + JSDOM** for frontend logic (no browser-only tests).
 - **Code Quality:**
     - Formatting/Linting is strictly enforced by **Ruff**.
     - Run `uv run ruff format .` before finishing any task.
-- **Localization:** All user-facing strings **must** be wrapped in `{% translate %}` or `gettext_lazy`. The project uses `django-modeltranslation`.
+- **Localization:**
+    - All user-facing strings **must** be wrapped in `{% translate %}` or `gettext_lazy`.
+    - The **Shop** uses `django-modeltranslation`.
+    - The **Blog** uses **Wagtail's native multi-tree i18n** (`wagtail.locales`).
+- **CMS Management:**
+    - The **Django Admin** (`/admin/`) is for commerce, inventory, and brands.
+    - The **Wagtail CMS** (`/cms/`) is for the blog and storytelling content.
+    - Both share the same authentication system and user accounts.
 
 ## 🧪 Testing Workflow
 1. **Backend:** `uv run python manage.py test`
 2. **Frontend:** `npm test`
 3. **Surgical Verification:** If you modify sync logic, verify that manual local data (like stock) is preserved after a sync.
+4. **Wagtail Verification:** When adding blog features, ensure that `BlogIndexPage` and `BlogPage` are correctly testable via `WagtailPageTestCase`.
 
 ## 🐙 GitHub Workflow
 - **Issue Management:** Always prefer closing issues automatically via git commit messages (e.g., `Closes #18`) in the push to the remote, rather than using the `gh` CLI directly.
