@@ -164,52 +164,35 @@
     @apply font-bold;
   }
 
-  /* Embla Carousel Base Styles */
-  .embla {
-    @apply overflow-hidden relative bg-[#fdfdfd] border border-[#eee];
+  /* Splide & Thumbnail Styles */
+  .splide__slide img {
+    @apply block w-full aspect-square object-contain cursor-zoom-in bg-[#fdfdfd];
   }
-  .embla__container {
-    @apply flex;
+  .thumbnails {
+    @apply flex gap-4 mt-6 flex-wrap list-none p-0;
   }
-  .embla__slide {
-    @apply flex-[0_0_100%] min-w-0 relative;
+  .thumbnail {
+    @apply w-[100px] h-[100px] cursor-pointer border-2 border-transparent opacity-70 transition-all duration-200 rounded-[2px] overflow-hidden;
   }
-  .embla__slide img {
-    @apply block w-full aspect-square object-contain cursor-zoom-in;
+  .thumbnail img {
+    @apply w-full h-full object-cover;
+  }
+  .thumbnail.is-active {
+    @apply border-brand-text opacity-100;
   }
 
   @media (max-width: 768px) {
-    .embla__slide img {
+    .splide__slide img {
       @apply aspect-square;
     }
   }
 
-  /* Thumbnails */
-  .thumbnails {
-    @apply flex gap-4 mt-6 flex-wrap;
+  /* PhotoSwipe Customization */
+  .pswp {
+    --pswp-bg: rgba(0, 0, 0, 0.95);
   }
-  .thumb {
-    @apply w-[100px] h-[100px] object-cover cursor-pointer border border-[#eee] opacity-70 transition-opacity duration-200 rounded-[2px];
-  }
-  .thumb.is-selected {
-    @apply border-brand-text opacity-100 border-2;
-  }
-
-  /* Modal / Dialog Styles */
-  dialog#image-modal {
-    @apply p-0 border-none max-w-full max-h-full w-full h-full bg-black/90 text-white;
-  }
-  dialog#image-modal::backdrop {
-    @apply bg-black/95;
-  }
-  .modal-content {
-    @apply h-full flex flex-col items-center justify-center relative;
-  }
-  .modal-content img {
-    @apply max-w-[95vw] max-h-[85vh] object-contain;
-  }
-  .close-modal {
-    @apply absolute top-2 right-4 bg-transparent border-none p-4 text-white text-[2.5rem] cursor-pointer font-sans opacity-80 hover:opacity-100 transition-opacity appearance-none leading-none;
+  .pswp__img {
+    @apply object-contain;
   }
 
   /* Cart Styles */

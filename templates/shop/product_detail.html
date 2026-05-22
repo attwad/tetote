@@ -4,41 +4,58 @@
 {% block title %}{{ product.name }} - Tetote{% endblock %}
 {% block meta_description %}{{ product.description|striptags|truncatechars:160 }}{% endblock %}
 
+{% block extra_head %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/photoswipe@5.4.4/dist/photoswipe.css">
+{% endblock %}
+
 {% block content %}
     <div class="flex flex-col md:grid md:grid-cols-2 gap-4 md:gap-12">
         <!-- Title for Mobile -->
         <h1 class="block md:hidden mb-4">{{ product.name }}</h1>
 
-        <!-- Image Section with Embla -->
-        <div class="order-1 md:order-none">
-            <div class="embla" id="product-carousel">
-                <div class="embla__container">
-                    {% if product.main_photo %}
-                        <div class="embla__slide">
-                            <img src="{{ product.main_photo }}" alt="{{ product.name }}" onclick="openModal(this.src)">
-                        </div>
-                    {% endif %}
-                    {% for image in product.images.all %}
-                        {% if image.url != product.main_photo %}
-                        <div class="embla__slide">
-                            <img src="{{ image.url }}" alt="{{ product.name }}" onclick="openModal(this.src)">
-                        </div>
+        <!-- Image Section with Splide -->
+        <div class="order-1 md:order-none overflow-hidden">
+            <section id="main-carousel" class="splide" aria-label="Product Images">
+                <div class="splide__track">
+                    <ul class="splide__list pswp-gallery" id="gallery">
+                        {% if product.main_photo %}
+                            <li class="splide__slide">
+                                <a href="{{ product.main_photo }}"
+                                   target="_blank">
+                                    <img src="{{ product.main_photo }}" alt="{{ product.name }}">
+                                </a>
+                            </li>
                         {% endif %}
-                    {% endfor %}
+                        {% for image in product.images.all %}
+                            {% if image.url != product.main_photo %}
+                            <li class="splide__slide">
+                                <a href="{{ image.url }}"
+                                   target="_blank">
+                                    <img src="{{ image.url }}" alt="{{ product.name }}">
+                                </a>
+                            </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
                 </div>
-            </div>
+            </section>
 
-            <!-- Custom Thumbnail Navigation -->
-            <div class="thumbnails" id="carousel-thumbs">
+            <!-- Splide Thumbnails -->
+            <ul id="thumbnail-carousel" class="thumbnails">
                 {% if product.main_photo %}
-                    <img src="{{ product.main_photo }}" class="thumb is-selected" data-index="0">
+                    <li class="thumbnail">
+                        <img src="{{ product.main_photo }}" alt="{% translate 'Thumbnail' %}">
+                    </li>
                 {% endif %}
                 {% for image in product.images.all %}
                     {% if image.url != product.main_photo %}
-                        <img src="{{ image.url }}" class="thumb" data-index="{{ forloop.counter }}">
+                        <li class="thumbnail">
+                            <img src="{{ image.url }}" alt="{% translate 'Thumbnail' %}">
+                        </li>
                     {% endif %}
                 {% endfor %}
-            </div>
+            </ul>
         </div>
 
         <!-- Info Section -->
@@ -92,58 +109,74 @@
             </div>
         </div>
     </div>
-
-    <!-- Native HTML Dialog Modal -->
-    <dialog id="image-modal">
-        <div class="modal-content">
-            <button class="close-modal" onclick="document.getElementById('image-modal').close()">&times;</button>
-            <img id="modal-img" src="" alt="Fullscreen view">
-            <p id="modal-caption" class="mt-4">{{ product.name }}</p>
-        </div>
-    </dialog>
 {% endblock %}
 
 {% block extra_js %}
-<script src="https://unpkg.com/embla-carousel/embla-carousel.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
 <script type="module">
+    import PhotoSwipeLightbox from 'https://unpkg.com/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js';
     import { getCart, saveCart, showToast, updateCartUI } from "{% static 'js/shop.js' %}";
 
     // Bridge for inline onclicks
     window.addToCart = addToCart;
-    window.openModal = openModal;
 
-    // Initialize Embla
-    const emblaNode = document.getElementById('product-carousel');
-    const options = { loop: true };
-    const emblaApi = EmblaCarousel(emblaNode, options);
-
-    // Thumbnail Sync
-    const thumbNodes = document.querySelectorAll('.thumb');
-    thumbNodes.forEach((thumb, index) => {
-        thumb.addEventListener('click', () => emblaApi.scrollTo(index));
+    // Initialize Splide
+    const main = new Splide('#main-carousel', {
+        type: 'fade',
+        rewind: true,
+        pagination: false,
+        arrows: false,
     });
 
-    emblaApi.on('select', () => {
-        const index = emblaApi.selectedScrollSnap();
-        thumbNodes.forEach((thumb, i) => {
-            if (i === index) thumb.classList.add('is-selected');
-            else thumb.classList.remove('is-selected');
+    const thumbnails = document.querySelectorAll('.thumbnail');
+    let currentThumbnail = thumbnails[0];
+
+    main.on('mounted move', () => {
+        const thumbnail = thumbnails[main.index];
+        if (thumbnail) {
+            if (currentThumbnail) currentThumbnail.classList.remove('is-active');
+            thumbnail.classList.add('is-active');
+            currentThumbnail = thumbnail;
+        }
+    });
+
+    thumbnails.forEach((thumbnail, index) => {
+        thumbnail.addEventListener('click', () => {
+            main.go(index);
         });
     });
 
-    // Modal Logic
-    const modal = document.getElementById('image-modal');
-    const modalImg = document.getElementById('modal-img');
+    main.mount();
 
-    function openModal(src) {
-        modalImg.src = src;
-        modal.showModal();
-    }
-
-    // Close modal on click outside
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) modal.close();
+    // Initialize PhotoSwipe
+    const lightbox = new PhotoSwipeLightbox({
+        gallery: '#gallery',
+        children: 'a',
+        pswpModule: () => import('https://unpkg.com/photoswipe@5.4.4/dist/photoswipe.esm.min.js'),
+        imageClickAction: 'toggle-controls',
+        tapAction: 'toggle-controls',
+        zoomAllowed: true,
     });
+
+    // Best Practice: Inject dimensions from already loaded images to prevent stretching
+    const galleryAnchors = document.querySelectorAll('#gallery a');
+    galleryAnchors.forEach(anchor => {
+        const img = anchor.querySelector('img');
+        const updateDims = () => {
+            if (img.naturalWidth) {
+                anchor.setAttribute('data-pswp-width', img.naturalWidth);
+                anchor.setAttribute('data-pswp-height', img.naturalHeight);
+            }
+        };
+
+        if (img.complete) {
+            updateDims();
+        } else {
+            img.onload = updateDims;
+        }
+    });
+
+    lightbox.init();
 
     // Existing Shop Logic
     function addToCart(priceId, qty, maxStock) {

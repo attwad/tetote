@@ -12,8 +12,6 @@
     --color-white: #fff;
     --spacing: 0.25rem;
     --container-2xl: 42rem;
-    --text-sm: 0.875rem;
-    --text-sm--line-height: calc(1.25 / 0.875);
     --text-base: 1rem;
     --text-base--line-height: calc(1.5 / 1);
     --text-lg: 1.125rem;
@@ -291,6 +289,9 @@
   .m-0 {
     margin: calc(var(--spacing) * 0);
   }
+  .mx-1 {
+    margin-inline: calc(var(--spacing) * 1);
+  }
   .mx-2 {
     margin-inline: calc(var(--spacing) * 2);
   }
@@ -359,6 +360,9 @@
   }
   .block {
     display: block;
+  }
+  .contents {
+    display: contents;
   }
   .flex {
     display: flex;
@@ -689,10 +693,6 @@
   .text-lg {
     font-size: var(--text-lg);
     line-height: var(--tw-leading, var(--text-lg--line-height));
-  }
-  .text-sm {
-    font-size: var(--text-sm);
-    line-height: var(--tw-leading, var(--text-sm--line-height));
   }
   .text-\[0\.8rem\] {
     font-size: 0.8rem;
@@ -1387,119 +1387,57 @@
     --tw-font-weight: var(--font-weight-bold);
     font-weight: var(--font-weight-bold);
   }
-  .embla {
-    position: relative;
-    overflow: hidden;
-    border-style: var(--tw-border-style);
-    border-width: 1px;
-    border-color: #eee;
-    background-color: #fdfdfd;
-  }
-  .embla__container {
-    display: flex;
-  }
-  .embla__slide {
-    position: relative;
-    min-width: calc(var(--spacing) * 0);
-    flex: 0 0 100%;
-  }
-  .embla__slide img {
+  .splide__slide img {
     display: block;
     aspect-ratio: 1 / 1;
     width: 100%;
     cursor: zoom-in;
+    background-color: #fdfdfd;
     object-fit: contain;
-  }
-  @media (max-width: 768px) {
-    .embla__slide img {
-      aspect-ratio: 1 / 1;
-    }
   }
   .thumbnails {
     margin-top: calc(var(--spacing) * 6);
     display: flex;
+    list-style-type: none;
     flex-wrap: wrap;
     gap: calc(var(--spacing) * 4);
+    padding: calc(var(--spacing) * 0);
   }
-  .thumb {
+  .thumbnail {
     height: 100px;
     width: 100px;
     cursor: pointer;
+    overflow: hidden;
     border-radius: 2px;
     border-style: var(--tw-border-style);
-    border-width: 1px;
-    border-color: #eee;
-    object-fit: cover;
+    border-width: 2px;
+    border-color: transparent;
     opacity: 70%;
-    transition-property: opacity;
+    transition-property: all;
     transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
     transition-duration: var(--tw-duration, var(--default-transition-duration));
     --tw-duration: 200ms;
     transition-duration: 200ms;
   }
-  .thumb.is-selected {
-    border-style: var(--tw-border-style);
-    border-width: 2px;
+  .thumbnail img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+  .thumbnail.is-active {
     border-color: var(--color-brand-text);
     opacity: 100%;
   }
-  dialog#image-modal {
-    height: 100%;
-    max-height: 100%;
-    width: 100%;
-    max-width: 100%;
-    --tw-border-style: none;
-    border-style: none;
-    background-color: color-mix(in srgb, #000 90%, transparent);
-    @supports (color: color-mix(in lab, red, red)) {
-      background-color: color-mix(in oklab, var(--color-black) 90%, transparent);
-    }
-    padding: calc(var(--spacing) * 0);
-    color: var(--color-white);
-  }
-  dialog#image-modal::backdrop {
-    background-color: color-mix(in srgb, #000 95%, transparent);
-    @supports (color: color-mix(in lab, red, red)) {
-      background-color: color-mix(in oklab, var(--color-black) 95%, transparent);
+  @media (max-width: 768px) {
+    .splide__slide img {
+      aspect-ratio: 1 / 1;
     }
   }
-  .modal-content {
-    position: relative;
-    display: flex;
-    height: 100%;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  .pswp {
+    --pswp-bg: rgba(0, 0, 0, 0.95);
   }
-  .modal-content img {
-    max-height: 85vh;
-    max-width: 95vw;
+  .pswp__img {
     object-fit: contain;
-  }
-  .close-modal {
-    position: absolute;
-    top: calc(var(--spacing) * 2);
-    right: calc(var(--spacing) * 4);
-    cursor: pointer;
-    appearance: none;
-    --tw-border-style: none;
-    border-style: none;
-    background-color: transparent;
-    padding: calc(var(--spacing) * 4);
-    font-family: var(--font-sans);
-    font-size: 2.5rem;
-    --tw-leading: 1;
-    line-height: 1;
-    color: var(--color-white);
-    opacity: 80%;
-    transition-property: opacity;
-    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
-    transition-duration: var(--tw-duration, var(--default-transition-duration));
-    &:hover {
-      @media (hover: hover) {
-        opacity: 100%;
-      }
-    }
   }
   .cart-item-card {
     display: flex;
