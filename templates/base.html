@@ -214,23 +214,7 @@
         window.toggleMobileMenu = function() { };
     </script>
 
-    <script type="module">
-        // Using a query param for simple cache busting
-        import { getCart, saveCart, updateCartUI, showToast, toggleMobileMenu, initHeaderScroll } from "{% static 'js/shop.js' %}?v=1.1";
-
-        // Expose to window for existing inline onclick handlers in other templates
-        window.getCart = getCart;
-        window.saveCart = saveCart;
-        window.updateCartUI = updateCartUI;
-        window.showToast = showToast;
-        window.toggleMobileMenu = toggleMobileMenu;
-
-        updateCartUI();
-        initHeaderScroll();
-        window.addEventListener('pageshow', (event) => {
-            updateCartUI();
-        });
-    </script>
+    <script type="module" src="{% static 'js/bundles/main.js' %}"></script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>

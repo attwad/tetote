@@ -5,8 +5,8 @@ Welcome to Tetote. This document provides critical procedural and architectural 
 ## 🏗 Core Architecture
 - **Hybrid Data Model:** Stripe is the source of truth for **Product IDs and Price amounts**. Django is the source of truth for all the rest.
 - **Surgical Syncing:** When handling Stripe webhooks or sync commands (see `integrations/views.py`), **NEVER** overwrite the `name` (translatable), `description`, or `stock_quantity` fields if the product already exists. Only look at fields that are part of the message sent in the webhook and update those fields only.
-- **Vanilla First:** Do not introduce frontend frameworks (React, Vue, etc.). Use Vanilla JS (ES Modules) and Tailwind for CSS.
-- **Tailwind Build:** When modifying templates and adding new Tailwind utility classes, you **MUST** run `npm run build:css` to update the static stylesheet.
+- **Vanilla First:** Do not introduce frontend frameworks (React, Vue, etc.). Use Vanilla JS (ES Modules) and Tailwind for CSS. Use **npm run build** to bundle assets.
+- **Frontend Build:** When adding new Tailwind classes to templates, or modifying styles and scripts in the `assets/` directory, you **MUST** run `npm run build` to update the static assets.
 
 ## 🎨 Design System
 - **Palette:**

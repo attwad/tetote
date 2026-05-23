@@ -5,8 +5,6 @@
 {% block meta_description %}{{ product.description|striptags|truncatechars:160 }}{% endblock %}
 
 {% block extra_head %}
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/photoswipe@5.4.4/dist/photoswipe.css">
 {% endblock %}
 
 {% block content %}
@@ -112,74 +110,14 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
 <script type="module">
-    import PhotoSwipeLightbox from 'https://unpkg.com/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js';
-    import { getCart, saveCart, showToast, updateCartUI } from "{% static 'js/shop.js' %}";
+    import { initProductGallery } from "{% static 'js/bundles/product-detail.js' %}";
 
-    // Bridge for inline onclicks
-    window.addToCart = addToCart;
+    // Initialize gallery
+    initProductGallery();
 
-    // Initialize Splide
-    const main = new Splide('#main-carousel', {
-        type: 'fade',
-        rewind: true,
-        pagination: false,
-        arrows: false,
-    });
-
-    const thumbnails = document.querySelectorAll('.thumbnail');
-    let currentThumbnail = thumbnails[0];
-
-    main.on('mounted move', () => {
-        const thumbnail = thumbnails[main.index];
-        if (thumbnail) {
-            if (currentThumbnail) currentThumbnail.classList.remove('is-active');
-            thumbnail.classList.add('is-active');
-            currentThumbnail = thumbnail;
-        }
-    });
-
-    thumbnails.forEach((thumbnail, index) => {
-        thumbnail.addEventListener('click', () => {
-            main.go(index);
-        });
-    });
-
-    main.mount();
-
-    // Initialize PhotoSwipe
-    const lightbox = new PhotoSwipeLightbox({
-        gallery: '#gallery',
-        children: 'a',
-        pswpModule: () => import('https://unpkg.com/photoswipe@5.4.4/dist/photoswipe.esm.min.js'),
-        imageClickAction: 'toggle-controls',
-        tapAction: 'toggle-controls',
-        zoomAllowed: true,
-    });
-
-    // Best Practice: Inject dimensions from already loaded images to prevent stretching
-    const galleryAnchors = document.querySelectorAll('#gallery a');
-    galleryAnchors.forEach(anchor => {
-        const img = anchor.querySelector('img');
-        const updateDims = () => {
-            if (img.naturalWidth) {
-                anchor.setAttribute('data-pswp-width', img.naturalWidth);
-                anchor.setAttribute('data-pswp-height', img.naturalHeight);
-            }
-        };
-
-        if (img.complete) {
-            updateDims();
-        } else {
-            img.onload = updateDims;
-        }
-    });
-
-    lightbox.init();
-
-    // Existing Shop Logic
-    function addToCart(priceId, qty, maxStock) {
+    // Bridge for inline onclicks (keeping translations in template)
+    window.addToCart = function(priceId, qty, maxStock) {
         let cart = getCart();
         const existing = cart.find(item => item.price_id === priceId);
         let currentQty = existing ? existing.qty : 0;
@@ -198,6 +136,6 @@
         }
         saveCart(cart);
         updateCartUI();
-    }
+    };
 </script>
 {% endblock %}

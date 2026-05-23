@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import "@splidejs/splide/dist/css/splide.min.css";
+@import "photoswipe/dist/photoswipe.css";
 
 @theme {
   --color-brand-bg: #fdfcfb;

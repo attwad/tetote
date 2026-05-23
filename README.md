@@ -4,12 +4,12 @@ Tetote is a high-end, minimalist e-commerce platform and digital showroom dedica
 
 ## 🇯🇵 Design Philosophy
 - **Minimalist Japanese Aesthetic:** The UI uses a warm, muted palette (**Bone White**, **Soft Charcoal**, **Muted Olive Earth**) to evoke a sense of calm and focus on the craftsmanship of the products.
-- **Showroom Experience:** The platform serves as both a shop and a gallery. High-resolution imagery, smooth transitions (Embla Carousel), and delicate typography (Cormorant Garamond) are central to the brand identity.
+- **Showroom Experience:** The platform serves as both a shop and a gallery. High-resolution imagery, smooth transitions (Splide & PhotoSwipe), and delicate typography (Cormorant Garamond) are central to the brand identity.
 - **Professional & Zen:** Every interaction is designed to be intentional and non-intrusive. High-contrast colors are avoided in favor of organic, understated tones.
 
 ## 🛠 Engineering Standards & Practices
-- **Vanilla over Frameworks:** We prioritize native web standards and vanilla JavaScript to maintain a lightweight, high-performance codebase and avoid unnecessary third-party dependencies. One exception is **Tailwind CSS**, which is used for all styling.
-- **Tailwind Build Process:** Because we use Tailwind's JIT (Just-In-Time) compiler, you must run the build command whenever you add or modify utility classes in templates to ensure they are included in the final stylesheet.
+- **Vanilla over Frameworks:** We prioritize native web standards and vanilla JavaScript to maintain a lightweight, high-performance codebase. We use **npm** to manage core dependencies (Splide, PhotoSwipe) and **esbuild** for a lightweight bundling process.
+- **Frontend Build Process:** We use Tailwind CSS for styling and esbuild for JavaScript bundling (Splide, PhotoSwipe). While Django template logic changes are immediate, you **must** run the build command whenever you add new Tailwind utility classes to templates or modify JavaScript in the `assets/` directory.
 - **Security First:** Sensitive data (Stripe keys, Django secrets) is strictly managed via environment variables and protected by aggressive `.gitignore` and `pre-commit` rules.
 - **High Test Coverage:** The project maintains near-total test coverage across both the Django backend (Python) and the modular frontend (Node/Vitest/JSDOM).
 - **Hybrid Content Management:**
@@ -33,7 +33,7 @@ Tetote is a high-end, minimalist e-commerce platform and digital showroom dedica
 ## 🚀 Key Features
 - **Smart Filtering:** A rich, URL-persistent chip system allowing multiple selections and single-click toggles.
 - **Persistent Cart:** A `localStorage` driven cart with real-time local stock verification.
-- **Dynamic Showroom:** Smooth cross-fade hover effects and a native `<dialog>` based fullscreen viewer.
+- **Dynamic Showroom:** Smooth cross-fade hover effects and a high-performance, navigable fullscreen gallery (PhotoSwipe v5).
 - **Wagtail-Powered Blog:** A highly flexible, StreamField-powered blog system for sharing event stories and ceramic techniques with native multi-language support.
 - **Custom Toast System:** A non-intrusive, styled notification library for user feedback.
 
@@ -46,8 +46,9 @@ Tetote is a high-end, minimalist e-commerce platform and digital showroom dedica
 ### Commands
 - **Run Server:** `uv run python manage.py runserver`
 - **Sync Stripe:** `uv run python manage.py sync_stripe` (Updates products/prices without touching stock)
-- **Build CSS:** `npm run build:css` (Run this after adding new Tailwind classes)
-- **Watch CSS:** `npm run watch:css` (Recommended during frontend development)
+- **Build All Assets:** `npm run build` (Builds both CSS and JS)
+- **Watch CSS:** `npm run watch:css` (Recommended during CSS development)
+- **Watch JS:** `npm run watch:js` (Recommended during JS development)
 - **Run All Tests:** `uv run python manage.py test && npm test`
 - **Formatting:** `uv run ruff format .`
 
