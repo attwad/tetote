@@ -54,3 +54,9 @@ Tetote is a high-end, minimalist e-commerce platform and digital showroom dedica
 
 ## 🔒 Security Note
 Never hardcode secrets. Ensure `.env` is populated with `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET`.
+
+## 📦 Deployment Note
+Since generated assets (`styles.css` and JS bundles) are not tracked in Git, you **must** run the following commands in your deployment pipeline before `collectstatic`:
+1. `npm install`
+2. `npm run build`
+3. `python manage.py collectstatic`

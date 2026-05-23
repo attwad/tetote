@@ -49,8 +49,8 @@ jobs:
       - name: Install Node dependencies
         run: npm ci
 
-      - name: Build CSS
-        run: npm run build:css
+      - name: Build Assets
+        run: npm run build
 
       - name: Install uv
         uses: astral-sh/setup-uv@v7
@@ -92,11 +92,14 @@ jobs:
             --exclude '.env' \
             --exclude 'db.sqlite3' \
             --exclude 'media' \
+            --exclude 'node_modules' \
             ./ /var/www/tetote-dev/
 
       - name: Install Dependencies & Setup
         working-directory: /var/www/tetote-dev
         run: |
+          npm install
+          npm run build
           ~/.local/bin/uv sync
           ~/.local/bin/uv run python manage.py migrate --noinput
           ~/.local/bin/uv run python manage.py collectstatic --noinput
@@ -121,11 +124,14 @@ jobs:
             --exclude '.env' \
             --exclude 'db.sqlite3' \
             --exclude 'media' \
+            --exclude 'node_modules' \
             ./ /var/www/tetote-prod/
 
       - name: Install Dependencies & Setup
         working-directory: /var/www/tetote-prod
         run: |
+          npm install
+          npm run build
           ~/.local/bin/uv sync
           ~/.local/bin/uv run python manage.py migrate --noinput
           ~/.local/bin/uv run python manage.py collectstatic --noinput

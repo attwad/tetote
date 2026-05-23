@@ -30,6 +30,8 @@ yarn-debug.log*
 yarn-error.log*
 .vitest-results/
 coverage/
+static/js/bundles/
+static/css/styles.css
 
 # Configuration & Secrets
 .env
