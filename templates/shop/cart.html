@@ -43,7 +43,7 @@
 
 {% block extra_js %}
 <script type="module">
-    import { getCart, saveCart, showToast, updateCartUI } from "{% static 'js/shop.js' %}";
+    // Functions are already available on window via the main.js bundle
 
     // Expose to window for inline onchange/onclick handlers
     window.updateQty = updateQty;

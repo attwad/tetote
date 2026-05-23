@@ -165,10 +165,6 @@
 
 {% block extra_js %}
 <script type="module">
-    import { toggleDrawer, toggleFilter, toggleStock, toggleSort } from "{% static 'js/shop.js' %}";
-    window.toggleDrawer = toggleDrawer;
-    window.toggleFilter = toggleFilter;
-    window.toggleStock = toggleStock;
-    window.toggleSort = toggleSort;
+    // Functions are already available on window via the main.js bundle
 </script>
 {% endblock %}

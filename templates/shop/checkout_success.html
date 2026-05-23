@@ -32,7 +32,7 @@
 
 {% block extra_js %}
 <script type="module">
-    import { saveCart } from "{% static 'js/shop.js' %}";
+    // saveCart is already available on window via the main.js bundle
 
     // Clear the cart upon reaching the success page
     saveCart([]);

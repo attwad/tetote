@@ -1,4 +1,4 @@
-import {
+export {
     updateCartUI,
     initHeaderScroll,
     getCart,
@@ -11,6 +11,18 @@ import {
     toggleSort
 } from './shop.js';
 
+import {
+    updateCartUI,
+    initHeaderScroll,
+    getCart,
+    saveCart,
+    showToast,
+    toggleMobileMenu,
+    toggleDrawer,
+    toggleFilter,
+    toggleStock,
+    toggleSort
+} from './shop.js';
 // Expose to window for existing inline onclick handlers
 window.getCart = getCart;
 window.saveCart = saveCart;
