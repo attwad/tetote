@@ -11,6 +11,7 @@ export function initProductGallery() {
         rewind: true,
         pagination: false,
         arrows: false,
+        lazyLoad: 'nearby',
     });
 
     const thumbnails = document.querySelectorAll('.thumbnail');

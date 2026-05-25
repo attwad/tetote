@@ -21,7 +21,7 @@
                             <li class="splide__slide">
                                 <a href="{{ product.main_photo }}"
                                    target="_blank">
-                                    <img src="{{ product.main_photo }}" alt="{{ product.name }}">
+                                    <img data-splide-lazy="{{ product.main_photo }}" alt="{{ product.name }}">
                                 </a>
                             </li>
                         {% endif %}
@@ -30,7 +30,7 @@
                             <li class="splide__slide">
                                 <a href="{{ image.url }}"
                                    target="_blank">
-                                    <img src="{{ image.url }}" alt="{{ product.name }}">
+                                    <img data-splide-lazy="{{ image.url }}" alt="{{ product.name }}">
                                 </a>
                             </li>
                             {% endif %}

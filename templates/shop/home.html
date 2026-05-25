@@ -3,34 +3,18 @@
 
 {% block extra_head %}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css">
-<style>
-    .home-carousel {
-        height: 600px;
-        overflow: hidden;
-    }
-    .home-carousel img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-    @media (max-width: 768px) {
-        .home-carousel {
-            height: 400px;
-        }
-    }
-</style>
 {% endblock %}
 
 {% block content %}
     {# Carousel Section #}
     {% if carousel_images %}
-    <section class="mb-16 -mx-8 relative">
-        <div id="home-carousel" class="splide home-carousel">
+    <section class="mb-16 -mx-8 relative bg-brand-bg" aria-label="{% translate 'Hero Image Carousel' %}">
+        <div id="home-carousel" class="splide">
             <div class="splide__track">
                 <ul class="splide__list">
                     {% for item in carousel_images %}
-                    <li class="splide__slide">
-                        <img src="{{ item.image.url }}" alt="">
+                    <li class="splide__slide flex items-center justify-center">
+                        <img data-splide-lazy="{{ item.image.url }}" alt="" class="object-contain block">
                     </li>
                     {% endfor %}
                 </ul>

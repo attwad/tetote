@@ -4,12 +4,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const homeCarousel = document.getElementById('home-carousel');
     if (homeCarousel) {
         new Splide('#home-carousel', {
-            type: 'loop',
+            type: 'fade',
+            rewind: true,
             autoplay: true,
             interval: 5000,
-            pauseOnHover: false,
+            pauseOnHover: true,
+            pauseOnFocus: true,
             arrows: true,
-            pagination: true,
+            pagination: false,
+            lazyLoad: 'nearby',
+            height: '600px',
+            breakpoints: {
+                768: {
+                    height: '400px',
+                },
+            },
         }).mount();
     }
 });
