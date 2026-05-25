@@ -4,9 +4,7 @@
 {% block title %}{{ page.title }} - Tetote{% endblock %}
 
 {% block content %}
-    <div class="max-w-[800px] mx-auto">
-        <h1 class="mb-12">{{ page.title }}</h1>
-
+    <div class="max-w-[800px] mx-auto pt-12">
         {% for post in blogpages %}
             <article class="mb-6">
                 <h2 class="mb-1"><a href="{% pageurl post %}" class="no-underline text-[#333] hover:underline text-2xl">{{ post.title }}</a></h2>
