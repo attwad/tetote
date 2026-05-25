@@ -1,35 +1,30 @@
-from wagtail.test.utils import WagtailPageTestCase
-from wagtail.models import Page
-from .models import BlogIndexPage, BlogPage
-import datetime
+from django.test import TestCase
+from django.urls import reverse
+from django.utils import timezone
+from .models import BlogPost
 
 
-class BlogTests(WagtailPageTestCase):
+class BlogSnippetTests(TestCase):
     def setUp(self):
-        # Get the root page
-        # In a standard Wagtail setup, the root page is created by migrations
-        self.root = Page.objects.get(id=1).get_first_child()
-
-        # Create Blog Index Page
-        self.index = BlogIndexPage(title="Blog", slug="blog")
-        self.root.add_child(instance=self.index)
-
-        # Create Blog Page
-        self.post = BlogPage(
+        self.post = BlogPost.objects.create(
             title="Test Post",
             slug="test-post",
-            date=datetime.date.today(),
-            body=[("paragraph", "Hello world")],
+            date=timezone.now().date(),
+            body=[{"type": "paragraph", "value": "Test content"}],
         )
-        self.index.add_child(instance=self.post)
 
-    def test_blog_index_view(self):
-        response = self.client.get(self.index.url)
+    def test_blog_list_view(self):
+        url = reverse("blog_list")
+        response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Test Post")
 
-    def test_blog_page_view(self):
-        response = self.client.get(self.post.url)
+    def test_blog_detail_view(self):
+        url = self.post.get_absolute_url()
+        response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Test Post")
-        self.assertContains(response, "Hello world")
+        self.assertContains(response, "Test content")
+
+    def test_admin_display_title(self):
+        self.assertEqual(self.post.get_admin_display_title(), "Test Post")

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load i18n wagtailcore_tags %}
+
+{% block title %}{{ title }} - Tetote{% endblock %}
+
+{% block content %}
+    <div class="max-w-[800px] mx-auto">
+        <h1 class="mb-12">{{ title }}</h1>
+
+        {% for item in newsitems %}
+            <article class="mb-12">
+                <h2 class="mb-4 text-3xl font-serif"><a href="{{ item.get_absolute_url }}" class="no-underline text-inherit hover:underline">{{ item.title }}</a></h2>
+                <div class="prose prose-brand max-w-none">
+                    {{ item.paragraph|richtext }}
+                </div>
+            </article>
+            {% if not forloop.last %}
+                <hr class="border-none border-t border-brand-border my-12">
+            {% endif %}
+        {% empty %}
+            <div class="text-center py-20 text-brand-muted italic">
+                {% translate "There are no news items at the moment." %}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

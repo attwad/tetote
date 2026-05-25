@@ -85,6 +85,7 @@ INSTALLED_APPS = [
     "shop.apps.ShopConfig",
     "blog.apps.BlogConfig",
     "integrations.apps.IntegrationsConfig",
+    "news.apps.NewsConfig",
 ]
 
 SITE_ID = 1

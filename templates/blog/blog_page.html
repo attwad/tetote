@@ -19,9 +19,7 @@
         </div>
         <hr class="border-none border-t border-brand-border my-6">
         <p class="mt-8">
-            {% with page.get_parent as parent %}
-                <a href="{% pageurl parent %}" class="btn">&laquo; {% translate "Back to" %} {{ parent.title }}</a>
-            {% endwith %}
+            <a href="{% url 'blog_list' %}" class="btn">&laquo; {% translate "Back to blog" %}</a>
         </p>
     </article>
 {% endblock %}
