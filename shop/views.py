@@ -6,10 +6,23 @@ from django.http import JsonResponse
 from django.urls import reverse
 from django.db import transaction
 from django.utils.translation import gettext as _, get_language
-from .models import Product, Brand, Glaze, ProductType, StoreSettings
+from .models import Product, Brand, Glaze, ProductType, StoreSettings, CarouselImage
+from news.models import NewsItem
 import json
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
+
+
+class HomeView(TemplateView):
+    template_name = "shop/home.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["carousel_images"] = CarouselImage.objects.filter(is_active=True)
+        context["news_items"] = NewsItem.objects.live().order_by("-first_published_at")[
+            :5
+        ]
+        return context
 
 
 class BrandDetailView(DetailView):

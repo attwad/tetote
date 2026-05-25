@@ -4,7 +4,9 @@
 
 - [Manage Products](/admin/shop/product/) — Edit descriptions, stock levels, and gallery images.
 - [Manage Brands](/admin/shop/brand/) — Add or edit information for ceramicist brands.
-- [Manage Blog Posts](/admin/blog/post/) — Write new stories and announcements.
+- [Manage Top Page Carousel](/admin/shop/carouselimage/) — Update the home page images.
+- [Manage News Items](/cms/pages/22/) — Write new updates for the front page.
+- [Manage Blog Posts](/cms/pages/21/) — Write new stories and announcements.
 - [Manage Glazes](/admin/shop/glaze/) — Configure available glaze types.
 - [Manage Product Types](/admin/shop/producttype/) — Define categories (e.g., Bowls, Vases).
 - [Store Settings](/admin/shop/storesettings/) — Pause or resume all sales.
@@ -39,6 +41,21 @@ To show a banner message at the top of the site (e.g., for holiday closures):
 1. Go to [Store Announcements](/admin/shop/storeannouncement/).
 2. Create a new announcement or edit an existing one.
 3. Check the **Is Active** box. Ensure only one announcement is active at a time.
+
+### 4. Managing the Top Page (Carousel)
+The Top Page at `/` features a carousel of images that can be managed through the **Django Admin**.
+
+1. Go to the [Manage Carousel Images](/admin/shop/carouselimage/) section.
+2. To add a new image:
+   - Click "Add Carousel Image".
+   - Upload your image and give it a title (optional).
+   - Set an **Order** (lower numbers appear first).
+   - Ensure **Is Active** is checked.
+3. To reorder or disable images:
+   - You can edit the **Order** and **Is Active** fields directly in the list view.
+4. Click **Save** to make the changes live.
+
+*Note: Images will automatically stretch to fill the width. For best results, use high-resolution landscape images.*
 
 ---
 

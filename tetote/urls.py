@@ -24,6 +24,7 @@ class StaticViewSitemap(Sitemap):
 
     def items(self):
         items = [
+            "shop:home",
             "shop:product_list",
             "shop:privacy_policy",
             "shop:return_policy",

@@ -154,3 +154,18 @@ class StoreSettings(models.Model):
 
     def __str__(self):
         return str(_("Store Settings"))
+
+
+class CarouselImage(models.Model):
+    image = models.ImageField(_("Image"), upload_to="carousel/")
+    order = models.PositiveIntegerField(_("Order"), default=0)
+    is_active = models.BooleanField(_("Is Active"), default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = _("Carousel Image")
+        verbose_name_plural = _("Carousel Images")
+        ordering = ["order", "-created_at"]
+
+    def __str__(self):
+        return f"Carousel Image {self.id}"

@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load i18n wagtailcore_tags wagtailimages_tags static %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css">
+<style>
+    .home-carousel {
+        height: 600px;
+        overflow: hidden;
+    }
+    .home-carousel img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    @media (max-width: 768px) {
+        .home-carousel {
+            height: 400px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    {# Carousel Section #}
+    {% if carousel_images %}
+    <section class="mb-16 -mx-8 relative">
+        <div id="home-carousel" class="splide home-carousel">
+            <div class="splide__track">
+                <ul class="splide__list">
+                    {% for item in carousel_images %}
+                    <li class="splide__slide">
+                        <img src="{{ item.image.url }}" alt="">
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    {# News Section #}
+    {% if news_items %}
+    <section class="max-w-[800px] mx-auto mb-16">
+        <h2 class="text-3xl mb-8 font-serif border-b border-brand-border pb-4 italic">{% translate "Latest News" %}</h2>
+        <div class="flex flex-col gap-8">
+            {% for item in news_items %}
+            <article>
+                <h3 class="text-2xl mb-2"><a href="{% pageurl item %}" class="no-underline text-inherit hover:underline">{{ item.title }}</a></h3>
+                <p class="text-brand-muted text-sm mb-4">{{ item.first_published_at|date:"F j, Y" }}</p>
+                <div class="prose prose-brand line-clamp-3">
+                    {{ item.specific.paragraph|richtext }}
+                </div>
+            </article>
+            {% if not forloop.last %}
+            <hr class="border-brand-border/30">
+            {% endif %}
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    {# Shop Link Section #}
+    <section class="text-center mb-16">
+        <a href="{% url 'shop:product_list' %}" class="inline-block px-12 py-4 border border-brand-text text-brand-text no-underline hover:bg-brand-text hover:text-white transition-colors duration-300 uppercase tracking-widest font-medium">
+            {% translate "Enter the Shop" %}
+        </a>
+    </section>
+{% endblock %}
+
+{% block extra_js %}
+<script type="module" src="{% static 'js/bundles/home.js' %}"></script>
+{% endblock %}

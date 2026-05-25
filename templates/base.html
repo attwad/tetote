@@ -25,7 +25,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
             </button>
 
-            <a href="{% url 'shop:product_list' %}" class="text-brand-text no-underline transition-opacity duration-200 hover:opacity-70">
+            <a href="/" class="text-brand-text no-underline transition-opacity duration-200 hover:opacity-70">
                 <img src="{% static 'images/logo.min.svg' %}" alt="Tetote Logo" class="w-20 h-20">
             </a>
 
@@ -62,7 +62,7 @@
                 </div>
                 {% endif %}
 
-                <a href="{% url 'shop:product_list' %}blog/" class="py-2 font-medium tracking-[0.05rem] text-brand-text no-underline transition-all duration-200 hover:opacity-70 hover:underline underline-offset-4 {% if request.resolver_match.app_name == 'blog' %}font-bold{% endif %}">{% translate "Blog" %}</a>
+                <a href="/blog/" class="py-2 font-medium tracking-[0.05rem] text-brand-text no-underline transition-all duration-200 hover:opacity-70 hover:underline underline-offset-4 {% if request.resolver_match.app_name == 'blog' %}font-bold{% endif %}">{% translate "Blog" %}</a>
                 <a href="{% url 'shop:contact' %}" class="py-2 font-medium tracking-[0.05rem] text-brand-text no-underline transition-all duration-200 hover:opacity-70 hover:underline underline-offset-4 {% if request.resolver_match.url_name == 'contact' %}font-bold{% endif %}">{% translate "Contact" %}</a>
             </nav>
             <!-- Cart Icon -->
@@ -134,7 +134,7 @@
             </div>
             {% endif %}
 
-            <a href="{% url 'shop:product_list' %}blog/" class="text-[1.2rem] font-medium tracking-[0.05rem] text-brand-text no-underline {% if request.resolver_match.app_name == 'blog' %}font-bold{% endif %}">{% translate "Blog" %}</a>
+            <a href="/blog/" class="text-[1.2rem] font-medium tracking-[0.05rem] text-brand-text no-underline {% if request.resolver_match.app_name == 'blog' %}font-bold{% endif %}">{% translate "Blog" %}</a>
             <a href="{% url 'shop:contact' %}" class="text-[1.2rem] font-medium tracking-[0.05rem] text-brand-text no-underline {% if request.resolver_match.url_name == 'contact' %}font-bold{% endif %}">{% translate "Contact" %}</a>
         </nav>
 

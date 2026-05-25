@@ -13,6 +13,7 @@ from .models import (
     ProductType,
     StoreAnnouncement,
     StoreSettings,
+    CarouselImage,
 )
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -60,6 +61,14 @@ class ProductTypeAdmin(TranslationAdmin):
 class StoreAnnouncementAdmin(TranslationAdmin):
     list_display = ("text", "is_active", "updated_at")
     list_editable = ("is_active",)
+
+
+@admin.register(CarouselImage)
+class CarouselImageAdmin(admin.ModelAdmin):
+    list_display = ("id", "order", "is_active", "created_at")
+    list_editable = ("order", "is_active")
+    list_filter = ("is_active",)
+    ordering = ("order", "-created_at")
 
 
 @admin.register(StoreSettings)
