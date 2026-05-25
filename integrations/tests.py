@@ -106,6 +106,40 @@ class StripeIntegrationTest(TestCase):
         self.assertEqual(product.price, 9900)
         self.assertEqual(product.stripe_price_id, "price_fixed")
 
+    def test_sync_product_does_not_overwrite_manual_date(self):
+        import datetime
+        from django.utils import timezone
+
+        # Create product with a specific manually set date
+        manual_date = timezone.now() - datetime.timedelta(days=10)
+        Product.objects.create(
+            stripe_product_id="prod_date_test",
+            name="Original",
+            stripe_name="Original",
+            slug="original",
+            price=1000,
+            date_added=manual_date,
+            public=True,
+        )
+
+        # Update product via Stripe (simulated webhook/sync) with a different creation date
+        stripe_created_date = 1700000000  # A different timestamp
+        product_data = {
+            "id": "prod_date_test",
+            "name": "Updated Name",
+            "images": [],
+            "created": stripe_created_date,
+        }
+
+        sync_product(product_data)
+
+        product = Product.objects.get(stripe_product_id="prod_date_test")
+        self.assertEqual(product.stripe_name, "Updated Name")
+        # date_added must remain the manual_date
+        self.assertAlmostEqual(
+            product.date_added.timestamp(), manual_date.timestamp(), places=0
+        )
+
     def test_sync_product_does_not_overwrite_images(self):
         # Create product with existing images
         product = Product.objects.create(

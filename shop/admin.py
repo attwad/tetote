@@ -96,7 +96,6 @@ class ProductAdmin(TabbedTranslationAdmin):
         "stripe_name",
         "main_photo",
         "price",
-        "date_added",
     )
     inlines = [ProductImageInline]
 

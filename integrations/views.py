@@ -64,29 +64,24 @@ def sync_product(product_data):
                 "slug": slug,
                 "main_photo": main_photo,
                 "price": 0,  # Placeholder until price event arrives
+                "date_added": datetime.datetime.fromtimestamp(
+                    product_data["created"], tz=datetime.timezone.utc
+                ),
             },
         )
 
         # Surgical update: only touch fields that belong to the Stripe Product object
+        # and that we WANT to keep in sync even after creation.
         product.stripe_name = stripe_name
-        product.slug = slug
-
-        # Ingest created timestamp
-        product.date_added = datetime.datetime.fromtimestamp(
-            product_data["created"], tz=datetime.timezone.utc
-        )
 
         # Only update images from Stripe if the product is being created for the first time
         if created:
-            product.main_photo = main_photo
-            product.save()
-
             # Update Gallery
             product.images.all().delete()
             for i, img_url in enumerate(images):
                 ProductImage.objects.create(product=product, url=img_url, order=i)
-        else:
-            product.save()
+
+        product.save()
 
 
 def sync_price(price_data):
