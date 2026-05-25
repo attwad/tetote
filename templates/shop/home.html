@@ -30,9 +30,9 @@
         <div class="flex flex-col gap-8">
             {% for item in news_items %}
             <article>
-                <h3 class="text-2xl mb-2"><a href="{% pageurl item %}" class="no-underline text-inherit hover:underline">{{ item.title }}</a></h3>
+                <h3 class="text-2xl mb-2">{{ item.title }}</h3>
                 <p class="text-brand-muted text-sm mb-4">{{ item.first_published_at|date:"F j, Y" }}</p>
-                <div class="prose prose-brand line-clamp-3">
+                <div class="prose prose-brand">
                     {{ item.specific.paragraph|richtext }}
                 </div>
             </article>

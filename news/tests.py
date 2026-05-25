@@ -26,12 +26,10 @@ class NewsTests(WagtailPageTestCase):
         context = self.index_page.get_context(None)
         self.assertEqual(len(context["newsitems"]), 5)
 
-    def test_news_item_rendering(self):
+    def test_news_item_is_not_directly_accessible(self):
         item = NewsItem(
             title="Test News", slug="test-news", paragraph="<p>Test content</p>"
         )
         self.index_page.add_child(instance=item)
         response = self.client.get(item.url)
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Test News")
-        self.assertContains(response, "Test content")
+        self.assertEqual(response.status_code, 404)

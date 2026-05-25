@@ -5,8 +5,9 @@
 
 {% block content %}
     <div class="max-w-[800px] mx-auto pt-12">
-        {% for item in newsitems %}            <article class="mb-12">
-                <h2 class="mb-4 text-3xl font-serif"><a href="{% pageurl item %}" class="no-underline text-inherit hover:underline">{{ item.title }}</a></h2>
+        {% for item in newsitems %}
+            <article class="mb-12">
+                <h2 class="mb-4 text-3xl font-serif">{{ item.title }}</h2>
                 <div class="prose prose-brand max-w-none">
                     {{ item.specific.paragraph|richtext }}
                 </div>

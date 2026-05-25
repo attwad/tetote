@@ -27,3 +27,8 @@ class NewsItem(Page):
     # Parent page restrictions
     parent_page_types = ["news.NewsIndexPage"]
     subpage_types = []
+
+    def serve(self, request):
+        from django.http import Http404
+
+        raise Http404
