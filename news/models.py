@@ -1,33 +1,29 @@
-from django.db import models
+from wagtail.models import Page
 from wagtail.fields import RichTextField
 from wagtail.admin.panels import FieldPanel
-from wagtail.snippets.models import register_snippet
-from django.urls import reverse
 
 
-@register_snippet
-class NewsItem(models.Model):
-    title = models.CharField(max_length=255)
-    slug = models.SlugField(max_length=255, unique=True)
+class NewsIndexPage(Page):
+    content_panels = Page.content_panels
+
+    def get_context(self, request):
+        context = super().get_context(request)
+        # Limit to the latest 5 news items
+        newsitems = self.get_children().live().order_by("-first_published_at")[:5]
+        context["newsitems"] = newsitems
+        return context
+
+    # Restrict child page types
+    subpage_types = ["news.NewsItem"]
+
+
+class NewsItem(Page):
     paragraph = RichTextField(blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
 
-    panels = [
-        FieldPanel("title"),
-        FieldPanel("slug"),
+    content_panels = Page.content_panels + [
         FieldPanel("paragraph"),
     ]
 
-    def __str__(self):
-        return self.title
-
-    def get_admin_display_title(self):
-        return self.title
-
-    def get_absolute_url(self):
-        return reverse("news_detail", kwargs={"slug": self.slug})
-
-    class Meta:
-        verbose_name = "News Item"
-        verbose_name_plural = "News Items"
-        ordering = ["-created_at"]
+    # Parent page restrictions
+    parent_page_types = ["news.NewsIndexPage"]
+    subpage_types = []

@@ -78,8 +78,6 @@ urlpatterns += i18n_patterns(
     path("i18n/", include("django.conf.urls.i18n")),
     path(settings.ADMIN_URL, admin.site.urls),
     path("", include("shop.urls")),
-    path("news/", include("news.urls")),
-    path("blog/", include("blog.urls")),
     path("", include(wagtail_urls)),
     prefix_default_language=False,
 )

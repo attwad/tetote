@@ -1,16 +1,24 @@
 from django.db import models
+from wagtail.models import Page
 from wagtail.fields import StreamField
 from wagtail import blocks
 from wagtail.admin.panels import FieldPanel
 from wagtail.images.blocks import ImageChooserBlock
-from wagtail.snippets.models import register_snippet
-from django.urls import reverse
 
 
-@register_snippet
-class BlogPost(models.Model):
-    title = models.CharField(max_length=255)
-    slug = models.SlugField(max_length=255, unique=True)
+class BlogIndexPage(Page):
+    content_panels = Page.content_panels
+
+    def get_context(self, request):
+        context = super().get_context(request)
+        blogpages = self.get_children().live().order_by("-first_published_at")
+        context["blogpages"] = blogpages
+        return context
+
+    subpage_types = ["blog.BlogPage"]
+
+
+class BlogPage(Page):
     date = models.DateField("Post date")
     body = StreamField(
         [
@@ -26,23 +34,10 @@ class BlogPost(models.Model):
         use_json_field=True,
     )
 
-    panels = [
-        FieldPanel("title"),
-        FieldPanel("slug"),
+    content_panels = Page.content_panels + [
         FieldPanel("date"),
         FieldPanel("body"),
     ]
 
-    def __str__(self):
-        return self.title
-
-    def get_admin_display_title(self):
-        return self.title
-
-    def get_absolute_url(self):
-        return reverse("blog_detail", kwargs={"slug": self.slug})
-
-    class Meta:
-        verbose_name = "Blog Post"
-        verbose_name_plural = "Blog Posts"
-        ordering = ["-date"]
+    parent_page_types = ["blog.BlogIndexPage"]
+    subpage_types = []

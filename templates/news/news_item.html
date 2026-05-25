@@ -7,16 +7,18 @@
     <div class="max-w-[800px] mx-auto">
         <article>
             <h1 class="mb-2">{{ page.title }}</h1>
-            <p class="text-brand-muted text-sm mb-8">{{ page.created_at|date:"F j, Y" }}</p>
+            <p class="text-brand-muted text-sm mb-8">{{ page.first_published_at|date:"F j, Y" }}</p>
             <div class="prose prose-brand max-w-none">
                 {{ page.paragraph|richtext }}
             </div>
         </article>
 
         <div class="mt-12 pt-8 border-t border-brand-border">
-            <a href="{% url 'news_list' %}" class="text-brand-accent hover:underline">
-                &larr; {% translate "Back to news" %}
-            </a>
+            {% with page.get_parent as parent %}
+                <a href="{% pageurl parent %}" class="text-brand-accent hover:underline">
+                    &larr; {% translate "Back to" %} {{ parent.title }}
+                </a>
+            {% endwith %}
         </div>
     </div>
 {% endblock %}
