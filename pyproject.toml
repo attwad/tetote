@@ -1,6 +1,7 @@
 [project]
 name = "tetote"
 version = "0.1.0"
+license = {text = "MIT"}
 requires-python = ">=3.12"
 dependencies = [
     "coverage>=7.13.4",
