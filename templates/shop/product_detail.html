@@ -8,11 +8,11 @@
 {% endblock %}
 
 {% block content %}
-    <div class="flex flex-col md:grid md:grid-cols-2 gap-4 md:gap-12">
+    <div class="flex flex-col md:grid md:grid-cols-2 gap-4 md:gap-x-12 md:gap-y-6">
         <!-- Title for Mobile -->
         <h1 class="block md:hidden mb-4">{{ product.name }}</h1>
 
-        <!-- Image Section with Splide -->
+        <!-- 1. Main Carousel (Desktop Row 1, Col 1) -->
         <div class="order-1 md:order-none overflow-hidden">
             <section id="main-carousel" class="splide" aria-label="Product Images">
                 <div class="splide__track">
@@ -38,26 +38,10 @@
                     </ul>
                 </div>
             </section>
-
-            <!-- Splide Thumbnails -->
-            <ul id="thumbnail-carousel" class="thumbnails">
-                {% if product.main_photo %}
-                    <li class="thumbnail">
-                        <img src="{{ product.main_photo }}" alt="{% translate 'Thumbnail' %}">
-                    </li>
-                {% endif %}
-                {% for image in product.images.all %}
-                    {% if image.url != product.main_photo %}
-                        <li class="thumbnail">
-                            <img src="{{ image.url }}" alt="{% translate 'Thumbnail' %}">
-                        </li>
-                    {% endif %}
-                {% endfor %}
-            </ul>
         </div>
 
-        <!-- Info Section -->
-        <div class="order-2 md:order-none">
+        <!-- 2. Info Top (Desktop Row 1, Col 2) -->
+        <div class="product-info-top order-3 md:order-none flex flex-col justify-center">
             <h1 class="hidden md:block mt-0">{{ product.name }}</h1>
 
             {% if product.brand %}
@@ -79,13 +63,9 @@
                 </a>
             </p>
 
-            <p class="price text-[1.5rem] my-6">CHF {{ product.price_in_chf|floatformat:2 }}</p>
+            <p class="price text-[1.5rem] mt-6 mb-8">CHF {{ product.price_in_chf|floatformat:2 }}</p>
 
-            <div class="description mb-8 markdown-content">
-                {{ product.description|markdownify }}
-            </div>
-
-            <div class="bg-white border border-brand-border p-6 rounded-[2px]">
+            <div class="bg-white border border-brand-border p-6 rounded-[2px] mb-4">
                 {% if product.is_in_stock %}
                     <p class="mt-0 text-base">
                         <span class="text-brand-accent font-medium">{% translate "In Stock" %}</span> ({{ product.stock_quantity }} {% translate "available" %})
@@ -104,6 +84,31 @@
                 {% else %}
                     <p class="m-0 text-[#9a7b76] font-medium">{% translate "Out of Stock" %}</p>
                 {% endif %}
+            </div>
+        </div>
+
+        <!-- 3. Thumbnails (Desktop Row 2, Col 1) -->
+        <div class="order-2 md:order-none">
+            <ul id="thumbnail-carousel" class="thumbnails">
+                {% if product.main_photo %}
+                    <li class="thumbnail">
+                        <img src="{{ product.main_photo }}" alt="{% translate 'Thumbnail' %}">
+                    </li>
+                {% endif %}
+                {% for image in product.images.all %}
+                    {% if image.url != product.main_photo %}
+                        <li class="thumbnail">
+                            <img src="{{ image.url }}" alt="{% translate 'Thumbnail' %}">
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- 4. Info Bottom (Desktop Row 2, Col 2) -->
+        <div class="product-info-bottom order-4 md:order-none">
+            <div class="description mb-8 markdown-content">
+                {{ product.description|markdownify }}
             </div>
         </div>
     </div>

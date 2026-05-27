@@ -174,7 +174,7 @@
     @apply cursor-zoom-in;
   }
   .thumbnails {
-    @apply flex gap-4 mt-6 flex-wrap list-none p-0;
+    @apply flex gap-4 flex-wrap list-none p-0;
   }
   .thumbnail {
     @apply w-[100px] h-[100px] cursor-pointer border-2 border-transparent opacity-70 transition-all duration-200 rounded-[2px] overflow-hidden;
