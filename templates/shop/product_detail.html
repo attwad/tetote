@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block content %}
-    <div class="flex flex-col md:grid md:grid-cols-2 gap-4 md:gap-x-12 md:gap-y-6">
+    <div class="flex flex-col md:grid md:grid-cols-2 gap-4 md:gap-x-22 md:gap-y-6">
         <!-- Title for Mobile -->
         <h1 class="block md:hidden mb-4">{{ product.name }}</h1>
 
@@ -42,30 +42,11 @@
 
         <!-- 2. Info Top (Desktop Row 1, Col 2) -->
         <div class="product-info-top order-3 md:order-none flex flex-col justify-center">
-            <h1 class="hidden md:block mt-0">{{ product.name }}</h1>
+            <h1 class="hidden md:block mt-0 mb-2">{{ product.name }}</h1>
 
-            {% if product.brand %}
-                <p class="my-[0.1rem]">{% translate "Brand" %}: <a href="{% url 'shop:brand_detail' brand_slug=product.brand.slug %}" class="text-inherit underline underline-offset-[3px]">{{ product.brand.name }}</a></p>
-            {% endif %}
-            {% if product.glaze %}
-                <p class="my-[0.1rem]">{% translate "Glaze" %}: {{ product.glaze.name }}</p>
-            {% endif %}
-            {% if product.product_type %}
-                <p class="my-[0.1rem]">{% translate "Type" %}: {{ product.product_type.name }}</p>
-            {% endif %}
-            <p class="my-[0.1rem]">
-                <a href="{% url 'shop:care_instructions' %}" class="text-brand-muted underline underline-offset-[3px] hover:opacity-70 transition-opacity">
-                    {% translate "Care Instructions" %}
-                </a>
-                <span class="text-brand-muted mx-1">|</span>
-                <a href="{% url 'shop:product_characteristics' %}" class="text-brand-muted underline underline-offset-[3px] hover:opacity-70 transition-opacity">
-                    {% translate "Product Characteristics" %}
-                </a>
-            </p>
+            <p class="price text-[1.5rem] mb-6">CHF {{ product.price_in_chf|floatformat:2 }}</p>
 
-            <p class="price text-[1.5rem] mt-6 mb-8">CHF {{ product.price_in_chf|floatformat:2 }}</p>
-
-            <div class="bg-white border border-brand-border p-6 rounded-[2px] mb-4">
+            <div class="bg-white border border-brand-border p-3 rounded-[2px] mb-6">
                 {% if product.is_in_stock %}
                     <p class="mt-0 text-base">
                         <span class="text-brand-accent font-medium">{% translate "In Stock" %}</span> ({{ product.stock_quantity }} {% translate "available" %})
@@ -85,6 +66,25 @@
                     <p class="m-0 text-[#9a7b76] font-medium">{% translate "Out of Stock" %}</p>
                 {% endif %}
             </div>
+
+            {% if product.brand %}
+                <p class="my-[0.1rem]">{% translate "Brand" %}: <a href="{% url 'shop:brand_detail' brand_slug=product.brand.slug %}" class="text-inherit underline underline-offset-[3px]">{{ product.brand.name }}</a></p>
+            {% endif %}
+            {% if product.glaze %}
+                <p class="my-[0.1rem]">{% translate "Glaze" %}: {{ product.glaze.name }}</p>
+            {% endif %}
+            {% if product.product_type %}
+                <p class="my-[0.1rem]">{% translate "Type" %}: {{ product.product_type.name }}</p>
+            {% endif %}
+            <p class="my-[0.1rem]">
+                <a href="{% url 'shop:care_instructions' %}" class="text-brand-muted underline underline-offset-[3px] hover:opacity-70 transition-opacity">
+                    {% translate "Care Instructions" %}
+                </a>
+                <span class="text-brand-muted mx-1">|</span>
+                <a href="{% url 'shop:product_characteristics' %}" class="text-brand-muted underline underline-offset-[3px] hover:opacity-70 transition-opacity">
+                    {% translate "Product Characteristics" %}
+                </a>
+            </p>
         </div>
 
         <!-- 3. Thumbnails (Desktop Row 2, Col 1) -->

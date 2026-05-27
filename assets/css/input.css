@@ -13,6 +13,10 @@
 
   --font-serif: "Cormorant Garamond", serif;
 
+  --spacing-4.8: 1.2rem;
+  --spacing-22: 5.5rem;
+  --spacing-26: 6.5rem;
+
   --animate-slide-down: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   --animate-fade-out: fadeOut 0.4s ease-out forwards;
 
@@ -177,7 +181,7 @@
     @apply flex gap-4 flex-wrap list-none p-0;
   }
   .thumbnail {
-    @apply w-[100px] h-[100px] cursor-pointer border-2 border-transparent opacity-70 transition-all duration-200 rounded-[2px] overflow-hidden;
+    @apply w-[80px] h-[80px] cursor-pointer border-2 border-transparent opacity-70 transition-all duration-200 rounded-[2px] overflow-hidden;
   }
   .thumbnail img {
     @apply w-full h-full object-cover;
