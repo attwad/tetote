@@ -1,5 +1,7 @@
 from django.conf import settings
 import stripe
+import markdown
+from django.utils.html import strip_tags
 from django.views.generic import ListView, DetailView, View, TemplateView
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.http import JsonResponse
@@ -111,7 +113,7 @@ class ProductInfoView(View):
                 {
                     "price_id": p.stripe_price_id,
                     "name": p.name,
-                    "description": p.description,
+                    "description": strip_tags(markdown.markdown(p.description)),
                     "price": p.price_in_chf,
                     "image": p.main_photo,
                     "stock": p.stock_quantity,

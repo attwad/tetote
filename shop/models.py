@@ -12,7 +12,7 @@ class Brand(models.Model):
         _("Content Slug"),
         max_length=255,
         blank=True,
-        help_text=_("The slug for the static markdown page (e.g., brands/bizen)"),
+        help_text=_("The slug for the static markdown page (e.g., bizen)"),
     )
 
     class Meta:
@@ -25,6 +25,12 @@ class Brand(models.Model):
 
     def get_absolute_url(self):
         return reverse("shop:brand_detail", kwargs={"brand_slug": self.slug})
+
+    @property
+    def full_content_slug(self):
+        if self.content_slug:
+            return f"brands/{self.content_slug}"
+        return ""
 
 
 class Glaze(models.Model):

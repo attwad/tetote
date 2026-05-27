@@ -10,7 +10,7 @@ class BrandDetailViewTest(TestCase):
         self.brand = Brand.objects.create(
             name="Test Brand",
             slug="test-brand",
-            content_slug="brands/test-brand",
+            content_slug="test-brand",
         )
         # Create a dummy markdown file for testing
         templates_dir = settings.TEMPLATES[0]["DIRS"][0]

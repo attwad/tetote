@@ -375,6 +375,15 @@
   .markdown-content blockquote {
     @apply border-l-4 border-brand-accent pl-6 py-2 my-6 italic text-brand-muted bg-brand-bg/50;
   }
+  .markdown-content table {
+    @apply w-full border-collapse mb-8 text-[0.95rem];
+  }
+  .markdown-content th {
+    @apply border-b border-brand-border py-2 px-4 text-left font-normal text-brand-text;
+  }
+  .markdown-content td {
+    @apply border-b border-brand-border py-2 px-4 text-left font-normal text-brand-text;
+  }
 
   @media (max-width: 768px) {
     .toast-container {

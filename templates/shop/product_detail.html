@@ -1,8 +1,8 @@
 {% extends "base.html" %}
-{% load i18n %}{% load static %}
+{% load i18n %}{% load static %}{% load markdown_extras %}
 
 {% block title %}{{ product.name }} - Tetote{% endblock %}
-{% block meta_description %}{{ product.description|striptags|truncatechars:160 }}{% endblock %}
+{% block meta_description %}{{ product.description|markdownify|striptags|truncatechars:160 }}{% endblock %}
 
 {% block extra_head %}
 {% endblock %}
@@ -81,8 +81,8 @@
 
             <p class="price text-[1.5rem] my-6">CHF {{ product.price_in_chf|floatformat:2 }}</p>
 
-            <div class="description mb-8">
-                {{ product.description|linebreaks }}
+            <div class="description mb-8 markdown-content">
+                {{ product.description|markdownify }}
             </div>
 
             <div class="bg-white border border-brand-border p-6 rounded-[2px]">

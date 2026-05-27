@@ -8,7 +8,7 @@
 <article class="brand-page">
     <div class="max-w-[800px] mx-auto markdown-content">
         {% if brand.content_slug %}
-            {% include_content brand.content_slug %}
+            {% include_content brand.full_content_slug %}
         {% else %}
             <h1>{{ brand.name }}</h1>
             <p>{% translate "No description available for this brand." %}</p>
