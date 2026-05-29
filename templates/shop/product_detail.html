@@ -64,7 +64,12 @@
                     </a>
                 </div>
             {% else %}
-                <p class="mb-8 text-[#9a7b76] font-medium">{% translate "Out of Stock" %}</p>
+                <p class="mb-3 text-[#9a7b76] font-medium">{% translate "Out of Stock" %}</p>
+                <div class="mb-12">
+                    <a href="{% url 'shop:contact' %}" class="text-brand-muted underline underline-offset-[3px] hover:opacity-70 transition-opacity">
+                        {% translate "Contact us to request more" %}
+                    </a>
+                </div>
             {% endif %}
 
             {% if product.brand %}
