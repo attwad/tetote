@@ -44,28 +44,28 @@
         <div class="product-info-top order-3 md:order-none flex flex-col justify-center">
             <h1 class="hidden md:block mt-0 mb-2">{{ product.name }}</h1>
 
-            <p class="price text-[1.5rem] mb-6">CHF {{ product.price_in_chf|floatformat:2 }}</p>
+            <p class="price text-[1.5rem] mb-1">CHF {{ product.price_in_chf|floatformat:2 }}</p>
 
-            <div class="bg-white border border-brand-border p-3 rounded-[2px] mb-6">
-                {% if product.is_in_stock %}
-                    <p class="mt-0 text-base">
-                        <span class="text-brand-accent font-medium">{% translate "In Stock" %}</span> ({{ product.stock_quantity }} {% translate "available" %})
-                    </p>
-                    <div class="flex gap-4 items-center flex-wrap">
-                        <div class="flex gap-4 items-center">
-                            <input type="number" id="qty" value="1" min="1" max="{{ product.stock_quantity }}" class="w-[60px] p-2 border border-brand-border">
-                            <button class="btn" onclick="addToCart('{{ product.stripe_price_id }}', parseInt(document.getElementById('qty').value), {{ product.stock_quantity }})">
-                                {% translate "Add to Cart" %}
-                            </button>
-                        </div>
-                        <a href="{% url 'shop:cart' %}" class="text-brand-muted text-[0.9rem] underline underline-offset-2 ml-4 hover:opacity-70 transition-opacity">
-                            {% translate "View Cart" %}
-                        </a>
-                    </div>
-                {% else %}
-                    <p class="m-0 text-[#9a7b76] font-medium">{% translate "Out of Stock" %}</p>
-                {% endif %}
-            </div>
+            {% if product.is_in_stock %}
+                <p class="mt-0 mb-3 text-base">
+                    <span class="text-brand-accent font-medium">{% translate "In Stock" %}</span> ({{ product.stock_quantity }} {% translate "available" %})
+                </p>
+
+                <div class="flex gap-4 items-center mb-4">
+                    <input type="number" id="qty" value="1" min="1" max="{{ product.stock_quantity }}" class="w-[60px] p-2 border border-brand-border h-[46px] m-0 box-border">
+                    <button class="h-[46px] px-8 border border-brand-text text-brand-text no-underline hover:bg-brand-text hover:text-white transition-colors duration-300 uppercase tracking-widest font-medium text-sm cursor-pointer m-0 box-border" onclick="addToCart('{{ product.stripe_price_id }}', parseInt(document.getElementById('qty').value), {{ product.stock_quantity }})">
+                        {% translate "Add to Cart" %}
+                    </button>
+                </div>
+
+                <div class="mb-12">
+                    <a href="{% url 'shop:cart' %}" class="text-brand-muted text-[0.9rem] underline underline-offset-2 hover:opacity-70 transition-opacity">
+                        {% translate "View Cart" %}
+                    </a>
+                </div>
+            {% else %}
+                <p class="mb-8 text-[#9a7b76] font-medium">{% translate "Out of Stock" %}</p>
+            {% endif %}
 
             {% if product.brand %}
                 <p class="my-[0.1rem]">{% translate "Brand" %}: <a href="{% url 'shop:brand_detail' brand_slug=product.brand.slug %}" class="text-inherit underline underline-offset-[3px]">{{ product.brand.name }}</a></p>
