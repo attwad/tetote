@@ -178,10 +178,10 @@
     @apply cursor-zoom-in;
   }
   .thumbnails {
-    @apply flex gap-4 flex-wrap list-none p-0;
+    @apply list-none p-0 m-0;
   }
   .thumbnail {
-    @apply w-[80px] h-[80px] cursor-pointer border-2 border-transparent opacity-70 transition-all duration-200 rounded-[2px] overflow-hidden;
+    @apply cursor-pointer border-2 border-transparent opacity-70 transition-all duration-200 rounded-[2px] overflow-hidden aspect-square;
   }
   .thumbnail img {
     @apply w-full h-full object-cover;

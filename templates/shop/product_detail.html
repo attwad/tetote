@@ -88,21 +88,25 @@
         </div>
 
         <!-- 3. Thumbnails (Desktop Row 2, Col 1) -->
-        <div class="order-2 md:order-none">
-            <ul id="thumbnail-carousel" class="thumbnails">
-                {% if product.main_photo %}
-                    <li class="thumbnail">
-                        <img src="{{ product.main_photo }}" alt="{% translate 'Thumbnail' %}">
-                    </li>
-                {% endif %}
-                {% for image in product.images.all %}
-                    {% if image.url != product.main_photo %}
-                        <li class="thumbnail">
-                            <img src="{{ image.url }}" alt="{% translate 'Thumbnail' %}">
-                        </li>
-                    {% endif %}
-                {% endfor %}
-            </ul>
+        <div class="order-2 md:order-none overflow-hidden">
+            <section id="thumbnail-carousel" class="splide" aria-label="Product Thumbnails">
+                <div class="splide__track">
+                    <ul class="splide__list thumbnails">
+                        {% if product.main_photo %}
+                            <li class="splide__slide thumbnail">
+                                <img src="{{ product.main_photo }}" alt="{% translate 'Thumbnail' %}">
+                            </li>
+                        {% endif %}
+                        {% for image in product.images.all %}
+                            {% if image.url != product.main_photo %}
+                                <li class="splide__slide thumbnail">
+                                    <img src="{{ image.url }}" alt="{% translate 'Thumbnail' %}">
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            </section>
         </div>
 
         <!-- 4. Info Bottom (Desktop Row 2, Col 2) -->

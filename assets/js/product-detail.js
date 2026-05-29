@@ -14,25 +14,26 @@ export function initProductGallery() {
         lazyLoad: 'nearby',
     });
 
-    const thumbnails = document.querySelectorAll('.thumbnail');
-    let currentThumbnail = thumbnails[0];
-
-    main.on('mounted move', () => {
-        const thumbnail = thumbnails[main.index];
-        if (thumbnail) {
-            if (currentThumbnail) currentThumbnail.classList.remove('is-active');
-            thumbnail.classList.add('is-active');
-            currentThumbnail = thumbnail;
-        }
+    const thumbnails = new Splide('#thumbnail-carousel', {
+        perPage: 5,
+        gap: '1rem',
+        isNavigation: true,
+        pagination: true,
+        arrows: false,
+        focus: 'center',
+        breakpoints: {
+            768: {
+                perPage: 4,
+            },
+            480: {
+                perPage: 3,
+            },
+        },
     });
 
-    thumbnails.forEach((thumbnail, index) => {
-        thumbnail.addEventListener('click', () => {
-            main.go(index);
-        });
-    });
-
+    main.sync(thumbnails);
     main.mount();
+    thumbnails.mount();
 
     // Initialize PhotoSwipe
     const lightbox = new PhotoSwipeLightbox({
