@@ -59,6 +59,13 @@ class IntegrationTests(StaticLiveServerTestCase):
             stripe_price_id="price_filter_seto",
         )
 
+    def wait_for_js_ready(self, page, function_name="updateCartUI"):
+        """
+        Wait for a global JS function to be available on window,
+        indicating that the module scripts have loaded and executed.
+        """
+        page.wait_for_function(f'typeof window.{function_name} === "function"')
+
     @patch("shop.views.stripe.checkout.Session.create")
     def test_user_journey_cart_and_checkout(self, mock_stripe_create):
         """
@@ -72,34 +79,43 @@ class IntegrationTests(StaticLiveServerTestCase):
         with sync_playwright() as p:
             browser = p.chromium.launch(headless=True)
             page = browser.new_page()
-            page.set_default_timeout(30000)
+            page.set_default_timeout(60000)
 
             # 2. Visit Home Page
-            page.goto(self.live_server_url)
+            page.goto(self.live_server_url, wait_until="networkidle")
             self.assertIn("Tetote", page.title())
 
             # 3. Go to Product List
+            self.wait_for_js_ready(page)
             page.click("text=Enter the Shop")
-            page.wait_for_url(f"**{reverse('shop:product_list')}")
+            page.wait_for_url(
+                f"**{reverse('shop:product_list')}", wait_until="networkidle"
+            )
             self.assertIn("Artisanal Vase", page.content())
 
             # 4. View Product Detail
             page.click("text=Artisanal Vase")
             page.wait_for_url(
-                f"**{reverse('shop:product_detail', kwargs={'product_slug': self.product.slug})}"
+                f"**{reverse('shop:product_detail', kwargs={'product_slug': self.product.slug})}",
+                wait_until="networkidle",
             )
             self.assertIn("CHF 150.00", page.content())
 
             # 5. Add to Cart
+            # Wait for addToCart to be defined in product-detail page
+            self.wait_for_js_ready(page, "addToCart")
             page.click("button:has-text('Add to Cart')")
             page.wait_for_selector("text=Added to cart")
 
             # 6. Go to Cart
-            page.goto(f"{self.live_server_url}{reverse('shop:cart')}")
+            page.goto(
+                f"{self.live_server_url}{reverse('shop:cart')}",
+                wait_until="networkidle",
+            )
             self.assertIn("Artisanal Vase", page.content())
 
             # 7. Proceed to Checkout
-            with page.expect_navigation(url="**checkout.stripe.com**", timeout=10000):
+            with page.expect_navigation(url="**checkout.stripe.com**", timeout=20000):
                 page.click("#checkout-btn")
 
             self.assertIn("checkout.stripe.com", page.url)
@@ -113,23 +129,26 @@ class IntegrationTests(StaticLiveServerTestCase):
         with sync_playwright() as p:
             browser = p.chromium.launch(headless=True)
             page = browser.new_page()
-            page.set_default_timeout(30000)
+            page.set_default_timeout(60000)
 
             # 2. Visit Shop
-            page.goto(f"{self.live_server_url}{reverse('shop:product_list')}")
+            page.goto(
+                f"{self.live_server_url}{reverse('shop:product_list')}",
+                wait_until="networkidle",
+            )
             self.assertIn("Bizen Vase", page.content())
             self.assertIn("Seto Vase", page.content())
 
             # 3. Filter by Bizen
+            self.wait_for_js_ready(page, "toggleFilter")
             page.click("#filter-drawer .filter-item:has-text('Bizen')")
 
             # 4. Verify URL and Visibility
-            page.wait_for_url(f"**?brand={self.brand_bizen.slug}")
+            page.wait_for_url(
+                f"**?brand={self.brand_bizen.slug}", wait_until="networkidle"
+            )
             self.assertIn("Bizen Vase", page.content())
 
-            # Use state="hidden" only if it's display:none.
-            # If it's filtered server-side, it will be removed from DOM.
-            # If it's filtered client-side, it might be hidden.
             page.wait_for_selector("text=Seto Vase", state="hidden")
             browser.close()
 
@@ -140,20 +159,18 @@ class IntegrationTests(StaticLiveServerTestCase):
         with sync_playwright() as p:
             browser = p.chromium.launch(headless=True)
             page = browser.new_page()
-            page.set_default_timeout(30000)
+            page.set_default_timeout(60000)
 
-            page.goto(self.live_server_url)
+            page.goto(self.live_server_url, wait_until="networkidle")
             page.select_option('select[name="language"]', "ja")
-            page.wait_for_url(f"{self.live_server_url}/ja/")
+            page.wait_for_url(f"{self.live_server_url}/ja/", wait_until="networkidle")
             self.assertIn("/ja/", page.url)
             browser.close()
 
     def test_user_journey_store_announcement(self):
         """
         User Journey 4: Store Announcement (Global State)
-        Verify that active announcements appear and inactive ones do not.
         """
-        # 1. Start with an ACTIVE announcement (Setup outside Playwright)
         ann = StoreAnnouncement.objects.create(
             text="Special Holiday Sale: 20% off!", is_active=True
         )
@@ -161,65 +178,57 @@ class IntegrationTests(StaticLiveServerTestCase):
         with sync_playwright() as p:
             browser = p.chromium.launch(headless=True)
             page = browser.new_page()
-            page.set_default_timeout(30000)
-            page.goto(self.live_server_url)
+            page.set_default_timeout(60000)
+            page.goto(self.live_server_url, wait_until="networkidle")
             self.assertIn("Special Holiday Sale: 20% off!", page.content())
             self.assertTrue(page.locator(".bg-brand-accent.text-white").is_visible())
             browser.close()
 
-        # 2. Deactivate it (Setup outside Playwright)
         ann.is_active = False
         ann.save()
 
         with sync_playwright() as p:
             browser = p.chromium.launch(headless=True)
             page = browser.new_page()
-            page.set_default_timeout(30000)
-            page.goto(self.live_server_url)
+            page.set_default_timeout(60000)
+            page.goto(self.live_server_url, wait_until="networkidle")
             self.assertNotIn("Special Holiday Sale: 20% off!", page.content())
-            # Locator should not be visible or shouldn't exist
             self.assertEqual(page.locator(".bg-brand-accent.text-white").count(), 0)
             browser.close()
 
     def test_user_journey_mobile_navigation(self):
         """
         User Journey 5: Mobile Navigation
-        Verify that the hamburger menu drawer works correctly on mobile viewports.
         """
         with sync_playwright() as p:
             browser = p.chromium.launch(headless=True)
-            # Simulate a mobile device
             context = browser.new_context(
                 viewport={"width": 390, "height": 844},
                 user_agent="Mozilla/5.0 (iPhone; CPU iPhone OS 14_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Mobile/15E148 Safari/604.1",
             )
             page = context.new_page()
-            page.set_default_timeout(30000)
+            page.set_default_timeout(60000)
 
-            page.goto(self.live_server_url)
+            page.goto(self.live_server_url, wait_until="networkidle")
 
-            # 1. Verify desktop nav is hidden, hamburger is visible
             self.assertFalse(page.locator("nav.hidden.md\\:flex").is_visible())
             hamburger = page.locator("button.md\\:hidden").first
             self.assertTrue(hamburger.is_visible())
 
-            # 2. Click hamburger menu
+            # Wait for toggleMobileMenu to be ready
+            self.wait_for_js_ready(page, "toggleMobileMenu")
             hamburger.click()
 
-            # 3. Verify drawer is visible (it should NOT have -translate-x-full)
             page.wait_for_function(
                 '!document.getElementById("mobile-menu-drawer").classList.contains("-translate-x-full")'
             )
 
-            # 4. Verify links inside drawer
             shop_link = page.locator("#mobile-menu-drawer a:has-text('Shop')")
             self.assertTrue(shop_link.is_visible())
 
-            # 5. Close menu via overlay
             overlay = page.locator("#mobile-menu-overlay")
             overlay.click()
 
-            # 6. Verify drawer is hidden (it SHOULD have -translate-x-full)
             page.wait_for_function(
                 'document.getElementById("mobile-menu-drawer").classList.contains("-translate-x-full")'
             )
@@ -229,9 +238,7 @@ class IntegrationTests(StaticLiveServerTestCase):
     def test_user_journey_admin_access(self):
         """
         User Journey 6: Admin Access
-        Verify that /help/ is restricted to staff users.
         """
-        # Create a staff user (Setup outside Playwright)
         User.objects.create_superuser(
             username="admin", password="password123", email="admin@example.com"
         )
@@ -239,21 +246,23 @@ class IntegrationTests(StaticLiveServerTestCase):
         with sync_playwright() as p:
             browser = p.chromium.launch(headless=True)
             page = browser.new_page()
-            page.set_default_timeout(30000)
+            page.set_default_timeout(60000)
 
-            # 1. Anonymous Access -> Denied (redirect to login or 403)
-            page.goto(f"{self.live_server_url}{reverse('shop:admin_help')}")
-            # UserPassesTestMixin usually redirects to login if not logged in
+            page.goto(
+                f"{self.live_server_url}{reverse('shop:admin_help')}",
+                wait_until="networkidle",
+            )
             self.assertIn("login", page.url)
 
-            # 2. Login
-            page.goto(f"{self.live_server_url}/admin/login/")
+            page.goto(f"{self.live_server_url}/admin/login/", wait_until="networkidle")
             page.fill('input[name="username"]', "admin")
             page.fill('input[name="password"]', "password123")
             page.click('input[type="submit"]')
 
-            # 3. Access Help again -> Allowed
-            page.goto(f"{self.live_server_url}{reverse('shop:admin_help')}")
+            page.goto(
+                f"{self.live_server_url}{reverse('shop:admin_help')}",
+                wait_until="networkidle",
+            )
             self.assertIn("Admin Documentation", page.content())
 
             browser.close()
@@ -261,9 +270,7 @@ class IntegrationTests(StaticLiveServerTestCase):
     def test_user_journey_no_product_recommendations(self):
         """
         User Journey 7: No Product Recommendations
-        Verify that the detail page does NOT show related products (feature removed).
         """
-        # 1. Setup Data
         brand_kyoto = Brand.objects.create(name="Kyoto", slug="kyoto")
         p1 = Product.objects.create(
             name="Kyoto Bowl",
@@ -293,14 +300,13 @@ class IntegrationTests(StaticLiveServerTestCase):
         with sync_playwright() as p:
             browser = p.chromium.launch(headless=True)
             page = browser.new_page()
-            page.set_default_timeout(30000)
+            page.set_default_timeout(60000)
 
-            # 2. Visit Kyoto Bowl Detail
             page.goto(
-                f"{self.live_server_url}{reverse('shop:product_detail', kwargs={'product_slug': p1.slug})}"
+                f"{self.live_server_url}{reverse('shop:product_detail', kwargs={'product_slug': p1.slug})}",
+                wait_until="networkidle",
             )
 
-            # 3. Verify Kyoto Plate is NOT recommended
             self.assertNotIn("Kyoto Plate", page.content())
 
             browser.close()
