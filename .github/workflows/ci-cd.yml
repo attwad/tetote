@@ -27,7 +27,7 @@ permissions:
 jobs:
   test:
     name: Run Tests & Linters
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     env:
       SECRET_KEY: "dummy-secret-key-for-tests"
       DEBUG: "False"
@@ -44,7 +44,7 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: "25"
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install Node dependencies
         run: npm ci
@@ -64,7 +64,7 @@ jobs:
         run: uv run playwright install chromium
 
       - name: Install Playwright Dependencies
-        run: sudo $(uv run which playwright) install-deps chromium
+        run: npx playwright install-deps chromium
 
       - name: Collect Static Files
         run: uv run python manage.py collectstatic --noinput
@@ -77,9 +77,6 @@ jobs:
 
       - name: Run Frontend Tests
         run: npm test
-
-      - uses: atos-actions/clean-self-hosted-runner@v1
-        if: ${{ always() }}
 
   deploy-dev:
     name: Deploy to Dev

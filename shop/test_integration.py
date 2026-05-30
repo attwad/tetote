@@ -72,6 +72,7 @@ class IntegrationTests(StaticLiveServerTestCase):
         with sync_playwright() as p:
             browser = p.chromium.launch(headless=True)
             page = browser.new_page()
+            page.set_default_timeout(30000)
 
             # 2. Visit Home Page
             page.goto(self.live_server_url)
@@ -112,6 +113,7 @@ class IntegrationTests(StaticLiveServerTestCase):
         with sync_playwright() as p:
             browser = p.chromium.launch(headless=True)
             page = browser.new_page()
+            page.set_default_timeout(30000)
 
             # 2. Visit Shop
             page.goto(f"{self.live_server_url}{reverse('shop:product_list')}")
@@ -138,6 +140,7 @@ class IntegrationTests(StaticLiveServerTestCase):
         with sync_playwright() as p:
             browser = p.chromium.launch(headless=True)
             page = browser.new_page()
+            page.set_default_timeout(30000)
 
             page.goto(self.live_server_url)
             page.select_option('select[name="language"]', "ja")
@@ -158,6 +161,7 @@ class IntegrationTests(StaticLiveServerTestCase):
         with sync_playwright() as p:
             browser = p.chromium.launch(headless=True)
             page = browser.new_page()
+            page.set_default_timeout(30000)
             page.goto(self.live_server_url)
             self.assertIn("Special Holiday Sale: 20% off!", page.content())
             self.assertTrue(page.locator(".bg-brand-accent.text-white").is_visible())
@@ -170,6 +174,7 @@ class IntegrationTests(StaticLiveServerTestCase):
         with sync_playwright() as p:
             browser = p.chromium.launch(headless=True)
             page = browser.new_page()
+            page.set_default_timeout(30000)
             page.goto(self.live_server_url)
             self.assertNotIn("Special Holiday Sale: 20% off!", page.content())
             # Locator should not be visible or shouldn't exist
@@ -189,6 +194,7 @@ class IntegrationTests(StaticLiveServerTestCase):
                 user_agent="Mozilla/5.0 (iPhone; CPU iPhone OS 14_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Mobile/15E148 Safari/604.1",
             )
             page = context.new_page()
+            page.set_default_timeout(30000)
 
             page.goto(self.live_server_url)
 
@@ -233,6 +239,7 @@ class IntegrationTests(StaticLiveServerTestCase):
         with sync_playwright() as p:
             browser = p.chromium.launch(headless=True)
             page = browser.new_page()
+            page.set_default_timeout(30000)
 
             # 1. Anonymous Access -> Denied (redirect to login or 403)
             page.goto(f"{self.live_server_url}{reverse('shop:admin_help')}")
@@ -286,6 +293,7 @@ class IntegrationTests(StaticLiveServerTestCase):
         with sync_playwright() as p:
             browser = p.chromium.launch(headless=True)
             page = browser.new_page()
+            page.set_default_timeout(30000)
 
             # 2. Visit Kyoto Bowl Detail
             page.goto(
