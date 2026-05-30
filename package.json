@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "vitest run",
+    "test": "uv run python manage.py test && vitest run",
+    "test:unit": "uv run python manage.py test && vitest run",
+    "test:integration": "npm run build && uv run python manage.py test shop.playwright_tests",
     "build:css": "npx tailwindcss -i ./assets/css/input.css -o ./static/css/styles.css",
     "watch:css": "npx tailwindcss -i ./assets/css/input.css -o ./static/css/styles.css --watch",
     "build:js": "esbuild assets/js/main.js assets/js/product-detail.js assets/js/home.js --bundle --minify --outdir=static/js/bundles --format=esm --splitting",

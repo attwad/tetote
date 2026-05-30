@@ -50,7 +50,8 @@ Tetote is a high-end, minimalist e-commerce platform and digital showroom dedica
 - **Build All Assets:** `npm run build` (Builds both CSS and JS)
 - **Watch CSS:** `npm run watch:css` (Recommended during CSS development)
 - **Watch JS:** `npm run watch:js` (Recommended during JS development)
-- **Run All Tests:** `uv run python manage.py test && npm test`
+- **Run Unit Tests:** `npm run test:unit` (Fast, no browser)
+- **Run Integration Tests:** `npm run test:integration` (Playwright, headless browser)
 - **Formatting:** `uv run ruff format .`
 
 ## 🔒 Security Note

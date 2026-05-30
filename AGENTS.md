@@ -33,8 +33,8 @@ Welcome to Tetote. This document provides critical procedural and architectural 
     - Both share the same authentication system and user accounts.
 
 ## 🧪 Testing Workflow
-1. **Backend:** `uv run python manage.py test`
-2. **Frontend:** `npm test`
+1. **Unit Tests:** `npm run test:unit` (Backend + Frontend unit tests)
+2. **Integration Tests:** `npm run test:integration` (Playwright E2E journeys)
 3. **Surgical Verification:** If you modify sync logic, verify that manual local data (like stock) is preserved after a sync.
 4. **Wagtail Verification:** When adding blog features, ensure that `BlogIndexPage` and `BlogPage` are correctly testable via `WagtailPageTestCase`.
 

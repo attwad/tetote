@@ -72,11 +72,11 @@ jobs:
       - name: Run Ruff Check
         run: uv run ruff check .
 
-      - name: Run Django Tests
-        run: uv run python manage.py test
+      - name: Run Unit Tests
+        run: npm run test:unit
 
-      - name: Run Frontend Tests
-        run: npm test
+      - name: Run Integration Tests
+        run: npm run test:integration
 
   deploy-dev:
     name: Deploy to Dev
