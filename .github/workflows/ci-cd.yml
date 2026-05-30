@@ -63,6 +63,9 @@ jobs:
       - name: Install Playwright Browsers
         run: uv run playwright install chromium
 
+      - name: Install Playwright Dependencies
+        run: sudo $(uv run which playwright) install-deps chromium
+
       - name: Collect Static Files
         run: uv run python manage.py collectstatic --noinput
 
