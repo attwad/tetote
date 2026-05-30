@@ -43,3 +43,5 @@ document.addEventListener('DOMContentLoaded', () => {
 window.addEventListener('pageshow', (event) => {
     updateCartUI();
 });
+
+window.JS_READY = true;

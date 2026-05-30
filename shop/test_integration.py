@@ -59,12 +59,12 @@ class IntegrationTests(StaticLiveServerTestCase):
             stripe_price_id="price_filter_seto",
         )
 
-    def wait_for_js_ready(self, page, function_name="updateCartUI"):
+    def wait_for_js_ready(self, page):
         """
-        Wait for a global JS function to be available on window,
-        indicating that the module scripts have loaded and executed.
+        Wait for window.JS_READY to be true, indicating that the module scripts
+        have loaded and executed.
         """
-        page.wait_for_function(f'typeof window.{function_name} === "function"')
+        page.wait_for_function("window.JS_READY === true")
 
     @patch("shop.views.stripe.checkout.Session.create")
     def test_user_journey_cart_and_checkout(self, mock_stripe_create):
@@ -83,14 +83,15 @@ class IntegrationTests(StaticLiveServerTestCase):
 
             # 2. Visit Home Page
             page.goto(self.live_server_url, wait_until="networkidle")
+            self.wait_for_js_ready(page)
             self.assertIn("Tetote", page.title())
 
             # 3. Go to Product List
-            self.wait_for_js_ready(page)
             page.click("text=Enter the Shop")
             page.wait_for_url(
                 f"**{reverse('shop:product_list')}", wait_until="networkidle"
             )
+            self.wait_for_js_ready(page)
             self.assertIn("Artisanal Vase", page.content())
 
             # 4. View Product Detail
@@ -99,14 +100,14 @@ class IntegrationTests(StaticLiveServerTestCase):
                 f"**{reverse('shop:product_detail', kwargs={'product_slug': self.product.slug})}",
                 wait_until="networkidle",
             )
+            self.wait_for_js_ready(page)
             self.assertIn("CHF 150.00", page.content())
 
             # 5. Add to Cart
-            # Wait for addToCart to be defined in product-detail page
-            self.wait_for_js_ready(page, "addToCart")
+            # The product-detail script also needs to be ready
+            page.wait_for_function('typeof window.addToCart === "function"')
             page.click("button:has-text('Add to Cart')")
             page.wait_for_selector("text=Added to cart")
-
             # 6. Go to Cart
             page.goto(
                 f"{self.live_server_url}{reverse('shop:cart')}",
@@ -136,17 +137,18 @@ class IntegrationTests(StaticLiveServerTestCase):
                 f"{self.live_server_url}{reverse('shop:product_list')}",
                 wait_until="networkidle",
             )
+            self.wait_for_js_ready(page)
             self.assertIn("Bizen Vase", page.content())
             self.assertIn("Seto Vase", page.content())
 
             # 3. Filter by Bizen
-            self.wait_for_js_ready(page, "toggleFilter")
             page.click("#filter-drawer .filter-item:has-text('Bizen')")
 
             # 4. Verify URL and Visibility
             page.wait_for_url(
                 f"**?brand={self.brand_bizen.slug}", wait_until="networkidle"
             )
+            self.wait_for_js_ready(page)
             self.assertIn("Bizen Vase", page.content())
 
             page.wait_for_selector("text=Seto Vase", state="hidden")
@@ -162,6 +164,7 @@ class IntegrationTests(StaticLiveServerTestCase):
             page.set_default_timeout(60000)
 
             page.goto(self.live_server_url, wait_until="networkidle")
+            self.wait_for_js_ready(page)
             page.select_option('select[name="language"]', "ja")
             page.wait_for_url(f"{self.live_server_url}/ja/", wait_until="networkidle")
             self.assertIn("/ja/", page.url)
@@ -180,6 +183,7 @@ class IntegrationTests(StaticLiveServerTestCase):
             page = browser.new_page()
             page.set_default_timeout(60000)
             page.goto(self.live_server_url, wait_until="networkidle")
+            self.wait_for_js_ready(page)
             self.assertIn("Special Holiday Sale: 20% off!", page.content())
             self.assertTrue(page.locator(".bg-brand-accent.text-white").is_visible())
             browser.close()
@@ -192,6 +196,7 @@ class IntegrationTests(StaticLiveServerTestCase):
             page = browser.new_page()
             page.set_default_timeout(60000)
             page.goto(self.live_server_url, wait_until="networkidle")
+            self.wait_for_js_ready(page)
             self.assertNotIn("Special Holiday Sale: 20% off!", page.content())
             self.assertEqual(page.locator(".bg-brand-accent.text-white").count(), 0)
             browser.close()
@@ -210,13 +215,13 @@ class IntegrationTests(StaticLiveServerTestCase):
             page.set_default_timeout(60000)
 
             page.goto(self.live_server_url, wait_until="networkidle")
+            self.wait_for_js_ready(page)
 
             self.assertFalse(page.locator("nav.hidden.md\\:flex").is_visible())
             hamburger = page.locator("button.md\\:hidden").first
             self.assertTrue(hamburger.is_visible())
 
-            # Wait for toggleMobileMenu to be ready
-            self.wait_for_js_ready(page, "toggleMobileMenu")
+            # Wait for JS to be fully loaded
             hamburger.click()
 
             page.wait_for_function(
@@ -263,6 +268,7 @@ class IntegrationTests(StaticLiveServerTestCase):
                 f"{self.live_server_url}{reverse('shop:admin_help')}",
                 wait_until="networkidle",
             )
+            self.wait_for_js_ready(page)
             self.assertIn("Admin Documentation", page.content())
 
             browser.close()
@@ -306,6 +312,7 @@ class IntegrationTests(StaticLiveServerTestCase):
                 f"{self.live_server_url}{reverse('shop:product_detail', kwargs={'product_slug': p1.slug})}",
                 wait_until="networkidle",
             )
+            self.wait_for_js_ready(page)
 
             self.assertNotIn("Kyoto Plate", page.content())
 
