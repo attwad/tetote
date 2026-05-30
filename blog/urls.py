@@ -1,3 +1,9 @@
+from django.urls import path
+from . import views
+
+app_name = "blog"
+
 urlpatterns = [
-    # Add custom non-wagtail blog views here in the future
+    path("", views.BlogListView.as_view(), name="index"),
+    path("<slug:slug>/", views.BlogDetailView.as_view(), name="detail"),
 ]

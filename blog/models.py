@@ -6,19 +6,8 @@ from wagtail.admin.panels import FieldPanel
 from wagtail.images.blocks import ImageChooserBlock
 
 
-class BlogIndexPage(Page):
-    content_panels = Page.content_panels
-
-    def get_context(self, request):
-        context = super().get_context(request)
-        blogpages = self.get_children().live().order_by("-first_published_at")
-        context["blogpages"] = blogpages
-        return context
-
-    subpage_types = ["blog.BlogPage"]
-
-
 class BlogPage(Page):
+    template = "blog/blog_detail.html"
     date = models.DateField("Post date")
     body = StreamField(
         [
@@ -39,5 +28,6 @@ class BlogPage(Page):
         FieldPanel("body"),
     ]
 
-    parent_page_types = ["blog.BlogIndexPage"]
+    # No parent restriction so it can be placed anywhere,
+    # but we'll query all BlogPage objects in our Django view.
     subpage_types = []

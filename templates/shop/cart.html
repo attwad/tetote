@@ -36,8 +36,10 @@
     </div>
 
     <div id="empty-cart" class="hidden text-center py-12">
-        <p>{% translate "Your cart is empty." %}</p>
-        <a href="{% url 'shop:product_list' %}" class="btn">{% translate "Go Shopping" %}</a>
+        <p class="mb-8 text-lg">{% translate "Your cart is empty." %}</p>
+        <a href="{% url 'shop:product_list' %}" class="inline-block px-12 py-4 border border-brand-text text-brand-text no-underline hover:bg-brand-text hover:text-white transition-colors duration-300 uppercase tracking-widest font-medium">
+            {% translate "Go Shopping" %}
+        </a>
     </div>
 {% endblock %}
 
