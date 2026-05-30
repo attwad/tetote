@@ -60,7 +60,7 @@
     @apply -translate-y-full;
   }
   .site-header.scrolled {
-    @apply border-brand-border shadow-sm;
+    @apply border-brand-border;
   }
 
   .btn {
