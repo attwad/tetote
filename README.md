@@ -27,6 +27,7 @@ Tetote is a high-end, minimalist e-commerce platform and digital showroom dedica
 - **Payments:** Stripe (Checkout Sessions & Webhooks)
 - **Testing:**
     - **Django Test Suite** (including `WagtailPageTestCase`) for business logic and integrations.
+    - **Playwright Integration Tests** for E2E user journeys (Chrome headless).
     - **Vitest & JSDOM** for isolated frontend unit testing.
 - **Package Management:** `uv` (Python), `npm` (JS)
 

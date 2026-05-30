@@ -9,7 +9,8 @@
     "watch:css": "npx tailwindcss -i ./assets/css/input.css -o ./static/css/styles.css --watch",
     "build:js": "esbuild assets/js/main.js assets/js/product-detail.js assets/js/home.js --bundle --minify --outdir=static/js/bundles --format=esm --splitting",
     "watch:js": "esbuild assets/js/main.js assets/js/product-detail.js assets/js/home.js --bundle --sourcemap --outdir=static/js/bundles --format=esm --splitting --watch",
-    "build": "npm run build:css && npm run build:js"
+    "build": "npm run build:css && npm run build:js",
+    "postinstall": "playwright install chromium"
   },
   "keywords": [],
   "author": "",
