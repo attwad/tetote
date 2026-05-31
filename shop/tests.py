@@ -188,26 +188,28 @@ class TranslationTests(TestCase):
 
 class ShopViewTests(TestCase):
     def setUp(self):
-        self.brand = Brand.objects.create(name="Bizen", slug="bizen")
-        self.product = Product.objects.create(
-            stripe_product_id="prod_1",
-            stripe_price_id="price_1",
-            name="Brand Product",
-            slug="brand-product",
-            price=1000,
-            stock_quantity=5,
-            brand=self.brand,
-            public=True,
-        )
-        self.unbranded_product = Product.objects.create(
-            stripe_product_id="prod_2",
-            stripe_price_id="price_2",
-            name="Unbranded Product",
-            slug="unbranded-product",
-            price=2000,
-            stock_quantity=2,
-            public=True,
-        )
+        self.client.cookies.clear()
+        with translation.override("en"):
+            self.brand = Brand.objects.create(name="Bizen", slug="bizen")
+            self.product = Product.objects.create(
+                stripe_product_id="prod_1",
+                stripe_price_id="price_1",
+                name="Brand Product",
+                slug="brand-product",
+                price=1000,
+                stock_quantity=5,
+                brand=self.brand,
+                public=True,
+            )
+            self.unbranded_product = Product.objects.create(
+                stripe_product_id="prod_2",
+                stripe_price_id="price_2",
+                name="Unbranded Product",
+                slug="unbranded-product",
+                price=2000,
+                stock_quantity=2,
+                public=True,
+            )
 
     def test_product_list_view(self):
         url = reverse("shop:product_list")
@@ -217,30 +219,36 @@ class ShopViewTests(TestCase):
         self.assertContains(response, "Unbranded Product")
 
     def test_product_detail_view(self):
-        self.product.description = "Main description"
-        self.product.details = "Extra details"
-        self.product.save()
+        with translation.override("en"):
+            self.product.description = "Main description"
+            self.product.details = "Extra details"
+            self.product.save()
 
-        url = reverse("shop:product_detail", kwargs={"product_slug": self.product.slug})
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Brand Product")
-        self.assertContains(response, "Description")
-        self.assertContains(response, "Main description")
-        self.assertContains(response, "Details")
-        self.assertContains(response, "Extra details")
+            url = reverse(
+                "shop:product_detail", kwargs={"product_slug": self.product.slug}
+            )
+            response = self.client.get(url)
+            self.assertEqual(response.status_code, 200)
+            self.assertContains(response, "Brand Product")
+            self.assertContains(response, "Description")
+            self.assertContains(response, "Main description")
+            self.assertContains(response, "Details")
+            self.assertContains(response, "Extra details")
 
     def test_product_detail_view_no_details(self):
-        self.product.description = "Main description"
-        self.product.details = ""
-        self.product.save()
+        with translation.override("en"):
+            self.product.description = "Main description"
+            self.product.details = ""
+            self.product.save()
 
-        url = reverse("shop:product_detail", kwargs={"product_slug": self.product.slug})
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Description")
-        self.assertContains(response, "Main description")
-        self.assertNotContains(response, "Details")
+            url = reverse(
+                "shop:product_detail", kwargs={"product_slug": self.product.slug}
+            )
+            response = self.client.get(url)
+            self.assertEqual(response.status_code, 200)
+            self.assertContains(response, "Description")
+            self.assertContains(response, "Main description")
+            self.assertNotContains(response, "Details")
 
     def test_unbranded_product_detail_view(self):
         url = reverse(
