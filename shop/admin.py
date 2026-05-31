@@ -97,7 +97,13 @@ class ProductAdmin(TabbedTranslationAdmin):
     )
     list_editable = ("public",)
     list_filter = ("public", "brand", "glaze", "product_type", "date_added")
-    search_fields = ("name", "stripe_name", "description", "stripe_product_id")
+    search_fields = (
+        "name",
+        "stripe_name",
+        "description",
+        "details",
+        "stripe_product_id",
+    )
     readonly_fields = (
         "stripe_product_id",
         "stripe_dashboard_url",
@@ -199,6 +205,7 @@ class ProductAdmin(TabbedTranslationAdmin):
                     "name",
                     "price",
                     "description",
+                    "details",
                     "main_photo",
                     "date_added",
                 )

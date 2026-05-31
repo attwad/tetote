@@ -217,10 +217,30 @@ class ShopViewTests(TestCase):
         self.assertContains(response, "Unbranded Product")
 
     def test_product_detail_view(self):
+        self.product.description = "Main description"
+        self.product.details = "Extra details"
+        self.product.save()
+
         url = reverse("shop:product_detail", kwargs={"product_slug": self.product.slug})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Brand Product")
+        self.assertContains(response, "Description")
+        self.assertContains(response, "Main description")
+        self.assertContains(response, "Details")
+        self.assertContains(response, "Extra details")
+
+    def test_product_detail_view_no_details(self):
+        self.product.description = "Main description"
+        self.product.details = ""
+        self.product.save()
+
+        url = reverse("shop:product_detail", kwargs={"product_slug": self.product.slug})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Description")
+        self.assertContains(response, "Main description")
+        self.assertNotContains(response, "Details")
 
     def test_unbranded_product_detail_view(self):
         url = reverse(

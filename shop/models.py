@@ -66,6 +66,7 @@ class Product(models.Model):
     name = models.CharField(_("Name"), max_length=255)
     slug = models.SlugField(_("Slug"), max_length=255, unique=True)
     description = models.TextField(_("Description"), blank=True)
+    details = models.TextField(_("Details"), blank=True)
     price = models.PositiveIntegerField(_("Price (CHF cents)"))
     main_photo = models.URLField(_("Main Photo URL"), max_length=500, blank=True)
     stock_quantity = models.IntegerField(_("Stock Quantity"), default=0)

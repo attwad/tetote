@@ -19,7 +19,7 @@ class ProductTypeTranslationOptions(TranslationOptions):
 
 @register(Product)
 class ProductTranslationOptions(TranslationOptions):
-    fields = ("name", "description")
+    fields = ("name", "description", "details")
 
 
 @register(StoreAnnouncement)
