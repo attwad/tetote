@@ -223,9 +223,6 @@
   .cart-item-info h3 a {
     @apply text-brand-text no-underline hover:underline;
   }
-  .cart-item-description {
-    @apply text-[0.95rem] text-brand-muted m-0 leading-[1.4];
-  }
   .cart-item-price-unit {
     @apply text-[0.9rem] text-brand-text mt-2;
   }

@@ -88,17 +88,12 @@
             const card = document.createElement('div');
             card.className = 'cart-item-card';
 
-            const truncatedDescription = info.description.length > 100
-                ? info.description.substring(0, 100) + '...'
-                : info.description;
-
             card.innerHTML = `
                 <div class="cart-item-image">
                     <img src="${info.image}" alt="${info.name}">
                 </div>
                 <div class="cart-item-info">
                     <h3><a href="${info.url}">${info.name}</a></h3>
-                    <p class="cart-item-description">${truncatedDescription}</p>
                     <p class="cart-item-price-unit">CHF ${info.price.toFixed(2)}</p>
                 </div>
                 <div class="cart-item-actions">
