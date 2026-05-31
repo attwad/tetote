@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tetote\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 19:13+0000\n"
+"POT-Creation-Date: 2026-05-31 09:06+0000\n"
 "PO-Revision-Date: 2026-04-16 19:30+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -22,7 +22,7 @@ msgstr ""
 msgid "tetote Admin"
 msgstr ""
 
-#: shop/admin.py:114
+#: shop/admin.py:120
 msgid "Stripe Dashboard URL"
 msgstr ""
 
@@ -44,7 +44,7 @@ msgstr "Inhalt"
 msgid "The slug for the static markdown page (e.g., bizen)"
 msgstr ""
 
-#: shop/models.py:19 shop/models.py:79 templates/shop/product_detail.html:76
+#: shop/models.py:19 shop/models.py:80 templates/shop/product_detail.html:76
 msgid "Brand"
 msgstr "Marke"
 
@@ -53,7 +53,7 @@ msgstr "Marke"
 msgid "Brands"
 msgstr "Marken"
 
-#: shop/models.py:41 shop/models.py:87 templates/shop/product_detail.html:79
+#: shop/models.py:41 shop/models.py:88 templates/shop/product_detail.html:79
 #: templates/shop/product_list.html:50
 msgid "Glaze"
 msgstr "Glasur"
@@ -62,7 +62,7 @@ msgstr "Glasur"
 msgid "Glazes"
 msgstr "Glasuren"
 
-#: shop/models.py:53 shop/models.py:95
+#: shop/models.py:53 shop/models.py:96
 msgid "Product Type"
 msgstr "Produkttyp"
 
@@ -82,129 +82,133 @@ msgstr "Stripe Preis-ID"
 msgid "Stripe Name"
 msgstr "Stripe Name"
 
-#: shop/models.py:68
+#: shop/models.py:68 templates/shop/product_detail.html:120
 msgid "Description"
 msgstr "Beschreibung"
 
-#: shop/models.py:69
+#: shop/models.py:69 templates/shop/product_detail.html:128
+msgid "Details"
+msgstr "Details"
+
+#: shop/models.py:70
 msgid "Price (CHF cents)"
 msgstr "Preis (CHF Rappen)"
 
-#: shop/models.py:70
+#: shop/models.py:71
 msgid "Main Photo URL"
 msgstr "Hauptfoto URL"
 
-#: shop/models.py:71
+#: shop/models.py:72
 msgid "Stock Quantity"
 msgstr "Lagerbestand"
 
-#: shop/models.py:72
+#: shop/models.py:73
 msgid "Public"
 msgstr "Öffentlich"
 
-#: shop/models.py:97
+#: shop/models.py:98
 msgid "Date Added"
 msgstr "Hinzugefügt am"
 
-#: shop/models.py:100 shop/models.py:124
+#: shop/models.py:101 shop/models.py:125
 msgid "Product"
 msgstr "Produkt"
 
-#: shop/models.py:101
+#: shop/models.py:102
 msgid "Products"
 msgstr "Produkte"
 
-#: shop/models.py:126
+#: shop/models.py:127
 msgid "Image URL"
 msgstr "Bild URL"
 
-#: shop/models.py:128
+#: shop/models.py:129
 #, fuzzy
 #| msgid "Image URL"
 msgid "Image File"
 msgstr "Bild URL"
 
-#: shop/models.py:130 shop/models.py:167
+#: shop/models.py:131 shop/models.py:168
 msgid "Order"
 msgstr "Reihenfolge"
 
-#: shop/models.py:133
+#: shop/models.py:134
 msgid "Product Image"
 msgstr "Produktbild"
 
-#: shop/models.py:134
+#: shop/models.py:135
 msgid "Product Images"
 msgstr "Produktbilder"
 
-#: shop/models.py:142
+#: shop/models.py:143
 msgid "Announcement Text"
 msgstr "Ankündigungstext"
 
-#: shop/models.py:143 shop/models.py:168
+#: shop/models.py:144 shop/models.py:169
 msgid "Is Active"
 msgstr "Aktiv"
 
-#: shop/models.py:147
+#: shop/models.py:148
 msgid "Store Announcement"
 msgstr "Shop-Ankündigung"
 
-#: shop/models.py:148
+#: shop/models.py:149
 msgid "Store Announcements"
 msgstr "Shop-Ankündigungen"
 
-#: shop/models.py:155
+#: shop/models.py:156
 msgid "Sales Paused"
 msgstr "Verkäufe pausiert"
 
-#: shop/models.py:158 shop/models.py:159 shop/models.py:162
+#: shop/models.py:159 shop/models.py:160 shop/models.py:163
 msgid "Store Settings"
 msgstr "Shop-Einstellungen"
 
-#: shop/models.py:166
+#: shop/models.py:167
 #, fuzzy
 #| msgid "Image URL"
 msgid "Image"
 msgstr "Bild URL"
 
-#: shop/models.py:172
+#: shop/models.py:173
 #, fuzzy
 #| msgid "Product Image"
 msgid "Carousel Image"
 msgstr "Produktbild"
 
-#: shop/models.py:173
+#: shop/models.py:174
 #, fuzzy
 #| msgid "Product Images"
 msgid "Carousel Images"
 msgstr "Produktbilder"
 
-#: shop/views.py:204
+#: shop/views.py:201
 msgid "Checkout is temporarily disabled"
 msgstr "Bezahlvorgang ist vorübergehend deaktiviert"
 
-#: shop/views.py:212
+#: shop/views.py:209
 msgid "Invalid request data"
 msgstr "Ungültige Anforderungsdaten"
 
-#: shop/views.py:215
+#: shop/views.py:212
 msgid "Cart is empty"
 msgstr "Warenkorb ist leer"
 
-#: shop/views.py:230
+#: shop/views.py:227
 msgid "Invalid cart items"
 msgstr "Ungültige Artikel im Warenkorb"
 
-#: shop/views.py:246
+#: shop/views.py:243
 #, python-format
 msgid "Product with price %(price_id)s not found"
 msgstr "Produkt mit Preis %(price_id)s nicht gefunden"
 
-#: shop/views.py:255
+#: shop/views.py:252
 #, python-format
 msgid "Only %(qty)s left of %(name)s"
 msgstr "Nur noch %(qty)s von %(name)s verfügbar"
 
-#: shop/views.py:295
+#: shop/views.py:292
 msgid "An error occurred while creating the checkout session"
 msgstr ""
 
@@ -239,6 +243,7 @@ msgid "Shop"
 msgstr "Shop"
 
 #: templates/base.html:65 templates/base.html:137
+#: templates/blog/blog_list.html:4 templates/blog/blog_list.html:8
 msgid "Blog"
 msgstr "Blog"
 
@@ -277,23 +282,29 @@ msgstr "Lieferbedingungen"
 msgid "Return Policy"
 msgstr "Rückgaberecht"
 
-#: templates/blog/blog_index_page.html:18
-msgid "We are sorry, there are no blog posts yet."
-msgstr "Es tut uns leid, es gibt noch keine Blog-Beiträge."
-
-#: templates/blog/blog_page.html:12
+#: templates/blog/blog_detail.html:12
 msgid "Published on"
 msgstr "Veröffentlicht am"
 
-#: templates/blog/blog_page.html:23 templates/news/news_item.html:19
+#: templates/blog/blog_detail.html:25
 #, fuzzy
 #| msgid "Back to Blog"
-msgid "Back to"
+msgid "Back to Blog"
 msgstr "Zurück zum Blog"
+
+#: templates/blog/blog_list.html:26
+msgid "We are sorry, there are no blog posts yet."
+msgstr "Es tut uns leid, es gibt noch keine Blog-Beiträge."
 
 #: templates/news/news_index_page.html:20
 msgid "There are no news items at the moment."
 msgstr ""
+
+#: templates/news/news_item.html:19
+#, fuzzy
+#| msgid "Back to Blog"
+msgid "Back to"
+msgstr "Zurück zum Blog"
 
 #: templates/shop/about_us.html:5
 msgid ""
@@ -365,26 +376,26 @@ msgstr ""
 msgid "Your cart is empty."
 msgstr "Ihr Warenkorb ist leer."
 
-#: templates/shop/cart.html:40
+#: templates/shop/cart.html:41
 msgid "Go Shopping"
 msgstr "Einkaufen gehen"
 
-#: templates/shop/cart.html:104
+#: templates/shop/cart.html:101
 msgid "Qty"
 msgstr "Menge"
 
-#: templates/shop/cart.html:110
+#: templates/shop/cart.html:107
 msgid "Remove"
 msgstr "Entfernen"
 
-#: templates/shop/cart.html:127 templates/shop/product_detail.html:140
+#: templates/shop/cart.html:124 templates/shop/product_detail.html:152
 msgid ""
 "Only X items are available in stock. If you need more, please contact us!"
 msgstr ""
 "Nur noch X Artikel an Lager. Wenn Sie mehr benötigen, kontaktieren Sie uns "
 "bitte!"
 
-#: templates/shop/cart.html:146
+#: templates/shop/cart.html:143
 msgid "Are you sure you want to clear your cart?"
 msgstr "Sind Sie sicher, dass Sie den Warenkorb leeren möchten?"
 
@@ -488,7 +499,7 @@ msgstr "Typ"
 msgid "Thumbnail"
 msgstr ""
 
-#: templates/shop/product_detail.html:149
+#: templates/shop/product_detail.html:161
 msgid "Added to cart."
 msgstr "In den Warenkorb gelegt."
 
