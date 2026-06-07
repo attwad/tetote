@@ -19,7 +19,7 @@
 <body class="bg-brand-bg text-brand-text font-serif text-[1.15rem] leading-[1.6]">
     <header class="bg-white text-brand-text pt-4 site-header">
         <!-- Logo Row -->
-        <div class="flex justify-center mb-4 relative px-10 md:px-26">
+        <div class="flex justify-center mb-1 relative px-10 md:px-26">
             <!-- Mobile Hamburger (Left) -->
             <button class="md:hidden absolute left-8 top-1/2 -translate-y-1/2 text-brand-text" onclick="toggleMobileMenu()">
                 <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
@@ -45,12 +45,12 @@
 
             <!-- Centered Menu -->
             <nav class="flex items-center gap-10 flex-none">
-                <a href="{% url 'shop:about_us' %}" class="py-2 text-[1.25rem] font-medium tracking-[0.05rem] text-brand-text no-underline transition-all duration-200 hover:opacity-70 hover:underline underline-offset-4 {% if request.resolver_match.url_name == 'about_us' %}font-bold{% endif %}">{% translate "About us" %}</a>
-                <a href="{% url 'shop:product_list' %}" class="py-2 text-[1.25rem] font-medium tracking-[0.05rem] text-brand-text no-underline transition-all duration-200 hover:opacity-70 hover:underline underline-offset-4 {% if request.resolver_match.url_name == 'product_list' or request.resolver_match.url_name == 'product_detail' %}font-bold{% endif %}">{% translate "Shop" %}</a>
+                <a href="{% url 'shop:about_us' %}" class="py-2 text-[1.6rem] font-normal tracking-[0.05rem] text-brand-text no-underline transition-all duration-200 hover:opacity-70 hover:underline underline-offset-4 {% if request.resolver_match.url_name == 'about_us' %}font-bold{% endif %}">{% translate "About us" %}</a>
+                <a href="{% url 'shop:product_list' %}" class="py-2 text-[1.6rem] font-normal tracking-[0.05rem] text-brand-text no-underline transition-all duration-200 hover:opacity-70 hover:underline underline-offset-4 {% if request.resolver_match.url_name == 'product_list' or request.resolver_match.url_name == 'product_detail' %}font-bold{% endif %}">{% translate "Shop" %}</a>
 
                 {% if all_brands %}
                 <div class="relative group py-2">
-                    <span class="text-[1.25rem] font-medium tracking-[0.05rem] text-brand-text cursor-default transition-all duration-200 group-hover:opacity-70 group-hover:underline underline-offset-4">{% translate "Brands" %}</span>
+                    <span class="text-[1.6rem] font-normal tracking-[0.05rem] text-brand-text cursor-default transition-all duration-200 group-hover:opacity-70 group-hover:underline underline-offset-4">{% translate "Brands" %}</span>
                     <!-- Invisible bridge to prevent hover loss -->
                     <div class="absolute left-1/2 -translate-x-1/2 top-full w-48 bg-white border border-brand-border shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible group-hover:pointer-events-auto pointer-events-none transition-all duration-200 z-50 py-3 flex flex-col mt-[1px]">
                         {% for brand in all_brands %}
@@ -62,8 +62,8 @@
                 </div>
                 {% endif %}
 
-                <a href="{% url 'blog:index' %}" class="py-2 text-[1.25rem] font-medium tracking-[0.05rem] text-brand-text no-underline transition-all duration-200 hover:opacity-70 hover:underline underline-offset-4 {% if request.resolver_match.app_name == 'blog' %}font-bold{% endif %}">{% translate "Blog" %}</a>
-                <a href="{% url 'shop:contact' %}" class="py-2 text-[1.25rem] font-medium tracking-[0.05rem] text-brand-text no-underline transition-all duration-200 hover:opacity-70 hover:underline underline-offset-4 {% if request.resolver_match.url_name == 'contact' %}font-bold{% endif %}">{% translate "Contact" %}</a>
+                <a href="{% url 'blog:index' %}" class="py-2 text-[1.6rem] font-normal tracking-[0.05rem] text-brand-text no-underline transition-all duration-200 hover:opacity-70 hover:underline underline-offset-4 {% if request.resolver_match.app_name == 'blog' %}font-bold{% endif %}">{% translate "Blog" %}</a>
+                <a href="{% url 'shop:contact' %}" class="py-2 text-[1.6rem] font-normal tracking-[0.05rem] text-brand-text no-underline transition-all duration-200 hover:opacity-70 hover:underline underline-offset-4 {% if request.resolver_match.url_name == 'contact' %}font-bold{% endif %}">{% translate "Contact" %}</a>
             </nav>
             <!-- Cart Icon -->
             <div class="flex-1 flex justify-end items-center gap-6">
@@ -71,12 +71,12 @@
                 {% if page %}
                     <div class="inline-flex gap-2">
                         {% for translation in page.get_translations.live %}
-                            <a href="{% pageurl translation %}" class="text-[0.85rem] font-medium tracking-[0.05rem] text-brand-text uppercase no-underline hover:opacity-70">
+                            <a href="{% pageurl translation %}" class="text-[1.25rem] font-normal tracking-[0.05rem] text-brand-text uppercase no-underline hover:opacity-70">
                                 {{ translation.locale.language_code|upper }}
                             </a>
-                            {% if not forloop.last %}<span class="text-brand-muted text-[0.85rem]">/</span>{% endif %}
+                            {% if not forloop.last %}<span class="text-brand-muted text-[1.25rem]">/</span>{% endif %}
                         {% empty %}
-                            <span class="text-[0.85rem] font-medium tracking-[0.05rem] text-brand-text uppercase">
+                            <span class="text-[1.25rem] font-normal tracking-[0.05rem] text-brand-text uppercase">
                                 {{ LANGUAGE_CODE|upper }}
                             </span>
                         {% endfor %}
@@ -85,7 +85,7 @@
                     <form action="{% url 'set_language' %}" method="post" class="inline-flex">
                         {% csrf_token %}
                         <input name="next" type="hidden" value="{{ request.get_full_path }}">
-                        <select name="language" onchange="this.form.submit()" class="bg-transparent border-none text-[0.85rem] font-medium tracking-[0.05rem] text-brand-text uppercase cursor-pointer focus:outline-none p-0 appearance-none hover:opacity-70">
+                        <select name="language" onchange="this.form.submit()" class="bg-transparent border-none text-[1.25rem] font-normal tracking-[0.05rem] text-brand-text uppercase cursor-pointer focus:outline-none p-0 appearance-none hover:opacity-70">
                             {% for lang_code, lang_name in LANGUAGES %}
                                 <option value="{{ lang_code }}" {% if lang_code == LANGUAGE_CODE %}selected{% endif %}>
                                     {{ lang_code|upper }}
@@ -103,7 +103,7 @@
         </div>
 
         <!-- Logo Threads / Red Lines -->
-        <div class="flex flex-col gap-[1px] mt-4 mb-[calc(var(--spacing)*2)]">
+        <div class="flex flex-col gap-[1px] mb-[calc(var(--spacing)*2)]">
             <div class="h-[1px] w-full bg-[#ef454a]"></div>
             <div class="h-[1px] w-full bg-[#ef454a]"></div>
             <div class="h-[1px] w-full bg-[#ef454a]"></div>
@@ -118,15 +118,15 @@
         </button>
 
         <nav class="flex flex-col gap-8 mt-12">
-            <a href="{% url 'shop:about_us' %}" class="text-[1.2rem] font-medium tracking-[0.05rem] text-brand-text no-underline {% if request.resolver_match.url_name == 'about_us' %}font-bold{% endif %}">{% translate "About us" %}</a>
-            <a href="{% url 'shop:product_list' %}" class="text-[1.2rem] font-medium tracking-[0.05rem] text-brand-text no-underline {% if request.resolver_match.url_name == 'product_list' or request.resolver_match.url_name == 'product_detail' %}font-bold{% endif %}">{% translate "Shop" %}</a>
+            <a href="{% url 'shop:about_us' %}" class="text-[1.2rem] font-normal tracking-[0.05rem] text-brand-text no-underline {% if request.resolver_match.url_name == 'about_us' %}font-bold{% endif %}">{% translate "About us" %}</a>
+            <a href="{% url 'shop:product_list' %}" class="text-[1.2rem] font-normal tracking-[0.05rem] text-brand-text no-underline {% if request.resolver_match.url_name == 'product_list' or request.resolver_match.url_name == 'product_detail' %}font-bold{% endif %}">{% translate "Shop" %}</a>
 
             {% if all_brands %}
             <div class="flex flex-col gap-4">
-                <span class="text-[1.2rem] font-medium tracking-[0.05rem] text-brand-text cursor-default">{% translate "Brands" %}</span>
+                <span class="text-[1.2rem] font-normal tracking-[0.05rem] text-brand-text cursor-default">{% translate "Brands" %}</span>
                 <div class="flex flex-col gap-4 pl-4 border-l border-brand-border ml-2">
                     {% for brand in all_brands %}
-                        <a href="{{ brand.get_absolute_url }}" class="text-[1.1rem] font-medium tracking-[0.05rem] text-brand-text no-underline {% if request.resolver_match.kwargs.brand_slug == brand.slug %}font-bold{% endif %}">
+                        <a href="{{ brand.get_absolute_url }}" class="text-[1.1rem] font-normal tracking-[0.05rem] text-brand-text no-underline {% if request.resolver_match.kwargs.brand_slug == brand.slug %}font-bold{% endif %}">
                             {{ brand.name }}
                         </a>
                     {% endfor %}
@@ -134,8 +134,8 @@
             </div>
             {% endif %}
 
-            <a href="{% url 'blog:index' %}" class="text-[1.2rem] font-medium tracking-[0.05rem] text-brand-text no-underline {% if request.resolver_match.app_name == 'blog' %}font-bold{% endif %}">{% translate "Blog" %}</a>
-            <a href="{% url 'shop:contact' %}" class="text-[1.2rem] font-medium tracking-[0.05rem] text-brand-text no-underline {% if request.resolver_match.url_name == 'contact' %}font-bold{% endif %}">{% translate "Contact" %}</a>
+            <a href="{% url 'blog:index' %}" class="text-[1.2rem] font-normal tracking-[0.05rem] text-brand-text no-underline {% if request.resolver_match.app_name == 'blog' %}font-bold{% endif %}">{% translate "Blog" %}</a>
+            <a href="{% url 'shop:contact' %}" class="text-[1.2rem] font-normal tracking-[0.05rem] text-brand-text no-underline {% if request.resolver_match.url_name == 'contact' %}font-bold{% endif %}">{% translate "Contact" %}</a>
         </nav>
 
         <!-- Language Switcher (Mobile) -->
@@ -144,7 +144,7 @@
             {% if page %}
                 <div class="flex gap-4">
                     {% for translation in page.get_translations.live %}
-                        <a href="{% pageurl translation %}" class="text-[1rem] font-medium uppercase text-brand-text no-underline hover:opacity-70">
+                        <a href="{% pageurl translation %}" class="text-[1rem] font-normal uppercase text-brand-text no-underline hover:opacity-70">
                             {{ translation.locale.language_code|upper }}
                         </a>
                     {% endfor %}
@@ -153,7 +153,7 @@
                 <form action="{% url 'set_language' %}" method="post">
                     {% csrf_token %}
                     <input name="next" type="hidden" value="{{ request.get_full_path }}">
-                    <select name="language" onchange="this.form.submit()" class="bg-transparent border-none text-[1rem] font-medium uppercase transition-opacity duration-200 hover:opacity-70 text-brand-text p-0 focus:outline-none appearance-none cursor-pointer">
+                    <select name="language" onchange="this.form.submit()" class="bg-transparent border-none text-[1rem] font-normal uppercase transition-opacity duration-200 hover:opacity-70 text-brand-text p-0 focus:outline-none appearance-none cursor-pointer">
                         {% for lang_code, lang_name in LANGUAGES %}
                             <option value="{{ lang_code }}" {% if lang_code == LANGUAGE_CODE %}selected{% endif %}>
                                 {{ lang_code|upper }}
@@ -171,7 +171,7 @@
         </div>
     {% endif %}
 
-    <main class="px-10 md:px-26 pt-4.8 md:pt-12 pb-12 max-w-[1400px] mx-auto min-h-[70vh]">
+    <main class="px-10 md:px-26 pt-2.4 md:pt-6 pb-12 max-w-[1400px] mx-auto min-h-[70vh]">
         {% block content %}{% endblock %}
     </main>
 

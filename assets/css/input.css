@@ -16,6 +16,7 @@
   --font-serif: "Cormorant Garamond", serif;
 
   --spacing-4.8: 1.2rem;
+  --spacing-2.4: 0.6rem;
   --spacing-22: 5.5rem;
   --spacing-26: 6.5rem;
 
@@ -38,15 +39,15 @@
   }
 
   h1 {
-    @apply text-[2.2rem] font-medium mb-6;
+    @apply text-[2.2rem] font-normal mb-6;
   }
 
   h2 {
-    @apply text-[1.5rem] font-medium mb-4;
+    @apply text-[1.5rem] font-normal mb-4;
   }
 
   h3 {
-    @apply text-[1.3rem] font-semibold mb-3;
+    @apply text-[1.3rem] font-normal mb-3;
   }
 
   select, input, button, textarea {
