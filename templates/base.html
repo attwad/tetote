@@ -19,7 +19,7 @@
 <body class="bg-brand-bg text-brand-text font-serif text-[1.15rem] leading-[1.6]">
     <header class="bg-white text-brand-text pt-4 site-header">
         <!-- Logo Row -->
-        <div class="flex justify-center mb-1 relative px-10 md:px-26">
+        <div class="flex justify-center mb-1 relative px-16 md:px-40">
             <!-- Mobile Hamburger (Left) -->
             <button class="md:hidden absolute left-8 top-1/2 -translate-y-1/2 text-brand-text" onclick="toggleMobileMenu()">
                 <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
@@ -39,7 +39,7 @@
         </div>
 
         <!-- Desktop Menu & Cart Row -->
-        <div class="px-10 md:px-26 hidden md:flex justify-between items-center relative">
+        <div class="px-16 md:px-40 hidden md:flex justify-between items-center relative">
             <!-- Spacer to balance the cart icon -->
             <div class="flex-1"></div>
 
@@ -166,16 +166,16 @@
     </div>
 
     {% if active_announcement %}
-        <div class="bg-brand-accent text-white text-center py-[0.8rem] px-10 md:px-26 text-base border-b border-brand-border tracking-[0.03rem]">
+        <div class="bg-brand-accent text-white text-center py-[0.8rem] px-16 md:px-40 text-base border-b border-brand-border tracking-[0.03rem]">
             {{ active_announcement.text }}
         </div>
     {% endif %}
 
-    <main class="px-10 md:px-26 pt-2.4 md:pt-6 pb-12 max-w-[1400px] mx-auto min-h-[70vh]">
+    <main class="px-16 md:px-40 pt-2.4 md:pt-6 pb-12 max-w-[1400px] mx-auto min-h-[70vh]">
         {% block content %}{% endblock %}
     </main>
 
-    <footer class="bg-brand-border h-[300px] px-10 md:px-26 text-center flex flex-col items-center justify-center gap-4">
+    <footer class="bg-brand-border h-[300px] px-16 md:px-40 text-center flex flex-col items-center justify-center gap-4">
         <!-- Social Link -->
         <a href="https://www.instagram.com/tetote.ch/" target="_blank" rel="noopener noreferrer" class="transition-opacity duration-200 hover:opacity-70">
             <img src="{% static 'images/insta_icon.svg' %}" alt="Instagram" class="w-10 h-10">

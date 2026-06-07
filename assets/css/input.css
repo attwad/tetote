@@ -19,6 +19,8 @@
   --spacing-2.4: 0.6rem;
   --spacing-22: 5.5rem;
   --spacing-26: 6.5rem;
+  --spacing-32: 8rem;
+  --spacing-40: 10rem;
 
   --animate-slide-down: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   --animate-fade-out: fadeOut 0.4s ease-out forwards;
