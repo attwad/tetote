@@ -185,8 +185,13 @@ class StoreSettings(models.Model):
 
 class CarouselImage(models.Model):
     image = models.ImageField(_("Image"), upload_to="carousel/")
+    link = models.CharField(
+        _("Link"),
+        max_length=500,
+        blank=True,
+        help_text=_("Internal path (e.g. /shop/) or external URL"),
+    )
     order = models.PositiveIntegerField(_("Order"), default=0)
-    is_active = models.BooleanField(_("Is Active"), default=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -196,3 +201,25 @@ class CarouselImage(models.Model):
 
     def __str__(self):
         return f"Carousel Image {self.id}"
+
+    @property
+    def localized_link(self):
+        """
+        Returns the link with the current language prefix if it's an internal path.
+        """
+        if not self.link:
+            return ""
+
+        if self.link.startswith(("http://", "https://", "mailto:", "tel:")):
+            return self.link
+
+        from django.utils.translation import get_language
+
+        lang = get_language()
+        # If it's a path and not the default language, prepend the language code
+        # assuming 'en' is the default and URLs are prefixed for others
+        if lang and lang != "en" and self.link.startswith("/"):
+            # Avoid double prefixing if the link already has it
+            if not self.link.startswith(f"/{lang}/"):
+                return f"/{lang}{self.link}"
+        return self.link

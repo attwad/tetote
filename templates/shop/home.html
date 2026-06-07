@@ -14,7 +14,13 @@
                 <ul class="splide__list">
                     {% for item in carousel_images %}
                     <li class="splide__slide flex items-center justify-center">
+                        {% if item.localized_link %}
+                        <a href="{{ item.localized_link }}" class="block w-full h-full">
+                            <img data-splide-lazy="{{ item.image.url }}" alt="" class="w-full h-full object-contain block">
+                        </a>
+                        {% else %}
                         <img data-splide-lazy="{{ item.image.url }}" alt="" class="object-contain block">
+                        {% endif %}
                     </li>
                     {% endfor %}
                 </ul>

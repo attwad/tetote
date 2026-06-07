@@ -27,9 +27,7 @@ class HomeViewTests(TestCase):
 
         # Create a carousel image
         image_content = b"GIF89a\x01\x00\x01\x00\x80\x00\x00\x00\x00\x00\xff\xff\xff!\xf9\x04\x01\x00\x00\x00\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x01D\x00;"
-        CarouselImage.objects.create(
-            image=ContentFile(image_content, name="c1.gif"), is_active=True
-        )
+        CarouselImage.objects.create(image=ContentFile(image_content, name="c1.gif"))
 
         url = reverse("shop:home")
         response = self.client.get(url)
@@ -39,16 +37,6 @@ class HomeViewTests(TestCase):
         self.assertContains(response, "carousel/c1")
         self.assertContains(response, reverse("shop:product_list"))
         self.assertContains(response, "Enter the Shop")
-
-    def test_home_page_inactive_carousel(self):
-        image_content = b"GIF89a\x01\x00\x01\x00\x80\x00\x00\x00\x00\x00\xff\xff\xff!\xf9\x04\x01\x00\x00\x00\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x01D\x00;"
-        CarouselImage.objects.create(
-            image=ContentFile(image_content, name="c2.gif"), is_active=False
-        )
-
-        url = reverse("shop:home")
-        response = self.client.get(url)
-        self.assertNotContains(response, "c2.gif")
 
 
 class LanguageSwitcherTests(TestCase):

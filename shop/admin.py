@@ -5,7 +5,11 @@ from django.contrib import admin
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 from modeltranslation.admin import TranslationAdmin, TabbedTranslationAdmin
-from adminsortable2.admin import SortableAdminBase, SortableInlineAdminMixin
+from adminsortable2.admin import (
+    SortableAdminBase,
+    SortableInlineAdminMixin,
+    SortableAdminMixin,
+)
 from .models import (
     Brand,
     Product,
@@ -67,11 +71,18 @@ class StoreAnnouncementAdmin(TranslationAdmin):
 
 
 @admin.register(CarouselImage)
-class CarouselImageAdmin(admin.ModelAdmin):
-    list_display = ("id", "order", "is_active", "created_at")
-    list_editable = ("order", "is_active")
-    list_filter = ("is_active",)
-    ordering = ("order", "-created_at")
+class CarouselImageAdmin(SortableAdminMixin, admin.ModelAdmin):
+    list_display = ("image_preview", "created_at")
+    list_filter = ()
+
+    def image_preview(self, obj):
+        if obj.image:
+            return format_html(
+                '<img src="{}" style="max-height: 50px;"/>', obj.image.url
+            )
+        return "-"
+
+    image_preview.short_description = _("Preview")
 
 
 @admin.register(StoreSettings)
