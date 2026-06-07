@@ -81,6 +81,7 @@ INSTALLED_APPS = [
     "wagtail",
     "modelcluster",
     "taggit",
+    "adminsortable2",
     # Project apps
     "shop.apps.ShopConfig",
     "blog.apps.BlogConfig",

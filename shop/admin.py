@@ -5,6 +5,7 @@ from django.contrib import admin
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 from modeltranslation.admin import TranslationAdmin, TabbedTranslationAdmin
+from adminsortable2.admin import SortableAdminBase, SortableInlineAdminMixin
 from .models import (
     Brand,
     Product,
@@ -24,11 +25,11 @@ admin.site.site_title = _("tetote Admin")
 admin.site.index_title = _("tetote admin room")
 
 
-class ProductImageInline(admin.TabularInline):
+class ProductImageInline(SortableInlineAdminMixin, admin.TabularInline):
     model = ProductImage
     extra = 1
     max_num = 8
-    fields = ("image_file", "url", "order", "image_preview")
+    fields = ("image_file", "url", "image_preview")
     readonly_fields = ("image_preview", "url")
 
     def image_preview(self, obj):
@@ -84,7 +85,7 @@ class StoreSettingsAdmin(admin.ModelAdmin):
 
 
 @admin.register(Product)
-class ProductAdmin(TabbedTranslationAdmin):
+class ProductAdmin(SortableAdminBase, TabbedTranslationAdmin):
     list_display = (
         "name",
         "stripe_name",
