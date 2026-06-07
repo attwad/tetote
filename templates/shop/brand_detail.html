@@ -1,8 +1,14 @@
 {% extends "base.html" %}
-{% load i18n content_tags %}
+{% load i18n static content_tags %}
 
 {% block title %}{{ brand.name }} - Tetote{% endblock %}
 {% block meta_description %}{% blocktranslate with brand_name=brand.name %}Handcrafted Japanese ceramics and pottery by {{ brand_name }}.{% endblocktranslate %}{% endblock %}
+
+{% block hero %}
+<section class="w-full h-[500px] overflow-hidden mb-12">
+    <img src="{% static 'images/deidei.jpg' %}" alt="{% translate 'Deidei' %}" class="w-full h-full object-cover">
+</section>
+{% endblock %}
 
 {% block content %}
 <article class="brand-page">

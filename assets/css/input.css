@@ -341,7 +341,10 @@
     @apply bg-none border-none text-brand-muted cursor-pointer text-[1.4rem];
   }
 
-  /* Markdown Content Styling */
+  .markdown-content > *:last-child {
+    @apply mb-0;
+  }
+
   .markdown-content img {
     @apply max-w-full h-auto rounded-[2px] my-6 mx-auto block;
   }
@@ -358,13 +361,13 @@
     @apply text-[1.1rem] font-bold mb-1 mt-3 uppercase tracking-wider;
   }
   .markdown-content p {
-    @apply mb-4 leading-[1.5];
+    @apply mb-4 leading-[1.6] text-[1.15rem];
   }
   .markdown-content ul {
-    @apply list-disc mb-4 pl-8 leading-[1.5];
+    @apply list-disc mb-4 pl-8 leading-[1.6] text-[1.15rem];
   }
   .markdown-content ol {
-    @apply list-decimal mb-4 pl-8 leading-[1.5];
+    @apply list-decimal mb-4 pl-8 leading-[1.6] text-[1.15rem];
   }
   .markdown-content li {
     @apply mb-0.5;
