@@ -137,7 +137,7 @@
     @apply mb-8;
   }
   .filter-label {
-    @apply block text-[0.95rem] mb-3 text-brand-muted font-semibold tracking-wider;
+    @apply block text-[1.15rem] mb-3 text-brand-muted font-semibold tracking-wider;
   }
   .chips {
     @apply flex gap-2 flex-wrap items-center;

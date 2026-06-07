@@ -5,10 +5,10 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css">
 {% endblock %}
 
-{% block content %}
+{% block hero %}
     {# Carousel Section #}
     {% if carousel_images %}
-    <section class="mb-16 -mx-8 relative bg-brand-bg" aria-label="{% translate 'Hero Image Carousel' %}">
+    <section class="mb-16 relative bg-brand-bg" aria-label="{% translate 'Hero Image Carousel' %}">
         <div id="home-carousel" class="splide">
             <div class="splide__track">
                 <ul class="splide__list">
@@ -22,7 +22,9 @@
         </div>
     </section>
     {% endif %}
+{% endblock %}
 
+{% block content %}
     {# News Section #}
     {% if news_items %}
     <section class="max-w-[800px] mx-auto mb-16">

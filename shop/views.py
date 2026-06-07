@@ -4,7 +4,7 @@ from django.views.generic import ListView, DetailView, View, TemplateView
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.http import JsonResponse
 from django.urls import reverse
-from django.db import transaction
+from django.db import transaction, models
 from django.utils.translation import gettext as _, get_language
 from .models import Product, Brand, Glaze, ProductType, StoreSettings, CarouselImage
 from news.models import NewsItem
@@ -167,10 +167,32 @@ class ProductListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["brands"] = Brand.objects.filter(products__public=True).distinct()
-        context["glazes"] = Glaze.objects.filter(products__public=True).distinct()
-        context["product_types"] = ProductType.objects.filter(
-            products__public=True
-        ).distinct()
+
+        # Sort glazes and types so that 'Other/Others' is always at the bottom
+        context["glazes"] = (
+            Glaze.objects.filter(products__public=True)
+            .distinct()
+            .order_by(
+                models.Case(
+                    models.When(slug__in=["other", "others"], then=models.Value(1)),
+                    default=models.Value(0),
+                    output_field=models.IntegerField(),
+                ),
+                "name",
+            )
+        )
+        context["product_types"] = (
+            ProductType.objects.filter(products__public=True)
+            .distinct()
+            .order_by(
+                models.Case(
+                    models.When(slug__in=["other", "others"], then=models.Value(1)),
+                    default=models.Value(0),
+                    output_field=models.IntegerField(),
+                ),
+                "name",
+            )
+        )
 
         # Pass active filter lists for template comparison
         context["active_brands"] = self.request.GET.getlist("brand")

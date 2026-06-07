@@ -1,8 +1,14 @@
 {% extends "base.html" %}
-{% load i18n content_tags %}
+{% load i18n static content_tags %}
 
 {% block title %}{% translate "Contact" %} - Tetote{% endblock %}
 {% block meta_description %}{% translate "Contact us for questions about our Japanese ceramics or your order." %}{% endblock %}
+
+{% block hero %}
+<section class="w-full h-[400px] overflow-hidden mb-12">
+    <img src="{% static 'images/contact.jpg' %}" alt="{% translate 'Contact Us' %}" class="w-full h-full object-cover">
+</section>
+{% endblock %}
 
 {% block content %}
 <div class="max-w-[800px] mx-auto markdown-content">

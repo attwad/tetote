@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
             arrows: true,
             pagination: false,
             lazyLoad: 'nearby',
-            height: '600px',
+            height: '700px',
             breakpoints: {
                 768: {
                     height: '400px',
