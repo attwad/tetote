@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@source "../../templates/**/*.html";
+@source "../../**/templates/**/*.html";
 @import "@splidejs/splide/dist/css/splide.min.css";
 @import "photoswipe/dist/photoswipe.css";
 
