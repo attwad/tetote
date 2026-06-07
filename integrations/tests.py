@@ -148,14 +148,17 @@ class StripeIntegrationTest(TestCase):
             stripe_name="Original",
             slug="original",
             price=1000,
-            main_photo="http://test.com/original_main.jpg",
             public=True,
         )
         ProductImage.objects.create(
-            product=product, url="http://test.com/original_gallery.jpg", order=0
+            product=product, url="http://test.com/original_main.jpg", order=0
+        )
+        ProductImage.objects.create(
+            product=product, url="http://test.com/original_gallery.jpg", order=1
         )
 
         # Update product via Stripe (simulated webhook/sync)
+        # Now it SHOULD overwrite images to match Stripe
         product_data = {
             "id": "prod_img_test",
             "name": "Updated Name",
@@ -167,12 +170,10 @@ class StripeIntegrationTest(TestCase):
 
         product.refresh_from_db()
         self.assertEqual(product.stripe_name, "Updated Name")
-        # Images must remain unchanged from original local values
-        self.assertEqual(product.main_photo, "http://test.com/original_main.jpg")
+        # Images SHOULD be updated to match Stripe
+        self.assertEqual(product.main_photo, "http://test.com/stripe_new.jpg")
         self.assertEqual(product.images.count(), 1)
-        self.assertEqual(
-            product.images.first().url, "http://test.com/original_gallery.jpg"
-        )
+        self.assertEqual(product.images.first().url, "http://test.com/stripe_new.jpg")
 
     def test_sync_price(self):
         Product.objects.create(
@@ -309,14 +310,16 @@ class ProductAdminTest(TestCase):
             name="Admin Product",
             slug="admin-prod",
             price=5000,
-            main_photo="http://test.com/main.jpg",
             brand=self.brand,
             public=True,
         )
 
     @patch("stripe.Product.modify")
     def test_save_related_syncs_images_to_stripe(self, mock_modify):
-        # Add a gallery image
+        # Add gallery images
+        ProductImage.objects.create(
+            product=self.product, url="http://test.com/main.jpg", order=0
+        )
         ProductImage.objects.create(
             product=self.product, url="http://test.com/gallery.jpg", order=1
         )
@@ -406,11 +409,8 @@ class ProductAdminTest(TestCase):
 
     @patch("stripe.Product.modify")
     def test_save_related_limits_to_8_images(self, mock_modify):
-        self.product.main_photo = "http://test.com/0.jpg"
-        self.product.save()
-
         # Add 10 gallery images
-        for i in range(1, 11):
+        for i in range(0, 10):
             ProductImage.objects.create(
                 product=self.product, url=f"http://test.com/{i}.jpg", order=i
             )

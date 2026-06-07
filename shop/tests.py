@@ -450,7 +450,6 @@ class ShopViewTests(TestCase):
             stripe_price_id="price_with_img",
             name="Image Product",
             slug="img-prod",
-            main_photo="https://example.com/main.jpg",
             price=100,
             stock_quantity=1,
             public=True,
@@ -463,15 +462,17 @@ class ShopViewTests(TestCase):
         )
 
         # Create a product without a secondary image
-        Product.objects.create(
+        product_no_img = Product.objects.create(
             stripe_product_id="prod_no_img",
             stripe_price_id="price_no_img",
             name="No Image Product",
             slug="no-img-prod",
-            main_photo="https://example.com/only-one.jpg",
             price=100,
             stock_quantity=1,
             public=True,
+        )
+        ProductImage.objects.create(
+            product=product_no_img, url="https://example.com/only-one.jpg", order=0
         )
 
         url = reverse("shop:product_list")

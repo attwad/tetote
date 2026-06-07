@@ -68,7 +68,6 @@ class Product(models.Model):
     description = models.TextField(_("Description"), blank=True)
     details = models.TextField(_("Details"), blank=True)
     price = models.PositiveIntegerField(_("Price (CHF cents)"))
-    main_photo = models.URLField(_("Main Photo URL"), max_length=500, blank=True)
     stock_quantity = models.IntegerField(_("Stock Quantity"), default=0)
     public = models.BooleanField(_("Public"), default=settings.DEBUG)
     brand = models.ForeignKey(
@@ -109,6 +108,16 @@ class Product(models.Model):
         return reverse("shop:product_detail", kwargs={"product_slug": self.slug})
 
     @property
+    def main_photo(self):
+        """
+        Returns the URL of the first image in the gallery (order=0).
+        """
+        first_image = self.images.all().first()
+        if first_image:
+            return first_image.image_url
+        return ""
+
+    @property
     def price_in_chf(self):
         return self.price / 100.0
 
@@ -137,6 +146,17 @@ class ProductImage(models.Model):
 
     def __str__(self):
         return f"Image for {self.product.name}"
+
+    @property
+    def image_url(self):
+        """
+        Returns the public URL from Stripe if available, otherwise fallback to local file URL.
+        """
+        if self.url:
+            return self.url
+        if self.image_file:
+            return self.image_file.url
+        return ""
 
 
 class StoreAnnouncement(models.Model):

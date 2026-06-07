@@ -26,11 +26,11 @@
                             </li>
                         {% endif %}
                         {% for image in product.images.all %}
-                            {% if image.url != product.main_photo %}
+                            {% if image.image_url != product.main_photo %}
                             <li class="splide__slide">
-                                <a href="{{ image.url }}"
+                                <a href="{{ image.image_url }}"
                                    target="_blank">
-                                    <img data-splide-lazy="{{ image.url }}" alt="{{ product.name }}">
+                                    <img data-splide-lazy="{{ image.image_url }}" alt="{{ product.name }}">
                                 </a>
                             </li>
                             {% endif %}
@@ -103,9 +103,9 @@
                             </li>
                         {% endif %}
                         {% for image in product.images.all %}
-                            {% if image.url != product.main_photo %}
+                            {% if image.image_url != product.main_photo %}
                                 <li class="splide__slide thumbnail">
-                                    <img src="{{ image.url }}" alt="{% translate 'Thumbnail' %}">
+                                    <img src="{{ image.image_url }}" alt="{% translate 'Thumbnail' %}">
                                 </li>
                             {% endif %}
                         {% endfor %}

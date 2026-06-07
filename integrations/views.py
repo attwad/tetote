@@ -49,7 +49,6 @@ def sync_product(product_data):
 
     # Extract images
     images = product_data.get("images", [])
-    main_photo = images[0] if images else ""
 
     # Generate slug from Name
     stripe_name = product_data["name"]
@@ -62,7 +61,6 @@ def sync_product(product_data):
                 "name": stripe_name,  # Initial name
                 "stripe_name": stripe_name,
                 "slug": slug,
-                "main_photo": main_photo,
                 "price": 0,  # Placeholder until price event arrives
                 "date_added": datetime.datetime.fromtimestamp(
                     product_data["created"], tz=datetime.timezone.utc
@@ -74,9 +72,12 @@ def sync_product(product_data):
         # and that we WANT to keep in sync even after creation.
         product.stripe_name = stripe_name
 
-        # Only update images from Stripe if the product is being created for the first time
-        if created:
-            # Update Gallery
+        # Always update images from Stripe to keep order in sync.
+        # We compare to avoid unnecessary deletes if possible, but recreation is safer for order.
+        current_image_urls = list(
+            product.images.all().order_by("order").values_list("url", flat=True)
+        )
+        if current_image_urls != images:
             product.images.all().delete()
             for i, img_url in enumerate(images):
                 ProductImage.objects.create(product=product, url=img_url, order=i)

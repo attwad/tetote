@@ -32,8 +32,10 @@ class ProductImageInline(admin.TabularInline):
     readonly_fields = ("image_preview", "url")
 
     def image_preview(self, obj):
-        if obj.url:
-            return format_html('<img src="{}" style="max-height: 100px;"/>', obj.url)
+        if obj.image_url:
+            return format_html(
+                '<img src="{}" style="max-height: 100px;"/>', obj.image_url
+            )
         return "-"
 
     image_preview.short_description = "Preview"
@@ -109,7 +111,6 @@ class ProductAdmin(TabbedTranslationAdmin):
         "stripe_dashboard_url",
         "stripe_price_id",
         "stripe_name",
-        "main_photo",
         "price",
     )
     inlines = [ProductImageInline]
@@ -166,12 +167,8 @@ class ProductAdmin(TabbedTranslationAdmin):
                     )
 
         if product.stripe_product_id:
-            # Collect all image URLs: main_photo first, then gallery images in order
+            # Collect all image URLs from gallery in order
             images = []
-            if product.main_photo:
-                images.append(product.main_photo)
-
-            # Add gallery images, excluding duplicates and limiting to 8 total
             for img in product.images.all().order_by("order"):
                 if img.url and img.url not in images:
                     images.append(img.url)
@@ -191,7 +188,7 @@ class ProductAdmin(TabbedTranslationAdmin):
                     level="warning",
                 )
 
-    # Note: price and main_photo are read-only as well but since they are common
+    # Note: price is read-only as well but since it is common
     # we don't translate them. They are in fieldsets below.
     fieldsets = (
         (
@@ -206,7 +203,6 @@ class ProductAdmin(TabbedTranslationAdmin):
                     "price",
                     "description",
                     "details",
-                    "main_photo",
                     "date_added",
                 )
             },
