@@ -8,7 +8,7 @@
 {% block hero %}
     {# Carousel Section #}
     {% if carousel_images %}
-    <section class="mb-16 relative bg-brand-bg" aria-label="{% translate 'Hero Image Carousel' %}">
+    <section class="relative bg-brand-bg" aria-label="{% translate 'Hero Image Carousel' %}">
         <div id="home-carousel" class="splide">
             <div class="splide__track">
                 <ul class="splide__list">
@@ -26,11 +26,13 @@
                 </ul>
             </div>
         </div>
-        <!-- Logo Overlay -->
-        <div class="absolute bottom-12 left-12 z-10 pointer-events-none">
-            <img src="{% static 'images/tetote_logo.svg' %}" alt="Tetote" class="w-32 md:w-48 opacity-80">
-        </div>
     </section>
+
+    {# Centered Logo & Tagline #}
+    <div class="flex flex-col items-center justify-center py-12 mb-8">
+        <img src="{% static 'images/tetote_logo.svg' %}" alt="Tetote" class="w-48 md:w-64 mb-4">
+        <p class="text-brand-muted uppercase tracking-[0.3em] text-sm font-medium">{% translate "Japanese craft shop" %}</p>
+    </div>
     {% endif %}
 {% endblock %}
 
