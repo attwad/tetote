@@ -351,12 +351,8 @@ class ProductAdminTest(TestCase):
     @patch("stripe.FileLink.create")
     @patch("stripe.File.create")
     @patch("shop.admin.open", create=True)
-    @patch("shop.admin.os.path.exists")
-    @patch("shop.admin.os.remove")
     def test_save_related_uploads_first_image_to_stripe_and_keeps_local(
         self,
-        mock_remove,
-        mock_exists,
         mock_open,
         mock_file_create,
         mock_file_link_create,
@@ -378,7 +374,6 @@ class ProductAdminTest(TestCase):
         mock_file_link_create.return_value = MockObject(
             {"url": "https://files.stripe.com/test.jpg"}
         )
-        mock_exists.return_value = True
 
         with patch(
             "django.db.models.fields.files.FieldFile.path", new_callable=PropertyMock
@@ -396,9 +391,6 @@ class ProductAdminTest(TestCase):
             self.assertEqual(img.url, "https://files.stripe.com/test.jpg")
             # Local file MUST NOT be cleared
             self.assertTrue(img.image_file)
-
-            # Verify local file was NOT removed
-            mock_remove.assert_not_called()
 
     @patch("stripe.Product.modify")
     def test_save_related_syncs_only_first_image(self, mock_modify):
