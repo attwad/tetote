@@ -443,10 +443,16 @@ class ShopViewTests(TestCase):
             public=True,
         )
         ProductImage.objects.create(
-            product=product, url="https://example.com/main.jpg", order=0
+            product=product,
+            url="https://example.com/main.jpg",
+            image_file="product_images/main.jpg",
+            order=0,
         )
         ProductImage.objects.create(
-            product=product, url="https://example.com/secondary.jpg", order=1
+            product=product,
+            url="https://example.com/secondary.jpg",
+            image_file="product_images/secondary.jpg",
+            order=1,
         )
 
         # Create a product without a secondary image

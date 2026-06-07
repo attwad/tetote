@@ -150,10 +150,8 @@ class ProductImage(models.Model):
     @property
     def image_url(self):
         """
-        Returns the public URL from Stripe if available, otherwise fallback to local file URL.
+        Returns the local file URL. We no longer serve images from Stripe URLs directly.
         """
-        if self.url:
-            return self.url
         if self.image_file:
             return self.image_file.url
         return ""

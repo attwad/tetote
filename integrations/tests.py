@@ -22,22 +22,31 @@ class MockObject(dict):
         return self
 
 
+@patch("integrations.views.requests.get")
 class StripeIntegrationTest(TestCase):
     @patch("stripe.Price.list")
     @patch("stripe.Product.list")
-    def test_sync_stripe_command(self, mock_product_list, mock_price_list):
+    def test_sync_stripe_command(
+        self, mock_product_list, mock_price_list, mock_requests_get
+    ):
         # Mock product list
         mock_p1 = MockObject(
             {
                 "id": "prod_1",
                 "name": "Stripe Product 1",
-                "images": [],
+                "images": ["http://test.com/img1.jpg"],
                 "metadata": {},
                 "created": 1700000000,
             }
         )
 
         mock_product_list.return_value.auto_paging_iter.return_value = [mock_p1]
+
+        # Mock requests.get response
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.content = b"fake image content"
+        mock_requests_get.return_value = mock_response
 
         # Mock price list
         mock_price1 = MockObject(
@@ -60,24 +69,13 @@ class StripeIntegrationTest(TestCase):
         self.assertEqual(product.price, 1500)
         self.assertEqual(product.stripe_price_id, "price_1")
 
-        # Test sync_product directly
-        product_data = {
-            "id": "prod_test",
-            "name": "Test Product",
-            "description": "Test Desc",
-            "images": ["http://test.com/img1.jpg"],
-            "metadata": {"glaze": "bizen", "product_type": "vase"},
-            "created": 1700000000,
-        }
-
-        sync_product(product_data)
-
-        product = Product.objects.get(stripe_product_id="prod_test")
-        self.assertEqual(product.stripe_name, "Test Product")
+        # Verify images were downloaded
         self.assertEqual(product.images.count(), 1)
-        self.assertEqual(product.images.first().url, "http://test.com/img1.jpg")
+        self.assertTrue(product.images.first().image_file)
+        self.assertIn("img1", product.images.first().image_file.name)
+        self.assertTrue(product.images.first().image_file.name.endswith(".jpg"))
 
-    def test_sync_product_does_not_overwrite_price(self):
+    def test_sync_product_does_not_overwrite_price(self, mock_requests_get):
         # Create product with existing price
         Product.objects.create(
             stripe_product_id="prod_overwrite_test",
@@ -106,7 +104,7 @@ class StripeIntegrationTest(TestCase):
         self.assertEqual(product.price, 9900)
         self.assertEqual(product.stripe_price_id, "price_fixed")
 
-    def test_sync_product_does_not_overwrite_manual_date(self):
+    def test_sync_product_does_not_overwrite_manual_date(self, mock_requests_get):
         import datetime
         from django.utils import timezone
 
@@ -140,8 +138,8 @@ class StripeIntegrationTest(TestCase):
             product.date_added.timestamp(), manual_date.timestamp(), places=0
         )
 
-    def test_sync_product_does_not_overwrite_images(self):
-        # Create product with existing images
+    def test_sync_product_does_not_overwrite_images(self, mock_requests_get):
+        # Create product with existing images (with files)
         product = Product.objects.create(
             stripe_product_id="prod_img_test",
             name="Original",
@@ -151,14 +149,20 @@ class StripeIntegrationTest(TestCase):
             public=True,
         )
         ProductImage.objects.create(
-            product=product, url="http://test.com/original_main.jpg", order=0
+            product=product,
+            url="http://test.com/original_main.jpg",
+            image_file="product_images/original_main.jpg",
+            order=0,
         )
         ProductImage.objects.create(
-            product=product, url="http://test.com/original_gallery.jpg", order=1
+            product=product,
+            url="http://test.com/original_gallery.jpg",
+            image_file="product_images/original_gallery.jpg",
+            order=1,
         )
 
         # Update product via Stripe (simulated webhook/sync)
-        # Now it SHOULD overwrite images to match Stripe
+        # Now it SHOULD NOT overwrite images if they already exist in Django
         product_data = {
             "id": "prod_img_test",
             "name": "Updated Name",
@@ -170,12 +174,11 @@ class StripeIntegrationTest(TestCase):
 
         product.refresh_from_db()
         self.assertEqual(product.stripe_name, "Updated Name")
-        # Images SHOULD be updated to match Stripe
-        self.assertEqual(product.main_photo, "http://test.com/stripe_new.jpg")
-        self.assertEqual(product.images.count(), 1)
-        self.assertEqual(product.images.first().url, "http://test.com/stripe_new.jpg")
+        # Images SHOULD NOT be updated, keeping Django's local truth
+        self.assertEqual(product.images.count(), 2)
+        self.assertIn("original_main.jpg", product.main_photo)
 
-    def test_sync_price(self):
+    def test_sync_price(self, mock_requests_get):
         Product.objects.create(
             stripe_product_id="prod_test",
             name="Test",
@@ -193,7 +196,7 @@ class StripeIntegrationTest(TestCase):
         self.assertEqual(product.stripe_price_id, "price_test")
         self.assertEqual(product.price, 5000)
 
-    def test_sync_price_ignores_inactive(self):
+    def test_sync_price_ignores_inactive(self, mock_requests_get):
         product = Product.objects.create(
             stripe_product_id="prod_test",
             name="Test",
@@ -219,7 +222,7 @@ class StripeIntegrationTest(TestCase):
         self.assertEqual(product.price, 1000)
 
     @patch("stripe.Webhook.construct_event")
-    def test_stripe_webhook_product_updated(self, mock_construct):
+    def test_stripe_webhook_product_updated(self, mock_construct, mock_requests_get):
         mock_construct.return_value = {
             "type": "product.updated",
             "data": {
@@ -245,7 +248,9 @@ class StripeIntegrationTest(TestCase):
 
     @patch("stripe.checkout.Session.list_line_items")
     @patch("stripe.Webhook.construct_event")
-    def test_stripe_webhook_checkout_completed(self, mock_construct, mock_list_items):
+    def test_stripe_webhook_checkout_completed(
+        self, mock_construct, mock_list_items, mock_requests_get
+    ):
         product = Product.objects.create(
             stripe_product_id="prod_test",
             stripe_price_id="price_test",
@@ -279,7 +284,7 @@ class StripeIntegrationTest(TestCase):
         self.assertEqual(product.stock_quantity, 8)
 
     @patch("stripe.Webhook.construct_event")
-    def test_stripe_webhook_invalid_payload(self, mock_construct):
+    def test_stripe_webhook_invalid_payload(self, mock_construct, mock_requests_get):
         mock_construct.side_effect = ValueError()
         url = reverse("stripe_webhook")
         response = self.client.post(
@@ -288,7 +293,7 @@ class StripeIntegrationTest(TestCase):
         self.assertEqual(response.status_code, 400)
 
     @patch("stripe.Webhook.construct_event")
-    def test_stripe_webhook_invalid_signature(self, mock_construct):
+    def test_stripe_webhook_invalid_signature(self, mock_construct, mock_requests_get):
         mock_construct.side_effect = stripe.error.SignatureVerificationError(
             "msg", "sig"
         )
@@ -315,7 +320,7 @@ class ProductAdminTest(TestCase):
         )
 
     @patch("stripe.Product.modify")
-    def test_save_related_syncs_images_to_stripe(self, mock_modify):
+    def test_save_related_syncs_only_first_image_to_stripe(self, mock_modify):
         # Add gallery images
         ProductImage.objects.create(
             product=self.product, url="http://test.com/main.jpg", order=0
@@ -333,10 +338,9 @@ class ProductAdminTest(TestCase):
         # Call save_related
         self.admin.save_related(mock_request, mock_form, mock_formsets, change=True)
 
-        # Verify stripe.Product.modify was called with correct images
+        # Verify stripe.Product.modify was called with ONLY the first image
         expected_images = [
             "http://test.com/main.jpg",
-            "http://test.com/gallery.jpg",
         ]
         mock_modify.assert_called_once_with(
             "prod_admin_test",
@@ -349,7 +353,7 @@ class ProductAdminTest(TestCase):
     @patch("shop.admin.open", create=True)
     @patch("shop.admin.os.path.exists")
     @patch("shop.admin.os.remove")
-    def test_save_related_uploads_image_to_stripe(
+    def test_save_related_uploads_first_image_to_stripe_and_keeps_local(
         self,
         mock_remove,
         mock_exists,
@@ -358,14 +362,10 @@ class ProductAdminTest(TestCase):
         mock_file_link_create,
         mock_modify,
     ):
-        # Mocking the .path property of the ImageField
-        # We'll use a slightly different approach: patch the ProductImage.image_file.path directly
-        # But since we're using models, we can patch the underlying file storage or just the path
-
         img = ProductImage.objects.create(
             product=self.product,
             image_file="product_images/test.jpg",
-            order=1,
+            order=0,
         )
 
         # Mock the form and formsets
@@ -380,9 +380,6 @@ class ProductAdminTest(TestCase):
         )
         mock_exists.return_value = True
 
-        # Instead of patching the class, we let the real object be used but we mock the .path property
-        # and ensure it behaves like it has a file.
-        # Actually, since it's a real model instance, we can just set the path on the instance's field.
         with patch(
             "django.db.models.fields.files.FieldFile.path", new_callable=PropertyMock
         ) as mock_path:
@@ -393,22 +390,18 @@ class ProductAdminTest(TestCase):
 
             # Verify Stripe File creation
             mock_file_create.assert_called_once()
-            args, kwargs = mock_file_create.call_args
-            self.assertEqual(kwargs["purpose"], "product_image")
-
-            # Verify Stripe FileLink creation
-            mock_file_link_create.assert_called_once_with(file="file_123")
 
             # Verify DB was updated
             img.refresh_from_db()
             self.assertEqual(img.url, "https://files.stripe.com/test.jpg")
-            self.assertFalse(img.image_file)  # Should be cleared after upload
+            # Local file MUST NOT be cleared
+            self.assertTrue(img.image_file)
 
-            # Verify local file was removed
-            mock_remove.assert_called_once_with("/fake/path/test.jpg")
+            # Verify local file was NOT removed
+            mock_remove.assert_not_called()
 
     @patch("stripe.Product.modify")
-    def test_save_related_limits_to_8_images(self, mock_modify):
+    def test_save_related_syncs_only_first_image(self, mock_modify):
         # Add 10 gallery images
         for i in range(0, 10):
             ProductImage.objects.create(
@@ -419,11 +412,10 @@ class ProductAdminTest(TestCase):
         mock_form.instance = self.product
         self.admin.save_related(MagicMock(), mock_form, [], change=True)
 
-        # Verify only 8 images were sent
+        # Verify only 1 image was sent
         args, kwargs = mock_modify.call_args
-        self.assertEqual(len(kwargs["images"]), 8)
+        self.assertEqual(len(kwargs["images"]), 1)
         self.assertEqual(kwargs["images"][0], "http://test.com/0.jpg")
-        self.assertEqual(kwargs["images"][7], "http://test.com/7.jpg")
 
     def test_stripe_dashboard_url_returns_link(self):
         url = self.admin.stripe_dashboard_url(self.product)

@@ -1,11 +1,14 @@
 import stripe
 import datetime
+import requests
+import os
 from django.conf import settings
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.db import transaction
 from django.db.models import F
 from django.utils.text import slugify
+from django.core.files.base import ContentFile
 from shop.models import Product, ProductImage
 import logging
 
@@ -72,15 +75,26 @@ def sync_product(product_data):
         # and that we WANT to keep in sync even after creation.
         product.stripe_name = stripe_name
 
-        # Always update images from Stripe to keep order in sync.
-        # We compare to avoid unnecessary deletes if possible, but recreation is safer for order.
-        current_image_urls = list(
-            product.images.all().order_by("order").values_list("url", flat=True)
-        )
-        if current_image_urls != images:
-            product.images.all().delete()
+        # Django is the source of truth for images.
+        # We only pull images from Stripe if the product has NO images in Django yet
+        # (e.g., during the initial sync of a new product).
+        if not product.images.exists() and images:
             for i, img_url in enumerate(images):
-                ProductImage.objects.create(product=product, url=img_url, order=i)
+                new_img = ProductImage.objects.create(
+                    product=product, url=img_url, order=i
+                )
+                # Immediately download and save locally
+                try:
+                    response = requests.get(img_url, timeout=10)
+                    if response.status_code == 200:
+                        filename = os.path.basename(img_url.split("?")[0])
+                        if not filename or "." not in filename:
+                            filename = f"product_{product.id}_{i}.jpg"
+                        new_img.image_file.save(
+                            filename, ContentFile(response.content), save=True
+                        )
+                except Exception as e:
+                    logger.error(f"Failed to download image from Stripe: {e}")
 
         product.save()
 

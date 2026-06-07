@@ -1,5 +1,4 @@
 import stripe
-import os
 from django.conf import settings
 from django.contrib import admin
 from django.utils.html import format_html
@@ -32,7 +31,6 @@ admin.site.index_title = _("tetote admin room")
 class ProductImageInline(SortableInlineAdminMixin, admin.TabularInline):
     model = ProductImage
     extra = 1
-    max_num = 8
     fields = ("image_file", "url", "image_preview")
     readonly_fields = ("image_preview", "url")
 
@@ -142,63 +140,66 @@ class ProductAdmin(SortableAdminBase, TabbedTranslationAdmin):
 
     def save_related(self, request, form, formsets, change):
         """
-        After saving the product and its images, sync the images to Stripe.
+        After saving the product and its images, sync the first image to Stripe.
+        Django is the source of truth for images and hosts them locally.
         """
         super().save_related(request, form, formsets, change)
 
         product = form.instance
 
-        # Handle file uploads to Stripe for each ProductImage
-        for img in product.images.all():
-            if img.image_file:
+        # 1. Detect if any image_file has changed in the formset
+        # and clear its 'url' so it gets re-uploaded if it's the first one.
+        for formset in formsets:
+            if formset.model == ProductImage:
+                for f in formset.forms:
+                    if f.instance.pk and "image_file" in f.changed_data:
+                        f.instance.url = ""
+                        f.instance.save()
+
+        # 2. Sync images with Stripe
+        # Only the first image is sent to Stripe (required for Checkout)
+        images = product.images.all().order_by("order")
+        if images.exists():
+            first_img = images[0]
+
+            # Ensure the first image has a Stripe URL if it has a local file
+            if first_img.image_file and not first_img.url:
                 try:
-                    # 1. Upload file to Stripe
-                    with open(img.image_file.path, "rb") as f:
+                    with open(first_img.image_file.path, "rb") as f:
                         stripe_file = stripe.File.create(
                             file=f, purpose="product_image"
                         )
 
-                    # 2. Create a public FileLink to get a public URL
                     stripe_link = stripe.FileLink.create(file=stripe_file.id)
-
-                    # 3. Store the public URL in the database
-                    img.url = stripe_link.url
-                    img.save()
-
-                    # 4. Delete the local temporary file
-                    if os.path.exists(img.image_file.path):
-                        os.remove(img.image_file.path)
-                        img.image_file = None
-                        img.save()
-
+                    first_img.url = stripe_link.url
+                    first_img.save()
                 except Exception as e:
                     self.message_user(
                         request,
-                        f"Warning: Failed to upload image for {product.name} to Stripe: {e}",
+                        f"Warning: Failed to upload first image to Stripe: {e}",
                         level="warning",
                     )
 
-        if product.stripe_product_id:
-            # Collect all image URLs from gallery in order
-            images = []
-            for img in product.images.all().order_by("order"):
-                if img.url and img.url not in images:
-                    images.append(img.url)
-
-            # Stripe allows up to 8 images
-            final_images = images[:8]
-
+            # Sync only the first image's URL to Stripe Product
+            if product.stripe_product_id:
+                try:
+                    stripe_images = [first_img.url] if first_img.url else []
+                    stripe.Product.modify(
+                        product.stripe_product_id,
+                        images=stripe_images,
+                    )
+                except Exception as e:
+                    self.message_user(
+                        request,
+                        f"Warning: Failed to sync first image to Stripe: {e}",
+                        level="warning",
+                    )
+        elif product.stripe_product_id:
+            # No images left, clear Stripe images
             try:
-                stripe.Product.modify(
-                    product.stripe_product_id,
-                    images=final_images,
-                )
-            except Exception as e:
-                self.message_user(
-                    request,
-                    f"Warning: Failed to sync images to Stripe: {e}",
-                    level="warning",
-                )
+                stripe.Product.modify(product.stripe_product_id, images=[])
+            except Exception:
+                pass
 
     # Note: price is read-only as well but since it is common
     # we don't translate them. They are in fieldsets below.
