@@ -22,18 +22,18 @@ Genießen Sie Mindfulness (eine Achtsamkeit) mit den Produkten von deidei, die t
 
 ## Geschichte von deidei
 
-**2022**
+### 2022
 Gründung der Keramik-Geschirr-Marke „deidei“
 
-**2024**
+### 2024
 “„deidei-Ausstellung“ im Ceramic Park MINO (Gifu, JAPAN)
 
-**2025**
-„Dialogue Kyoto-Ausstellung“ – Gruppenausstellung (Kyoto, JAPAN)
-POP-UP-Event im Kaufhaus Nihonbashi Mitsukoshi (Tokyo, JAPAN)
-„Living Motif – Japanische Werkzeuge-Ausstellung“ – Gruppenausstellung (Tokyo, JAPAN)
+### 2025
+„Dialogue Kyoto-Ausstellung“ – Gruppenausstellung (Kyoto, JAPAN)<br>
+POP-UP-Event im Kaufhaus Nihonbashi Mitsukoshi (Tokyo, JAPAN)<br>
+„Living Motif – Japanische Werkzeuge-Ausstellung“ – Gruppenausstellung (Tokyo, JAPAN)<br>
 „deidei-Keramikausstellung“ in der Galleria ORIBE (Gifu, JAPAN)
 
-**2026**
-„MONO JAPAN 2026“ – Gruppenausstellung (Rotterdam, NIEDERLANDE)
-POP-UP-Event im Kaufhaus Nihonbashi Mitsukoshi (Tokyo, JAPAN)
+### 2026
+„MONO JAPAN 2026“ – Gruppenausstellung (Rotterdam, NIEDERLANDE)<br>
+POP-UP-Event im Kaufhaus Ginza Mitsukoshi (Tokyo, JAPAN)

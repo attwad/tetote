@@ -30,11 +30,11 @@ Etablissement de “deidei”, la marque de vaisselle céramique
 “deidei Exhibition” à Ceramic Park MINO (Gifu, JAPON)
 
 ### 2025
-“Dialogue Kyoto Exhibition” - exposition collective  (Kyoto, JAPON)
-POP-UP à Nihonbashi Mitsukoshi (Tokyo, JAPON)
-“Living Motif - Japanese Tools Exhibition” - exposition collective  (Tokyo, JAPON)
+“Dialogue Kyoto Exhibition” - exposition collective  (Kyoto, JAPON)<br>
+POP-UP à Nihonbashi Mitsukoshi (Tokyo, JAPON)<br>
+“Living Motif - Japanese Tools Exhibition” - exposition collective  (Tokyo, JAPON)<br>
 “deidei Ceramic Exhibition” à Galleria ORIBE (Gifu, JAPON)
 
 ### 2026
-“MONO JAPAN 2026” - exposition collective (Rotterdam, PAYS-BAS)
-POP-UP à Nihonbashi Mitsukoshi (Tokyo, JAPON)
+“MONO JAPAN 2026” - exposition collective (Rotterdam, PAYS-BAS)<br>
+POP-UP à Ginza Mitsukoshi (Tokyo, JAPON)

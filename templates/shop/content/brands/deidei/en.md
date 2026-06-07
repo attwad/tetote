@@ -30,11 +30,11 @@ Established the ceramic tableware brand “deidei”
 “deidei Exhibition” at Ceramic Park MINO (Gifu, JAPAN)
 
 ### 2025
-“Dialogue Kyoto Exhibition” - Group Exhibition (Kyoto, JAPAN)
-POP-UP event at Nihonbashi Mitsukoshi (Tokyo, JAPAN)
-“Living Motif - Japanese Tools Exhibition” - Group Exhibition  (Tokyo, JAPAN)
+“Dialogue Kyoto Exhibition” - Group Exhibition (Kyoto, JAPAN)<br>
+POP-UP event at Nihonbashi Mitsukoshi (Tokyo, JAPAN)<br>
+“Living Motif - Japanese Tools Exhibition” - Group Exhibition  (Tokyo, JAPAN)<br>
 “deidei Ceramic Exhibition” at Galleria ORIBE (Gifu, JAPAN)
 
 ### 2026
-“MONO JAPAN 2026” - Group Exhibition (Rotterdam, NETHERLANDS)
-POP-UP event at Nihonbashi Mitsukoshi (Tokyo, JAPAN)
+“MONO JAPAN 2026” - Group Exhibition (Rotterdam, NETHERLANDS)<br>
+POP-UP event at Ginza Mitsukoshi (Tokyo, JAPAN)

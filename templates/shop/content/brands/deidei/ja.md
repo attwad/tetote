@@ -25,11 +25,11 @@
 セラミックパークMINO(岐阜)にて「泥々」展を開催
 
 ### 2025年
-ガレリア織部(岐阜)にて「泥々作陶展　堀俊郎・堀太一」を開催
-Dialogue Kyoto Exhibition(京都)に出展
-本橋三越本店にてPOPUP開催
+ガレリア織部(岐阜)にて「泥々作陶展　堀俊郎・堀太一」を開催<br>
+Dialogue Kyoto Exhibition(京都)に出展<br>
+本橋三越本店にてPOPUP開催<br>
 Living Motif「日本の道具」展（六本木）に出品
 
 ### 2026年
-「MONO JAPAN 2026」(オランダ・ロッテルダム)に出展
-日本橋三越本店にてPOPUP開催
+「MONO JAPAN 2026」(オランダ・ロッテルダム)に出展<br>
+銀座三越にてPOPUP開催
