@@ -88,11 +88,11 @@ msgstr "Stripe名称"
 
 #: shop/models.py:68 templates/shop/product_detail.html:120
 msgid "Description"
-msgstr "説明"
+msgstr "商品紹介"
 
 #: shop/models.py:69 templates/shop/product_detail.html:128
 msgid "Details"
-msgstr "詳細"
+msgstr "商品スペック"
 
 #: shop/models.py:70
 msgid "Price (CHF cents)"
@@ -516,7 +516,7 @@ msgstr "絞り込み"
 
 #: templates/shop/product_list.html:97
 msgid "Sort by"
-msgstr "並べ替え"
+msgstr "並び替え"
 
 #: templates/shop/product_list.html:99
 msgid "New in Shop"
