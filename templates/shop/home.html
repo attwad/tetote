@@ -13,26 +13,34 @@
             <div class="splide__track">
                 <ul class="splide__list">
                     {% for item in carousel_images %}
-                    <li class="splide__slide flex items-center justify-center">
-                        {% if item.localized_link %}
-                        <a href="{{ item.localized_link }}" class="block w-full h-full">
-                            <img data-splide-lazy="{{ item.image.url }}" alt="" class="w-full h-full object-contain block">
-                        </a>
-                        {% else %}
-                        <img data-splide-lazy="{{ item.image.url }}" alt="" class="object-contain block">
-                        {% endif %}
+                    <li class="splide__slide">
+                        <div class="relative w-full h-full">
+                            {% if item.localized_link %}
+                            <a href="{{ item.localized_link }}" class="block w-full h-full relative">
+                                <img data-splide-lazy="{{ item.image.url }}" alt="{{ item.alt_text }}" class="w-full h-full object-cover block">
+                                {% if item.overlay_image %}
+                                <div class="absolute inset-y-0 right-[80px] z-10 flex items-center pointer-events-none">
+                                    <img src="{{ item.overlay_image.url }}" alt="" class="w-[200px] md:w-[300px] h-auto block">
+                                </div>
+                                {% endif %}
+                            </a>
+                            {% else %}
+                            <div class="relative w-full h-full">
+                                <img data-splide-lazy="{{ item.image.url }}" alt="{{ item.alt_text }}" class="w-full h-full object-cover block">
+                                {% if item.overlay_image %}
+                                <div class="absolute inset-y-0 right-[80px] z-10 flex items-center pointer-events-none">
+                                    <img src="{{ item.overlay_image.url }}" alt="" class="w-[200px] md:w-[300px] h-auto block">
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                        </div>
                     </li>
                     {% endfor %}
                 </ul>
             </div>
         </div>
     </section>
-
-    {# Centered Logo & Tagline #}
-    <div class="flex flex-col items-center justify-center py-12 mb-8">
-        <img src="{% static 'images/tetote_logo.svg' %}" alt="Tetote" class="w-48 md:w-64 mb-4">
-        <p class="text-brand-muted uppercase tracking-[0.3em] text-sm font-medium">{% translate "Japanese craft shop" %}</p>
-    </div>
     {% endif %}
 {% endblock %}
 

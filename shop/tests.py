@@ -31,9 +31,13 @@ class HomeViewTests(TestCase):
             is_draft=True,
         )
 
-        # Create a carousel image
+        # Create a carousel image with alt text and overlay
         image_content = b"GIF89a\x01\x00\x01\x00\x80\x00\x00\x00\x00\x00\xff\xff\xff!\xf9\x04\x01\x00\x00\x00\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x01D\x00;"
-        CarouselImage.objects.create(image=ContentFile(image_content, name="c1.gif"))
+        CarouselImage.objects.create(
+            image=ContentFile(image_content, name="c1.gif"),
+            alt_text_en="Beautiful Vase",
+            overlay_image=ContentFile(b"<svg></svg>", name="overlay.svg"),
+        )
 
         url = reverse("shop:home")
         response = self.client.get(url)
@@ -42,6 +46,9 @@ class HomeViewTests(TestCase):
         self.assertNotContains(response, "Draft News")
         self.assertContains(response, "splide__slide")
         self.assertContains(response, "carousel/c1")
+        self.assertContains(response, "Beautiful Vase")
+        self.assertContains(response, "overlay")
+        self.assertContains(response, ".svg")
         self.assertContains(response, reverse("shop:product_list"))
         self.assertContains(response, "Enter the Shop")
 

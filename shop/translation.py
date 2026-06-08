@@ -1,5 +1,12 @@
 from modeltranslation.translator import register, TranslationOptions
-from .models import Brand, Product, Glaze, ProductType, StoreAnnouncement
+from .models import (
+    Brand,
+    Product,
+    Glaze,
+    ProductType,
+    StoreAnnouncement,
+    CarouselImage,
+)
 
 
 @register(Brand)
@@ -25,3 +32,8 @@ class ProductTranslationOptions(TranslationOptions):
 @register(StoreAnnouncement)
 class StoreAnnouncementTranslationOptions(TranslationOptions):
     fields = ("text",)
+
+
+@register(CarouselImage)
+class CarouselImageTranslationOptions(TranslationOptions):
+    fields = ("alt_text",)

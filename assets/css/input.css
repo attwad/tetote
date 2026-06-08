@@ -176,7 +176,7 @@
   }
 
   /* Splide & Thumbnail Styles */
-  .splide__slide img {
+  .product-gallery-img {
     @apply block w-full aspect-square object-contain bg-[#fdfdfd];
   }
   .pswp-gallery .splide__slide img {

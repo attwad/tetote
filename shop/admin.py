@@ -69,8 +69,8 @@ class StoreAnnouncementAdmin(TranslationAdmin):
 
 
 @admin.register(CarouselImage)
-class CarouselImageAdmin(SortableAdminMixin, admin.ModelAdmin):
-    list_display = ("image_preview", "created_at")
+class CarouselImageAdmin(SortableAdminMixin, TabbedTranslationAdmin):
+    list_display = ("image_preview", "alt_text", "created_at")
     list_filter = ()
 
     def image_preview(self, obj):

@@ -183,6 +183,16 @@ class StoreSettings(models.Model):
 
 class CarouselImage(models.Model):
     image = models.ImageField(_("Image"), upload_to="carousel/")
+    alt_text = models.CharField(_("Alt Text"), max_length=255, blank=True)
+    overlay_image = models.FileField(
+        _("Overlay Image"),
+        upload_to="carousel/overlays/",
+        blank=True,
+        null=True,
+        help_text=_(
+            "Optional SVG overlay centered horizontally and stuck to the right."
+        ),
+    )
     link = models.CharField(
         _("Link"),
         max_length=500,
