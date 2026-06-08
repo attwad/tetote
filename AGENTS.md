@@ -18,25 +18,20 @@ Welcome to Tetote. This document provides critical procedural and architectural 
 
 ## 🛠 Engineering Standards
 - **Test Coverage:** Maintain 95%+ coverage.
-    - Use Django standard tests (including `WagtailPageTestCase` for blog logic) for backend logic.
-    - Use **Vitest + JSDOM** for frontend logic (no browser-only tests).
+    - Use Django standard tests for backend logic.
 - **Code Quality:**
     - Formatting/Linting is strictly enforced by **Ruff**.
     - Run `uv run ruff format .` before finishing any task.
 - **Localization:**
     - All user-facing strings **must** be wrapped in `{% translate %}` or `gettext_lazy`.
-    - The **Shop** uses `django-modeltranslation`.
-    - The **Blog** uses **Wagtail's native multi-tree i18n** (`wagtail.locales`).
+    - The **Shop** and **Blog** use `django-modeltranslation`.
 - **CMS Management:**
-    - The **Django Admin** (`/admin/`) is for commerce, inventory, and brands.
-    - The **Wagtail CMS** (`/cms/`) is for the blog and storytelling content.
-    - Both share the same authentication system and user accounts.
+    - The **Django Admin** (`/admin/`) is for commerce, inventory, brands, and the blog.
 
 ## 🧪 Testing Workflow
 1. **Unit Tests:** `npm run test:unit` (Backend + Frontend unit tests)
 2. **Integration Tests:** `npm run test:integration` (Playwright E2E journeys)
 3. **Surgical Verification:** If you modify sync logic, verify that manual local data (like stock) is preserved after a sync.
-4. **Wagtail Verification:** When adding blog features, ensure that `BlogIndexPage` and `BlogPage` are correctly testable via `WagtailPageTestCase`.
 
 ## 🐙 GitHub Workflow
 - **Issue Management:** Always prefer closing issues automatically via git commit messages (e.g., `Closes #18`) in the push to the remote, rather than using the `gh` CLI directly.

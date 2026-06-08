@@ -13,7 +13,6 @@ dependencies = [
     "markdown>=3.5.2",
     "pillow>=12.1.1",
     "stripe>=14.4.0",
-    "wagtail>=6.0",
 ]
 
 [dependency-groups]

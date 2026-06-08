@@ -1,12 +1,11 @@
 from django.contrib import admin
 from modeltranslation.admin import TranslationAdmin
-from .models import BlogPost
+from .models import NewsItem
 
 
-@admin.register(BlogPost)
-class BlogPostAdmin(TranslationAdmin):
+@admin.register(NewsItem)
+class NewsItemAdmin(TranslationAdmin):
     list_display = ("title", "date", "is_draft", "created_at")
     list_filter = ("is_draft", "date")
     search_fields = ("title", "content")
-    prepopulated_fields = {"slug": ("title",)}
     date_hierarchy = "date"

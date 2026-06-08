@@ -1,22 +1,25 @@
 {% extends "base.html" %}
-{% load i18n wagtailcore_tags %}
+{% load i18n markdown_extras %}
 
-{% block title %}{{ page.title }} - Tetote{% endblock %}
+{% block title %}{{ post.title }} - Tetote{% endblock %}
 
-{% block meta_description %}{{ page.body|striptags|truncatechars:160 }}{% endblock %}
+{% block meta_description %}{{ post.content|striptags|truncatechars:160 }}{% endblock %}
 
 {% block content %}
     <article class="max-w-[800px] mx-auto pt-12">
-        <h1 class="mb-4 font-serif italic text-4xl">{{ page.title }}</h1>
+        <h1 class="mb-4 font-serif italic text-4xl">
+            {{ post.title }}
+            {% if post.is_draft %}
+                <span class="ml-2 text-xs uppercase tracking-widest px-2 py-1 border border-brand-muted text-brand-muted italic align-middle">{% translate "Draft" %}</span>
+            {% endif %}
+        </h1>
         <p class="text-brand-muted text-[0.9rem] mb-6">
-            {% translate "Published on" %} {{ page.date|date:"F j, Y" }}
+            {% translate "Published on" %} {{ post.date|date:"F j, Y" }}
         </p>
         <hr class="border-none border-t border-brand-border my-6">
 
         <div class="markdown-content">
-            {% for block in page.body %}
-                {% include_block block %}
-            {% endfor %}
+            {{ post.content|markdownify }}
         </div>
 
         <hr class="border-none border-t border-brand-border my-6">

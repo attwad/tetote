@@ -14,19 +14,17 @@ Tetote is a high-end, minimalist e-commerce platform and digital showroom dedica
 - **High Test Coverage:** The project maintains near-total test coverage across both the Django backend (Python) and the modular frontend (Node/Vitest/JSDOM).
 - **Hybrid Content Management:**
     - **Stripe:** Acts as the source of truth for **Products and Prices**.
-    - **Wagtail CMS:** Powering the **Blog and artisanal storytelling** with a flexible StreamField-based editor.
-    - **Django:** Acts as the source of truth for **Inventory (Stock)**, **Brands**, **Glaze**, **Product Types**, and **Shop Translations**.
+    - **Django:** Acts as the source of truth for **Inventory (Stock)**, **Brands**, **Glaze**, **Product Types**, **Blog**, and **Shop Translations**.
 - **Surgical Sync Logic:** Integration with Stripe is "surgical"—webhooks and sync commands only update specific fields (like `stripe_name` and `price`), ensuring that manual stock levels and translations managed in the Django Admin are never overwritten.
 - **Consistency:** Coding practices are enforced via `Ruff` (linting/formatting) and custom git hooks.
 
 ## 🏗 Technical Stack
 - **Backend:** Django 6.0+ (Python 3.14+)
-- **CMS:** Wagtail 7.4+ (LTS)
 - **Frontend:** Vanilla JS (ES Modules), Tailwind CSS
-- **Database:** SQLite (Development) / `django-modeltranslation` (Shop) / Wagtail i18n (Blog)
+- **Database:** SQLite (Development) / `django-modeltranslation` (Shop & Blog)
 - **Payments:** Stripe (Checkout Sessions & Webhooks)
 - **Testing:**
-    - **Django Test Suite** (including `WagtailPageTestCase`) for business logic and integrations.
+    - **Django Test Suite** for business logic and integrations.
     - **Playwright Integration Tests** for E2E user journeys (Chrome headless).
     - **Vitest & JSDOM** for isolated frontend unit testing.
 - **Package Management:** `uv` (Python), `npm` (JS)
@@ -35,7 +33,7 @@ Tetote is a high-end, minimalist e-commerce platform and digital showroom dedica
 - **Smart Filtering:** A rich, URL-persistent chip system allowing multiple selections and single-click toggles.
 - **Persistent Cart:** A `localStorage` driven cart with real-time local stock verification.
 - **Dynamic Showroom:** Smooth cross-fade hover effects and a high-performance, navigable fullscreen gallery (PhotoSwipe v5).
-- **Wagtail-Powered Blog:** A highly flexible, StreamField-powered blog system for sharing event stories and ceramic techniques with native multi-language support.
+- **Markdown-Powered Blog:** A simple, Markdown-based blog system for sharing stories and ceramic techniques with native multi-language support.
 - **Custom Toast System:** A non-intrusive, styled notification library for user feedback.
 
 ## 📋 Development

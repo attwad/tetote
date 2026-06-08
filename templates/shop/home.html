@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n wagtailcore_tags wagtailimages_tags static %}
+{% load i18n static markdown_extras %}
 
 {% block extra_head %}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css">
@@ -44,10 +44,15 @@
         <div class="flex flex-col gap-8">
             {% for item in news_items %}
             <article>
-                <h3 class="text-2xl mb-2">{{ item.title }}</h3>
-                <p class="text-brand-muted text-sm mb-4">{{ item.first_published_at|date:"F j, Y" }}</p>
+                <h3 class="text-2xl mb-2">
+                    {{ item.title }}
+                    {% if item.is_draft %}
+                        <span class="ml-2 text-xs uppercase tracking-widest px-2 py-1 border border-brand-muted text-brand-muted italic align-middle">{% translate "Draft" %}</span>
+                    {% endif %}
+                </h3>
+                <p class="text-brand-muted text-sm mb-4">{{ item.date|date:"F j, Y" }}</p>
                 <div class="prose prose-brand">
-                    {{ item.specific.paragraph|richtext }}
+                    {{ item.content|markdownify }}
                 </div>
             </article>
             {% if not forloop.last %}

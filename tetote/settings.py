@@ -66,21 +66,6 @@ INSTALLED_APPS = [
     "django.contrib.sites",
     "django.contrib.sitemaps",
     # Third-party apps
-    "wagtail.contrib.forms",
-    "wagtail.contrib.redirects",
-    "wagtail.embeds",
-    "wagtail.sites",
-    "wagtail.users",
-    "wagtail.snippets",
-    "wagtail.documents",
-    "wagtail.images",
-    "wagtail.search",
-    "wagtail.admin",
-    "wagtail.locales",
-    "wagtail.contrib.simple_translation",
-    "wagtail",
-    "modelcluster",
-    "taggit",
     "adminsortable2",
     # Project apps
     "shop.apps.ShopConfig",
@@ -100,7 +85,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "wagtail.contrib.redirects.middleware.RedirectMiddleware",
     "shop.middleware.ShopDisabledMiddleware",
 ]
 
@@ -224,12 +208,6 @@ UMAMI_WEBSITE_ID = env("UMAMI_WEBSITE_ID", default="")
 # https://docs.djangoproject.com/en/6.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-# Wagtail settings
-WAGTAIL_SITE_NAME = "Tetote"
-WAGTAIL_I18N_ENABLED = True
-WAGTAIL_CONTENT_LANGUAGES = LANGUAGES
-WAGTAILADMIN_BASE_URL = "/cms"
 
 # Modeltranslation settings
 MODELTRANSLATION_FALLBACK_LANGUAGES = ("en", "de", "fr", "ja")

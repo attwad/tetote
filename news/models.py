@@ -1,34 +1,21 @@
-from wagtail.models import Page
-from wagtail.fields import RichTextField
-from wagtail.admin.panels import FieldPanel
+from django.db import models
 
 
-class NewsIndexPage(Page):
-    content_panels = Page.content_panels
+class NewsItem(models.Model):
+    title = models.CharField(max_length=255)
+    content = models.TextField(help_text="Markdown supported")
+    date = models.DateField(help_text="Publication date shown on the post")
+    is_draft = models.BooleanField(
+        default=True, help_text="Draft news items are only visible to staff members."
+    )
 
-    def get_context(self, request):
-        context = super().get_context(request)
-        # Limit to the latest 5 news items
-        newsitems = self.get_children().live().order_by("-first_published_at")[:5]
-        context["newsitems"] = newsitems
-        return context
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
-    # Restrict child page types
-    subpage_types = ["news.NewsItem"]
+    class Meta:
+        ordering = ["-date", "-created_at"]
+        verbose_name = "News Item"
+        verbose_name_plural = "News Items"
 
-
-class NewsItem(Page):
-    paragraph = RichTextField(blank=True)
-
-    content_panels = Page.content_panels + [
-        FieldPanel("paragraph"),
-    ]
-
-    # Parent page restrictions
-    parent_page_types = ["news.NewsIndexPage"]
-    subpage_types = []
-
-    def serve(self, request):
-        from django.http import Http404
-
-        raise Http404
+    def __str__(self):
+        return self.title

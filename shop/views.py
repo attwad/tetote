@@ -19,9 +19,12 @@ class HomeView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["carousel_images"] = CarouselImage.objects.all()
-        context["news_items"] = NewsItem.objects.live().order_by("-first_published_at")[
-            :5
-        ]
+
+        news_qs = NewsItem.objects.all()
+        if not self.request.user.is_staff:
+            news_qs = news_qs.filter(is_draft=False)
+
+        context["news_items"] = news_qs.order_by("-date")[:5]
         return context
 
 

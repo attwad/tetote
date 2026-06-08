@@ -11,11 +11,6 @@ from shop.sitemaps import ProductSitemap, BrandSitemap
 from django.contrib.sitemaps import Sitemap
 from django.urls import reverse
 
-from wagtail.admin import urls as wagtailadmin_urls
-from wagtail import urls as wagtail_urls
-from wagtail.documents import urls as wagtaildocs_urls
-from wagtail.contrib.sitemaps import Sitemap as WagtailSitemap
-
 
 class StaticViewSitemap(Sitemap):
     i18n = True
@@ -40,7 +35,6 @@ class StaticViewSitemap(Sitemap):
 
 sitemaps = {
     "static": StaticViewSitemap,
-    "wagtail": WagtailSitemap,
 }
 
 if not getattr(settings, "SHOP_DISABLED", False):
@@ -64,8 +58,6 @@ def robots_txt(request):
 urlpatterns = [
     # Exempt from i18n_patterns (like webhooks)
     path("stripe/webhook/", stripe_webhook, name="stripe_webhook"),
-    path("cms/", include(wagtailadmin_urls)),
-    path("documents/", include(wagtaildocs_urls)),
     path(
         "sitemap.xml",
         sitemap,
@@ -81,7 +73,6 @@ urlpatterns += i18n_patterns(
     path("", include("shop.urls")),
     path("blog/", include("blog.urls")),
     path("news/", include("news.urls")),
-    path("", include(wagtail_urls)),
     prefix_default_language=False,
 )
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-31 09:06+0000\n"
+"POT-Creation-Date: 2026-06-08 19:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,15 +18,21 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: shop/admin.py:22 shop/admin.py:24
+#: shop/admin.py:26 shop/admin.py:28
 msgid "tetote admin room"
 msgstr ""
 
-#: shop/admin.py:23
+#: shop/admin.py:27
 msgid "tetote Admin"
 msgstr ""
 
-#: shop/admin.py:120
+#: shop/admin.py:83
+#, fuzzy
+#| msgid "Previous"
+msgid "Preview"
+msgstr "Précédent"
+
+#: shop/admin.py:131
 msgid "Stripe Dashboard URL"
 msgstr ""
 
@@ -48,16 +54,16 @@ msgstr "Contenu"
 msgid "The slug for the static markdown page (e.g., bizen)"
 msgstr ""
 
-#: shop/models.py:19 shop/models.py:80 templates/shop/product_detail.html:76
+#: shop/models.py:19 shop/models.py:79 templates/shop/product_detail.html:76
 msgid "Brand"
 msgstr "Marque"
 
-#: shop/models.py:20 templates/base.html:53 templates/base.html:126
+#: shop/models.py:20 templates/base.html:53 templates/base.html:111
 #: templates/shop/product_list.html:35
 msgid "Brands"
 msgstr "Marques"
 
-#: shop/models.py:41 shop/models.py:88 templates/shop/product_detail.html:79
+#: shop/models.py:41 shop/models.py:87 templates/shop/product_detail.html:79
 #: templates/shop/product_list.html:50
 msgid "Glaze"
 msgstr "Émaux"
@@ -66,7 +72,7 @@ msgstr "Émaux"
 msgid "Glazes"
 msgstr "Émaux"
 
-#: shop/models.py:53 shop/models.py:96
+#: shop/models.py:53 shop/models.py:95
 msgid "Product Type"
 msgstr "Type de produit"
 
@@ -99,120 +105,130 @@ msgid "Price (CHF cents)"
 msgstr "Prix (centimes CHF)"
 
 #: shop/models.py:71
-msgid "Main Photo URL"
-msgstr "URL de la photo principale"
-
-#: shop/models.py:72
 msgid "Stock Quantity"
 msgstr "Quantité disponible"
 
-#: shop/models.py:73
+#: shop/models.py:72
 msgid "Public"
 msgstr "Public"
 
-#: shop/models.py:98
+#: shop/models.py:97
 msgid "Date Added"
 msgstr "Date d'ajout"
 
-#: shop/models.py:101 shop/models.py:125
+#: shop/models.py:100 shop/models.py:134
 msgid "Product"
 msgstr "Produit"
 
-#: shop/models.py:102
+#: shop/models.py:101
 msgid "Products"
 msgstr "Produits"
 
-#: shop/models.py:127
+#: shop/models.py:136
 msgid "Image URL"
 msgstr "URL de l'image"
 
-#: shop/models.py:129
+#: shop/models.py:138
 #, fuzzy
 #| msgid "Image URL"
 msgid "Image File"
 msgstr "URL de l'image"
 
-#: shop/models.py:131 shop/models.py:168
+#: shop/models.py:140 shop/models.py:192
 msgid "Order"
 msgstr "Ordre"
 
-#: shop/models.py:134
+#: shop/models.py:143
 msgid "Product Image"
 msgstr "Image du produit"
 
-#: shop/models.py:135
+#: shop/models.py:144
 msgid "Product Images"
 msgstr "Images du produit"
 
-#: shop/models.py:143
+#: shop/models.py:161
 msgid "Announcement Text"
 msgstr "Texte de l'annonce"
 
-#: shop/models.py:144 shop/models.py:169
+#: shop/models.py:162
 msgid "Is Active"
 msgstr "Est actif"
 
-#: shop/models.py:148
+#: shop/models.py:166
 msgid "Store Announcement"
 msgstr "Annonce de la boutique"
 
-#: shop/models.py:149
+#: shop/models.py:167
 msgid "Store Announcements"
 msgstr "Annonces de la boutique"
 
-#: shop/models.py:156
+#: shop/models.py:174
 msgid "Sales Paused"
 msgstr "Ventes suspendues"
 
-#: shop/models.py:159 shop/models.py:160 shop/models.py:163
+#: shop/models.py:177 shop/models.py:178 shop/models.py:181
 msgid "Store Settings"
 msgstr "Paramètres de la boutique"
 
-#: shop/models.py:167
+#: shop/models.py:185
 #, fuzzy
 #| msgid "Image URL"
 msgid "Image"
 msgstr "URL de l'image"
 
-#: shop/models.py:173
+#: shop/models.py:187
+msgid "Link"
+msgstr ""
+
+#: shop/models.py:190
+msgid "Internal path (e.g. /shop/) or external URL"
+msgstr ""
+
+#: shop/models.py:196
 #, fuzzy
 #| msgid "Product Image"
 msgid "Carousel Image"
 msgstr "Image du produit"
 
-#: shop/models.py:174
+#: shop/models.py:197
 #, fuzzy
 #| msgid "Product Images"
 msgid "Carousel Images"
 msgstr "Images du produit"
 
-#: shop/views.py:201
+#: shop/test_maintenance.py:18 shop/test_maintenance.py:30
+#: shop/test_maintenance.py:37 shop/test_maintenance.py:56
+#: templates/shop/wip.html:9
+msgid "Coming Soon"
+msgstr "Bientôt disponible"
+
+#: shop/views.py:226
 msgid "Checkout is temporarily disabled"
 msgstr "Le paiement est temporairement désactivé"
 
-#: shop/views.py:209
+#: shop/views.py:234
 msgid "Invalid request data"
 msgstr "Données de requête invalides"
 
-#: shop/views.py:212
+#: shop/views.py:237
 msgid "Cart is empty"
 msgstr "Votre panier est vide."
 
-#: shop/views.py:227
+#: shop/views.py:252
 msgid "Invalid cart items"
 msgstr "Articles du panier invalides"
 
-#: shop/views.py:243
+#: shop/views.py:268
 #, python-format
 msgid "Product with price %(price_id)s not found"
 msgstr "Produit avec le prix %(price_id)s non trouvé"
 
-#: shop/views.py:252
+#: shop/views.py:277
 #, python-format
 msgid "Only %(qty)s left of %(name)s"
 msgstr "Seulement %(qty)s restant(s) pour %(name)s"
 
-#: shop/views.py:292
+#: shop/views.py:317
 msgid "An error occurred while creating the checkout session"
 msgstr ""
 
@@ -236,67 +252,62 @@ msgstr "Retour à la boutique"
 msgid "Artisanal Japanese ceramics, handcrafted pottery, and tableware."
 msgstr ""
 
-#: templates/base.html:48 templates/base.html:121
+#: templates/base.html:48 templates/base.html:106
 #: templates/shop/about_us.html:4
 msgid "About us"
 msgstr "À propos de nous"
 
-#: templates/base.html:49 templates/base.html:122
+#: templates/base.html:49 templates/base.html:107
 #: templates/shop/product_list.html:4
 msgid "Shop"
 msgstr "Boutique"
 
-#: templates/base.html:65 templates/base.html:137
+#: templates/base.html:65 templates/base.html:122
 #: templates/blog/blog_list.html:4 templates/blog/blog_list.html:8
 msgid "Blog"
 msgstr "Blog"
 
-#: templates/base.html:66 templates/base.html:138 templates/base.html:201
+#: templates/base.html:66 templates/base.html:123 templates/base.html:174
 #: templates/shop/contact.html:4
 msgid "Contact"
 msgstr "Contact"
 
-#: templates/base.html:143
+#: templates/base.html:128
 msgid "Language"
 msgstr "Langue"
 
-#: templates/base.html:189 templates/shop/care_instructions.html:4
-#: templates/shop/product_detail.html:86
-msgid "Care Instructions"
-msgstr "Conseils d'entretien"
-
-#: templates/base.html:191 templates/shop/product_characteristics.html:4
-#: templates/shop/product_detail.html:90
-msgid "Product Characteristics"
-msgstr "Caractéristiques du produit"
-
-#: templates/base.html:193 templates/shop/privacy_policy.html:4
+#: templates/base.html:166 templates/shop/privacy_policy.html:4
 msgid "Privacy Policy"
 msgstr "Politique de confidentialité"
 
-#: templates/base.html:195 templates/shop/terms_conditions.html:4
+#: templates/base.html:168 templates/shop/terms_conditions.html:4
 msgid "Terms and Conditions"
 msgstr "Termes et Conditions"
 
-#: templates/base.html:197 templates/shop/delivery_policy.html:4
+#: templates/base.html:170 templates/shop/delivery_policy.html:4
 msgid "Delivery Policy"
 msgstr "Politique de livraison"
 
-#: templates/base.html:199 templates/shop/return_policy.html:4
+#: templates/base.html:172 templates/shop/return_policy.html:4
 msgid "Return Policy"
 msgstr "Politique de retour"
 
-#: templates/blog/blog_detail.html:12
+#: templates/blog/blog_detail.html:13 templates/blog/blog_list.html:17
+#: templates/shop/home.html:50
+msgid "Draft"
+msgstr "Brouillon"
+
+#: templates/blog/blog_detail.html:17
 msgid "Published on"
 msgstr "Publié le"
 
-#: templates/blog/blog_detail.html:25
+#: templates/blog/blog_detail.html:28
 #, fuzzy
 #| msgid "Back to Blog"
 msgid "Back to Blog"
 msgstr "Retour au Blog"
 
-#: templates/blog/blog_list.html:26
+#: templates/blog/blog_list.html:29
 msgid "We are sorry, there are no blog posts yet."
 msgstr "Nous sommes désolés, il n'y a pas encore d'articles sur le blog."
 
@@ -320,13 +331,22 @@ msgstr ""
 msgid "Handcrafted Japanese ceramics and pottery by %(brand_name)s."
 msgstr ""
 
-#: templates/shop/brand_detail.html:14
+#: templates/shop/brand_detail.html:9
+msgid "Deidei"
+msgstr ""
+
+#: templates/shop/brand_detail.html:20
 msgid "No description available for this brand."
 msgstr ""
 
-#: templates/shop/brand_detail.html:21
+#: templates/shop/brand_detail.html:27
 msgid "View the Collection"
 msgstr "Voir la collection"
+
+#: templates/shop/care_instructions.html:4
+#: templates/shop/product_detail.html:86
+msgid "Care Instructions"
+msgstr "Conseils d'entretien"
 
 #: templates/shop/care_instructions.html:5
 msgid "Care and maintenance tips for your Japanese ceramics."
@@ -433,6 +453,12 @@ msgstr ""
 "Contactez-nous pour toute question sur nos céramiques japonaises ou votre "
 "commande."
 
+#: templates/shop/contact.html:9
+#, fuzzy
+#| msgid "Contact"
+msgid "Contact Us"
+msgstr "Contact"
+
 #: templates/shop/delivery_policy.html:5
 msgid "Shipping methods, costs, and delivery times."
 msgstr "Modes d'expédition, frais et délais de livraison."
@@ -443,17 +469,26 @@ msgstr "Modes d'expédition, frais et délais de livraison."
 msgid "Hero Image Carousel"
 msgstr "URL de l'image principale"
 
-#: templates/shop/home.html:29
+#: templates/shop/home.html:34
+msgid "Japanese craft shop"
+msgstr ""
+
+#: templates/shop/home.html:43
 msgid "Latest News"
 msgstr "Actualités"
 
-#: templates/shop/home.html:50
+#: templates/shop/home.html:69
 msgid "Enter the Shop"
 msgstr "Accéder à la boutique"
 
 #: templates/shop/privacy_policy.html:5
 msgid "How we handle and protect your personal information."
 msgstr "Comment nous traitons et protégeons vos informations personnelles."
+
+#: templates/shop/product_characteristics.html:4
+#: templates/shop/product_detail.html:90
+msgid "Product Characteristics"
+msgstr "Caractéristiques du produit"
 
 #: templates/shop/product_characteristics.html:5
 msgid ""
@@ -572,31 +607,30 @@ msgstr "Termes et Conditions"
 msgid "Shop Coming Soon"
 msgstr "Boutique en ligne bientôt disponible"
 
-#: templates/shop/wip.html:9
-msgid "Coming Soon"
-msgstr "Bientôt disponible"
-
 #: templates/shop/wip.html:11
 msgid "We are currently building our web store, please come back later."
 msgstr ""
 "Nous préparons actuellement notre boutique en ligne, merci de revenir plus "
 "tard."
 
-#: tetote/settings.py:172
+#: tetote/settings.py:157
 msgid "English"
 msgstr "Anglais"
 
-#: tetote/settings.py:173
+#: tetote/settings.py:158
 msgid "German"
 msgstr "Allemand"
 
-#: tetote/settings.py:174
+#: tetote/settings.py:159
 msgid "French"
 msgstr "Français"
 
-#: tetote/settings.py:175
+#: tetote/settings.py:160
 msgid "Japanese"
 msgstr "Japonais"
+
+#~ msgid "Main Photo URL"
+#~ msgstr "URL de la photo principale"
 
 #~ msgid "Title"
 #~ msgstr "Titre"
