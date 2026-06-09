@@ -75,7 +75,7 @@ When writing blog posts or product descriptions, you can use **Markdown** to for
 | Title | `# Title text` |  |
 | Medium Header | `## Medium header` | |
 | Small Header | `### Small header` | |
-| Image | `![Alt Text](url)` | Embeds an image<br>(drag and drop in<br>text box to upload) |
+| Image | `![Alt Text](url)` | Embeds an image<br>(drag and drop an image file<br>into the text box to upload) |
 
 
 ### Writing Tips

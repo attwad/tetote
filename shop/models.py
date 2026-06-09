@@ -3,6 +3,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
+from markdownx.models import MarkdownxField
 
 
 class Brand(models.Model):
@@ -65,8 +66,8 @@ class Product(models.Model):
     stripe_name = models.CharField(_("Stripe Name"), max_length=255, blank=True)
     name = models.CharField(_("Name"), max_length=255)
     slug = models.SlugField(_("Slug"), max_length=255, unique=True)
-    description = models.TextField(_("Description"), blank=True)
-    details = models.TextField(_("Details"), blank=True)
+    description = MarkdownxField(_("Description"), blank=True)
+    details = MarkdownxField(_("Details"), blank=True)
     price = models.PositiveIntegerField(_("Price (CHF cents)"))
     stock_quantity = models.IntegerField(_("Stock Quantity"), default=0)
     public = models.BooleanField(_("Public"), default=settings.DEBUG)

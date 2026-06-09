@@ -1,11 +1,12 @@
 from django.db import models
 from django.urls import reverse
+from markdownx.models import MarkdownxField
 
 
 class BlogPost(models.Model):
     title = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255, unique=True)
-    content = models.TextField(help_text="Markdown supported")
+    content = MarkdownxField(help_text="Markdown supported")
     date = models.DateField(help_text="Publication date shown on the post")
     is_draft = models.BooleanField(
         default=True, help_text="Draft posts are only visible to staff members."

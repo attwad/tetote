@@ -65,6 +65,7 @@ urlpatterns = [
         name="django.contrib.sitemaps.views.sitemap",
     ),
     path("robots.txt", robots_txt, name="robots_txt"),
+    path("markdownx/", include("markdownx.urls")),
 ]
 
 urlpatterns += i18n_patterns(

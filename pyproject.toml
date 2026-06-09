@@ -8,6 +8,7 @@ dependencies = [
     "django>=6.0",
     "django-admin-sortable2>=2.3.1",
     "django-environ>=0.13.0",
+    "django-markdownx>=4.0.11",
     "django-modeltranslation>=0.19.19",
     "gunicorn>=25.3.0",
     "markdown>=3.5.2",

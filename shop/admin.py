@@ -4,6 +4,7 @@ from django.contrib import admin
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 from modeltranslation.admin import TranslationAdmin, TabbedTranslationAdmin
+from markdownx.admin import MarkdownxModelAdmin
 from adminsortable2.admin import (
     SortableAdminBase,
     SortableInlineAdminMixin,
@@ -94,7 +95,7 @@ class StoreSettingsAdmin(admin.ModelAdmin):
 
 
 @admin.register(Product)
-class ProductAdmin(SortableAdminBase, TabbedTranslationAdmin):
+class ProductAdmin(SortableAdminBase, TabbedTranslationAdmin, MarkdownxModelAdmin):
     list_display = (
         "name",
         "stripe_name",

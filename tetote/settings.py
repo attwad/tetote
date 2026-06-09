@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     "django.contrib.sitemaps",
     # Third-party apps
     "adminsortable2",
+    "markdownx",
     # Project apps
     "shop.apps.ShopConfig",
     "blog.apps.BlogConfig",

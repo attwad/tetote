@@ -231,6 +231,20 @@ wheels = [
 ]
 
 [[package]]
+name = "django-markdownx"
+version = "4.0.11"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django" },
+    { name = "markdown" },
+    { name = "pillow" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/fb/b0/0e453f0d2277b64746063204cad9c82bb79bde76364dc038aeb3b7b71faf/django_markdownx-4.0.11.tar.gz", hash = "sha256:0f2a4552174af98b621522eb36c8d1009a7f73d2bf591d973a34fc65cc740680", size = 36260, upload-time = "2026-05-23T14:19:24.599Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/06/84/c8b963d092132fae8e6436179a015d769b735b15b9400f10b02c0d525ebe/django_markdownx-4.0.11-py2.py3-none-any.whl", hash = "sha256:65d32d8892a3f9d678b149b7a0c3a073db6c6c10955df1c4f453b38eb96d163e", size = 46172, upload-time = "2026-05-23T14:19:23.194Z" },
+]
+
+[[package]]
 name = "django-modeltranslation"
 version = "0.20.3"
 source = { registry = "https://pypi.org/simple" }
@@ -631,6 +645,7 @@ dependencies = [
     { name = "django" },
     { name = "django-admin-sortable2" },
     { name = "django-environ" },
+    { name = "django-markdownx" },
     { name = "django-modeltranslation" },
     { name = "gunicorn" },
     { name = "markdown" },
@@ -651,6 +666,7 @@ requires-dist = [
     { name = "django", specifier = ">=6.0" },
     { name = "django-admin-sortable2", specifier = ">=2.3.1" },
     { name = "django-environ", specifier = ">=0.13.0" },
+    { name = "django-markdownx", specifier = ">=4.0.11" },
     { name = "django-modeltranslation", specifier = ">=0.19.19" },
     { name = "gunicorn", specifier = ">=25.3.0" },
     { name = "markdown", specifier = ">=3.5.2" },

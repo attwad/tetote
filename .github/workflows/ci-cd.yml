@@ -104,7 +104,7 @@ jobs:
             --exclude 'node_modules' \
             ./ /var/www/tetote-dev/
 
-      - name: Install Dependencies & Setup
+      - name: Install Dependencies, Setup, Migrations, Static Assets Collection
         working-directory: /var/www/tetote-dev
         run: |
           npm install
