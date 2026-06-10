@@ -573,7 +573,7 @@ class CheckoutViewTests(TestCase):
         # Verify kwargs
         args, kwargs = mock_create.call_args
         self.assertTrue(kwargs.get("allow_promotion_codes"))
-        self.assertEqual(kwargs.get("payment_method_types"), ["card", "twint"])
+        self.assertEqual(kwargs.get("payment_method_types"), ["card"])
         self.assertNotIn("automatic_payment_methods", kwargs)
         self.assertEqual(
             kwargs.get("shipping_address_collection"), {"allowed_countries": ["CH"]}
