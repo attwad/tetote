@@ -291,7 +291,7 @@ class CreateCheckoutSessionView(View):
         try:
             current_language = get_language()
             session_kwargs = {
-                "payment_method_types": ["card"],
+                "payment_method_types": ["card", "twint"],
                 "line_items": line_items,
                 "mode": "payment",
                 "allow_promotion_codes": True,
