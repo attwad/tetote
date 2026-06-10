@@ -198,6 +198,7 @@ MEDIA_ROOT = BASE_DIR / "media"
 STRIPE_PUBLIC_KEY = env("STRIPE_PUBLIC_KEY", default="")
 STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY", default="")
 STRIPE_WEBHOOK_SECRET = env("STRIPE_WEBHOOK_SECRET", default="")
+STRIPE_SHIPPING_RATES = env.list("STRIPE_SHIPPING_RATES", default=[])
 
 # Shop settings
 SHOP_DISABLED = env.bool("SHOP_DISABLED", default=False)

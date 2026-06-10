@@ -561,15 +561,26 @@ class CheckoutViewTests(TestCase):
         mock_create.return_value.url = "https://checkout.stripe.com/test"
         url = reverse("shop:create_checkout_session")
         data = {"items": [{"price_id": "price_test", "qty": 2}]}
-        response = self.client.post(
-            url, data=json.dumps(data), content_type="application/json"
-        )
+
+        with self.settings(STRIPE_SHIPPING_RATES=["shr_test"]):
+            response = self.client.post(
+                url, data=json.dumps(data), content_type="application/json"
+            )
+
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["url"], "https://checkout.stripe.com/test")
 
-        # Verify that allow_promotion_codes is True
+        # Verify kwargs
         args, kwargs = mock_create.call_args
         self.assertTrue(kwargs.get("allow_promotion_codes"))
+        self.assertEqual(kwargs.get("payment_method_types"), ["card", "twint"])
+        self.assertNotIn("automatic_payment_methods", kwargs)
+        self.assertEqual(
+            kwargs.get("shipping_address_collection"), {"allowed_countries": ["CH"]}
+        )
+        self.assertEqual(
+            kwargs.get("shipping_options"), [{"shipping_rate": "shr_test"}]
+        )
         self.assertNotIn("locale", kwargs)
 
     @patch("stripe.checkout.Session.create")

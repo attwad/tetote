@@ -295,6 +295,13 @@ class CreateCheckoutSessionView(View):
                 "line_items": line_items,
                 "mode": "payment",
                 "allow_promotion_codes": True,
+                "shipping_address_collection": {
+                    "allowed_countries": ["CH"],
+                },
+                "shipping_options": [
+                    {"shipping_rate": rate_id}
+                    for rate_id in settings.STRIPE_SHIPPING_RATES
+                ],
                 "success_url": request.build_absolute_uri(
                     reverse("shop:checkout_success")
                 ),
