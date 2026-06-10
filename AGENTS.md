@@ -13,7 +13,7 @@ Welcome to Tetote. This document provides critical procedural and architectural 
     - Background: `#fdfcfb` (Bone White)
     - Primary Text: `#2c2c2c` (Soft Charcoal)
     - Accents: `#4a5d4e` (Muted Olive)
-- **Typography:** Primary font is **Cormorant Garamond**. Use it for all UI elements, including form inputs and buttons.
+- **Typography:** Primary font is **Cormorant Garamond**. For Japanese content (`lang="ja"`), the font switches to **Noto Serif JP**. Use `font-serif` for all UI elements, including form inputs and buttons.
 - **State:** Drawer and filter states must be persisted in the URL (e.g., `?expanded=true`).
 
 ## 🛠 Engineering Standards

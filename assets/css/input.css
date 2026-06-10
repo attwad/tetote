@@ -35,6 +35,10 @@
   }
 }
 
+html[lang="ja"] {
+  --font-serif: "Noto Serif JP", serif;
+}
+
 @layer base {
   body {
     @apply bg-brand-bg text-brand-text font-serif text-[1.15rem] leading-[1.6];

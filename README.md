@@ -4,7 +4,7 @@ Tetote is a high-end, minimalist e-commerce platform and digital showroom dedica
 
 ## 🇯🇵 Design Philosophy
 - **Minimalist Japanese Aesthetic:** The UI uses a warm, muted palette (**Bone White**, **Soft Charcoal**, **Muted Olive Earth**) to evoke a sense of calm and focus on the craftsmanship of the products.
-- **Showroom Experience:** The platform serves as both a shop and a gallery. High-resolution imagery, smooth transitions (Splide & PhotoSwipe), and delicate typography (Cormorant Garamond) are central to the brand identity.
+- **Showroom Experience:** The platform serves as both a shop and a gallery. High-resolution imagery, smooth transitions (Splide & PhotoSwipe), and professional typography (**Cormorant Garamond** for Western languages, **Noto Serif JP** for Japanese) are central to the brand identity.
 - **Professional & Zen:** Every interaction is designed to be intentional and non-intrusive. High-contrast colors are avoided in favor of organic, understated tones.
 
 ## 🛠 Engineering Standards & Practices
