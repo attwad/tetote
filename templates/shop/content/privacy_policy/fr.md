@@ -133,7 +133,11 @@ La politique modifiée entre en vigueur dès sa publication sur le Site. En cont
 Pour toute question concernant la présente Politique, veuillez contacter :
 
 Nom de la boutique : tetote
+
 Société exploitante : japanese craft Takahashi
+
 Responsable de la gestion des données: Yui Takahashi
+
 Adresse : Hochbordstrasse 29, 8600 Dübendorf
+
 Adresse e-mail : [info@tetote.ch](mailto:info@tetote.ch)

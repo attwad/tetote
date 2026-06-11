@@ -129,10 +129,15 @@ The Shop may change this Policy without prior notice to customers in response to
 The changed policy will take effect upon being posted on the Website. By starting to use the service after the change, the customer is deemed to have understood the changed policy.
 
 **Data Controller and Contact**
+
 For inquiries regarding this Policy, please contact the following:
 
 **Shop Name:** tetote
+
 **Operating Company:** japanese craft Takahashi
+
 **Data Protection Officer:** Yui Takahashi
+
 **Address:** Hochbordstrasse 29, 8600 Dübendorf
+
 **Email Address:** [info@tetote.ch](mailto:info@tetote.ch)

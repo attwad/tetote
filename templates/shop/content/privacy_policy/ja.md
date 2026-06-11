@@ -126,9 +126,15 @@ Stripe
 なお、変更後本サービスの利用を開始した場合には、お客様は変更後のポリシーをご理解いただいたものとします。
 
 **データ管理責任者、お問い合わせ窓口**
+
 本ポリシーに関するお問い合わせは、下記の窓口までお願いいたします。
+
 ショップ名： tetote
+
 運営会社名：japanese craft Takahashi
+
 データ保護担当：Yui Takahashi
+
 住所： Hochbordstrasse 29, 8600 Dübendorf
+
 メールアドレス： [info@tetote.ch](mailto:info@tetote.ch)
