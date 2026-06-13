@@ -59,15 +59,22 @@ describe('Shop Logic Tests', () => {
         });
 
         it('toggleStock should toggle in_stock', () => {
-            const result = getNewURL(baseUrl, 'stock');
+            const result = getNewURL(baseUrl, 'stock', null, 'in_stock');
             expect(result).toContain('stock=in_stock');
-            const back = getNewURL(result, 'stock');
+            const back = getNewURL(result, 'stock', null, 'in_stock');
             expect(back).not.toContain('stock=in_stock');
+        });
+
+        it('toggleStock should handle soon status', () => {
+            const result = getNewURL(baseUrl, 'stock', null, 'soon');
+            expect(result).toContain('stock=soon');
+            const back = getNewURL(result, 'stock', null, 'soon');
+            expect(back).not.toContain('stock=soon');
         });
 
         it('toggleStock should preserve expanded=true', () => {
             const start = baseUrl + '?expanded=true';
-            const result = getNewURL(start, 'stock');
+            const result = getNewURL(start, 'stock', null, 'in_stock');
             expect(result).toContain('expanded=true');
             expect(result).toContain('stock=in_stock');
         });
