@@ -21,7 +21,7 @@
                             <li class="splide__slide">
                                 <a href="{{ product.main_photo }}"
                                    target="_blank">
-                                    <img data-splide-lazy="{{ product.main_photo }}" alt="{{ product.name }}" class="product-gallery-img">
+                                    <img data-splide-lazy="{{ product.main_photo }}?w=1280" alt="{{ product.name }}" class="product-gallery-img">
                                 </a>
                             </li>
                         {% endif %}
@@ -30,7 +30,7 @@
                             <li class="splide__slide">
                                 <a href="{{ image.image_url }}"
                                    target="_blank">
-                                    <img data-splide-lazy="{{ image.image_url }}" alt="{{ product.name }}" class="product-gallery-img">
+                                    <img data-splide-lazy="{{ image.image_url }}?w=1280" alt="{{ product.name }}" class="product-gallery-img">
                                 </a>
                             </li>
                             {% endif %}
@@ -105,13 +105,13 @@
                     <ul class="splide__list thumbnails">
                         {% if product.main_photo %}
                             <li class="splide__slide thumbnail">
-                                <img src="{{ product.main_photo }}" alt="{% translate 'Thumbnail' %}">
+                                <img src="{{ product.main_photo }}?w=160" alt="{% translate 'Thumbnail' %}">
                             </li>
                         {% endif %}
                         {% for image in product.images.all %}
                             {% if image.image_url != product.main_photo %}
                                 <li class="splide__slide thumbnail">
-                                    <img src="{{ image.image_url }}" alt="{% translate 'Thumbnail' %}">
+                                    <img src="{{ image.image_url }}?w=160" alt="{% translate 'Thumbnail' %}">
                                 </li>
                             {% endif %}
                         {% endfor %}
