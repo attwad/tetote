@@ -521,7 +521,7 @@ msgstr "お取り寄せのご相談はこちら"
 
 #: templates/shop/product_detail.html:82 templates/shop/product_list.html:65
 msgid "Type"
-msgstr "タイプ"
+msgstr "商品タイプ"
 
 #: templates/shop/product_detail.html:102
 #: templates/shop/product_detail.html:108
@@ -539,7 +539,7 @@ msgstr ""
 
 #: templates/shop/product_list.html:22
 msgid "Stock Status"
-msgstr "在庫状況"
+msgstr "在庫"
 
 #: templates/shop/product_list.html:80
 msgid "Clear all"

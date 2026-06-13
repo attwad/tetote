@@ -503,7 +503,7 @@ msgstr "Pflegehinweise ansehen"
 
 #: templates/shop/product_detail.html:51 templates/shop/product_list.html:29
 msgid "In Stock"
-msgstr "An Lager"
+msgstr "Auf Lager"
 
 #: templates/shop/product_detail.html:51
 msgid "available"
@@ -519,7 +519,7 @@ msgstr "Warenkorb anzeigen"
 
 #: templates/shop/product_detail.html:67 templates/shop/product_list.html:125
 msgid "Out of Stock"
-msgstr "Nicht vorrätig"
+msgstr "Nicht verfügbar"
 
 #: templates/shop/product_detail.html:70
 msgid "Contact us to request more"
@@ -527,7 +527,7 @@ msgstr "Kontaktieren Sie uns für Nachbestellungen"
 
 #: templates/shop/product_detail.html:82 templates/shop/product_list.html:65
 msgid "Type"
-msgstr "Typ"
+msgstr "Produktart"
 
 #: templates/shop/product_detail.html:102
 #: templates/shop/product_detail.html:108

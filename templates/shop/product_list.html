@@ -19,19 +19,6 @@
             <form id="filter-form" method="get">
                 <!-- Main Filter Groups -->
                 <div class="filter-group">
-                    <span class="filter-label">{% translate "Stock Status" %}</span>
-                    <div class="flex flex-col gap-2 items-start pl-4">
-                        <a href="#" class="filter-item {% if request.GET.stock == 'in_stock' %}active{% endif %}"
-                           onclick="toggleStock(event)">
-                            {% if request.GET.stock == 'in_stock' %}
-                                <span class="filter-remove-icon">&times;</span>
-                            {% endif %}
-                            {% translate "In Stock" %}
-                        </a>
-                    </div>
-                </div>
-
-                <div class="filter-group">
                     <span class="filter-label">{% translate "Brands" %}</span>
                     <div class="flex flex-col gap-2 items-start pl-4">
                         {% for brand in brands %}
@@ -58,6 +45,19 @@
                                 {{ glaze.name }}
                             </a>
                         {% endfor %}
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <span class="filter-label">{% translate "Stock Status" %}</span>
+                    <div class="flex flex-col gap-2 items-start pl-4">
+                        <a href="#" class="filter-item {% if request.GET.stock == 'in_stock' %}active{% endif %}"
+                           onclick="toggleStock(event)">
+                            {% if request.GET.stock == 'in_stock' %}
+                                <span class="filter-remove-icon">&times;</span>
+                            {% endif %}
+                            {% translate "In Stock" %}
+                        </a>
                     </div>
                 </div>
 
