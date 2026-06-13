@@ -107,8 +107,8 @@ export function getNewURL(currentUrlStr, type, name, value, shouldBeExpanded = n
                 params.append(name, value);
             }
         } else if (type === 'stock') {
-            if (params.get('stock') === 'in_stock') params.delete('stock');
-            else params.set('stock', 'in_stock');
+            if (params.get('stock') === value) params.delete('stock');
+            else params.set('stock', value);
         } else if (type === 'sort') {
             if (value) params.set('sort', value);
             else params.delete('sort');
@@ -179,11 +179,11 @@ export function toggleFilter(event, name, value) {
     window.location.href = getNewURL(window.location.href, 'filter', name, value, isExpanded);
 }
 
-export function toggleStock(event) {
+export function toggleStock(event, value) {
     if (event) event.preventDefault();
     const drawer = document.getElementById('filter-drawer');
     const isExpanded = drawer && drawer.classList.contains('open');
-    window.location.href = getNewURL(window.location.href, 'stock', null, null, isExpanded);
+    window.location.href = getNewURL(window.location.href, 'stock', null, value, isExpanded);
 }
 
 export function toggleSort(value) {

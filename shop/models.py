@@ -70,6 +70,7 @@ class Product(models.Model):
     details = MarkdownxField(_("Details"), blank=True)
     price = models.PositiveIntegerField(_("Price (CHF cents)"))
     stock_quantity = models.IntegerField(_("Stock Quantity"), default=0)
+    soon_in_stock = models.BooleanField(_("Soon in stock"), default=False)
     public = models.BooleanField(_("Public"), default=settings.DEBUG)
     brand = models.ForeignKey(
         Brand,

@@ -64,7 +64,13 @@
                     </a>
                 </div>
             {% else %}
-                <p class="mb-3 text-[#9a7b76] font-medium">{% translate "Out of Stock" %}</p>
+                <p class="mb-3 text-[#9a7b76] font-medium">
+                    {% if product.soon_in_stock %}
+                        {% translate "Soon in stock" %}
+                    {% else %}
+                        {% translate "Out of Stock" %}
+                    {% endif %}
+                </p>
                 <div class="mb-12">
                     <a href="{% url 'shop:contact' %}" class="text-brand-muted underline underline-offset-[3px] hover:opacity-70 transition-opacity">
                         {% translate "Contact us to request more" %}

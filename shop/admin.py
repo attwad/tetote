@@ -102,14 +102,22 @@ class ProductAdmin(SortableAdminBase, TabbedTranslationAdmin, MarkdownxModelAdmi
         "public",
         "price",
         "stock_quantity",
+        "soon_in_stock",
         "brand",
         "glaze",
         "product_type",
         "is_in_stock",
         "date_added",
     )
-    list_editable = ("public",)
-    list_filter = ("public", "brand", "glaze", "product_type", "date_added")
+    list_editable = ("public", "soon_in_stock")
+    list_filter = (
+        "public",
+        "soon_in_stock",
+        "brand",
+        "glaze",
+        "product_type",
+        "date_added",
+    )
     search_fields = (
         "name",
         "stripe_name",
@@ -230,6 +238,7 @@ class ProductAdmin(SortableAdminBase, TabbedTranslationAdmin, MarkdownxModelAdmi
                     "glaze",
                     "product_type",
                     "stock_quantity",
+                    "soon_in_stock",
                 )
             },
         ),

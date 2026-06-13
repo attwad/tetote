@@ -157,6 +157,8 @@ class ProductListView(ListView):
 
         if stock_filter == "in_stock":
             queryset = queryset.filter(stock_quantity__gt=0)
+        elif stock_filter == "soon":
+            queryset = queryset.filter(stock_quantity=0, soon_in_stock=True)
 
         # Sorting (Must be done on QuerySet)
         sort = self.request.GET.get("sort")
@@ -205,7 +207,7 @@ class ProductListView(ListView):
         context["is_expanded"] = self.request.GET.get("expanded") == "true"
 
         # Include stock in the total count
-        has_stock = 1 if self.request.GET.get("stock") == "in_stock" else 0
+        has_stock = 1 if self.request.GET.get("stock") in ["in_stock", "soon"] else 0
 
         context["total_active_filters"] = (
             len(context["active_brands"])
