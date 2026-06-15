@@ -37,6 +37,7 @@
 
 html[lang="ja"] {
   --font-serif: "Noto Serif JP", serif;
+  font-size: 90%;
 }
 
 @layer base {
