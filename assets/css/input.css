@@ -38,6 +38,16 @@
 html[lang="ja"] {
   --font-serif: "Noto Serif JP", serif;
   font-size: 90%;
+
+  .site-header, #mobile-menu-drawer {
+    .text-\[1\.6rem\] { font-size: 1.77778rem; }
+    .text-\[1\.25rem\] { font-size: 1.38889rem; }
+    .text-\[1\.2rem\] { font-size: 1.33333rem; }
+    .text-\[1\.1rem\] { font-size: 1.22222rem; }
+    .text-\[1rem\] { font-size: 1.11111rem; }
+    .text-\[0\.9rem\] { font-size: 1rem; }
+    .text-\[0\.8rem\] { font-size: 0.88889rem; }
+  }
 }
 
 @layer base {
@@ -65,6 +75,10 @@ html[lang="ja"] {
 @layer components {
   .site-header {
     @apply sticky top-0 z-[1000] w-full bg-white transition-transform duration-300 ease-in-out border-b border-transparent;
+  }
+  .site-header, .site-header *, #mobile-menu-drawer, #mobile-menu-drawer * {
+    --font-serif: "Cormorant Garamond", "Noto Serif JP", serif;
+    font-family: "Cormorant Garamond", "Noto Serif JP", serif;
   }
   .site-header.hidden-up {
     @apply -translate-y-full;
