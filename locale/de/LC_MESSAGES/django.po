@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tetote\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-20 16:31+0000\n"
+"POT-Creation-Date: 2026-06-20 18:55+0000\n"
 "PO-Revision-Date: 2026-04-16 19:30+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -55,7 +55,6 @@ msgid "Brand"
 msgstr "Marke"
 
 #: shop/models.py:21 templates/base.html:53 templates/base.html:111
-#: templates/shop/product_list.html:24
 msgid "Brands"
 msgstr "Marken"
 
@@ -594,6 +593,13 @@ msgstr "In den Warenkorb gelegt."
 msgid ""
 "Curated collection of handcrafted Japanese ceramics, pottery, and tableware."
 msgstr ""
+
+#: templates/shop/product_list.html:24
+#, fuzzy
+#| msgid "Brands"
+msgctxt "filter"
+msgid "Brands"
+msgstr "Marken"
 
 #: templates/shop/product_list.html:54
 msgid "Stock Status"

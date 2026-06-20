@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-20 16:31+0000\n"
+"POT-Creation-Date: 2026-06-20 18:55+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -59,7 +59,6 @@ msgid "Brand"
 msgstr "ブランド"
 
 #: shop/models.py:21 templates/base.html:53 templates/base.html:111
-#: templates/shop/product_list.html:24
 msgid "Brands"
 msgstr "Brands"
 
@@ -588,6 +587,11 @@ msgstr "カートに追加されました"
 msgid ""
 "Curated collection of handcrafted Japanese ceramics, pottery, and tableware."
 msgstr ""
+
+#: templates/shop/product_list.html:24
+msgctxt "filter"
+msgid "Brands"
+msgstr "ブランド"
 
 #: templates/shop/product_list.html:54
 msgid "Stock Status"

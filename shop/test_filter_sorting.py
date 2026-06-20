@@ -64,3 +64,11 @@ class FilterSortingTests(TestCase):
         self.assertEqual(ptypes[0].slug, "a-first-type")
         self.assertEqual(ptypes[1].slug, "z-last-type")
         self.assertEqual(ptypes[2].slug, "others")
+
+    def test_brands_translation_ja(self):
+        from django.utils import translation
+
+        with translation.override("ja"):
+            response = self.client.get(reverse("shop:product_list"))
+            self.assertContains(response, "ブランド")
+            self.assertContains(response, "Brands")
