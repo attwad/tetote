@@ -1,17 +1,65 @@
 {% extends "base.html" %}
-{% load i18n static content_tags %}
+{% load i18n static %}
 
 {% block title %}{% translate "Contact" %} - Tetote{% endblock %}
 {% block meta_description %}{% translate "Contact us for questions about our Japanese ceramics or your order." %}{% endblock %}
 
-{% block hero %}
-<section class="w-full h-[400px] overflow-hidden mb-12">
-    <img src="{% static 'images/contact.jpg' %}" alt="{% translate 'Contact Us' %}" class="w-full h-full object-cover">
-</section>
-{% endblock %}
+{% block hero %}{% endblock %}
 
 {% block content %}
-<div class="max-w-[800px] mx-auto markdown-content">
-    {% include_content "contact" %}
+<div class="max-w-[800px] mx-auto">
+    <!-- Contact Heading -->
+    <h1 class="text-brand-text">{% translate "Contact" %}</h1>
+
+    <!-- Introductory Paragraph -->
+    <div class="mb-12 text-[1.2rem] leading-[1.7] text-brand-text">
+        <p>
+            {% translate "If you have any questions or inquiries, please feel free to reach out to us." %}<br>
+            {% translate "We will get back to you as soon as possible." %}
+        </p>
+    </div>
+
+    <!-- Contact Info Blocks -->
+    <div class="space-y-8 mb-20">
+        <!-- Mail Block -->
+        <div class="flex items-center gap-4">
+            <a href="mailto:info@tetote.ch" class="hover:opacity-70 transition-opacity duration-200">
+                <img src="{% static 'images/mail.svg' %}" alt="{% translate 'Mail' %}" class="w-12 h-12">
+            </a>
+            <div class="flex flex-col">
+                <span class="text-[1.2rem] font-normal leading-tight text-brand-text mb-0.5">{% translate "Mail" %}</span>
+                <a href="mailto:info@tetote.ch" class="text-[1.2rem] font-normal underline underline-offset-4 decoration-[1.5px] hover:opacity-70 transition-opacity duration-200">info@tetote.ch</a>
+            </div>
+        </div>
+
+        <!-- Instagram Block -->
+        <div class="flex items-center gap-4">
+            <a href="https://www.instagram.com/tetote.ch/" target="_blank" rel="noopener noreferrer" class="hover:opacity-70 transition-opacity duration-200">
+                <img src="{% static 'images/insta_icon.svg' %}" alt="{% translate 'Instagram' %}" class="w-12 h-12">
+            </a>
+            <div class="flex flex-col">
+                <span class="text-[1.2rem] font-normal leading-tight text-brand-text mb-0.5">{% translate "Instagram" %}</span>
+                <a href="https://www.instagram.com/tetote.ch/" target="_blank" rel="noopener noreferrer" class="text-[1.2rem] font-normal underline underline-offset-4 decoration-[1.5px] hover:opacity-70 transition-opacity duration-200">tetote.ch</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Operating Hours -->
+    <div class="mb-8">
+        <h2 class="text-brand-text">{% translate "Operating Hours (for Shipping):" %}</h2>
+        <p class="text-[1.2rem] leading-[1.7] text-brand-text">
+            <span class="inline-block w-[90px] flex-shrink-0">{% translate "Mon-Fri" %}</span>9:00-18:00<br>
+            <span class="inline-block w-[240px] flex-shrink-0">{% translate "Sat, Sun, & Public Holidays" %}</span>{% translate "closed" %}
+        </p>
+    </div>
+
+    <!-- Calendar Link Section -->
+    <div class="text-[1.2rem] leading-[1.7] text-brand-text">
+        <p>
+            {% blocktranslate trimmed %}
+            Please check also <a href="/blog/business-calendar-2026/" class="underline underline-offset-4 decoration-[1px] hover:opacity-70 transition-opacity">our business calendar 2026</a>.
+            {% endblocktranslate %}
+        </p>
+    </div>
 </div>
 {% endblock %}

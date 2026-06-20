@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tetote\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-13 07:46+0000\n"
+"POT-Creation-Date: 2026-06-20 16:31+0000\n"
 "PO-Revision-Date: 2026-04-16 19:30+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -28,7 +28,7 @@ msgstr ""
 msgid "Preview"
 msgstr "Vorherige"
 
-#: shop/admin.py:132
+#: shop/admin.py:140
 msgid "Stripe Dashboard URL"
 msgstr ""
 
@@ -55,12 +55,12 @@ msgid "Brand"
 msgstr "Marke"
 
 #: shop/models.py:21 templates/base.html:53 templates/base.html:111
-#: templates/shop/product_list.html:22
+#: templates/shop/product_list.html:24
 msgid "Brands"
 msgstr "Marken"
 
 #: shop/models.py:42 shop/models.py:89 templates/shop/product_detail.html:85
-#: templates/shop/product_list.html:37
+#: templates/shop/product_list.html:39
 msgid "Glaze"
 msgstr "Glasur"
 
@@ -105,7 +105,7 @@ msgid "Stock Quantity"
 msgstr "Lagerbestand"
 
 #: shop/models.py:73 templates/shop/product_detail.html:69
-#: templates/shop/product_list.html:66 templates/shop/product_list.html:134
+#: templates/shop/product_list.html:68 templates/shop/product_list.html:136
 msgid "Soon in stock"
 msgstr "Bald wieder auf Lager"
 
@@ -283,7 +283,7 @@ msgid "Blog"
 msgstr "Blog"
 
 #: templates/base.html:66 templates/base.html:123 templates/base.html:174
-#: templates/shop/contact.html:4
+#: templates/shop/contact.html:4 templates/shop/contact.html:12
 msgid "Contact"
 msgstr "Kontakt"
 
@@ -468,11 +468,48 @@ msgstr ""
 "Kontaktieren Sie uns bei Fragen zu unserer japanischen Keramik oder Ihrer "
 "Bestellung."
 
-#: templates/shop/contact.html:9
-#, fuzzy
-#| msgid "Contact"
-msgid "Contact Us"
-msgstr "Kontakt"
+#: templates/shop/contact.html:17
+msgid ""
+"If you have any questions or inquiries, please feel free to reach out to us."
+msgstr "Wenn Sie Fragen oder Anfragen haben, wenden Sie sich bitte an uns."
+
+#: templates/shop/contact.html:18
+msgid "We will get back to you as soon as possible."
+msgstr "Wir werden uns so schnell wie möglich bei Ihnen melden."
+
+#: templates/shop/contact.html:27 templates/shop/contact.html:30
+msgid "Mail"
+msgstr "E-Mail"
+
+#: templates/shop/contact.html:38 templates/shop/contact.html:41
+msgid "Instagram"
+msgstr "Instagram"
+
+#: templates/shop/contact.html:49
+msgid "Operating Hours (for Shipping):"
+msgstr "Öffnungszeiten (für den Versand):"
+
+#: templates/shop/contact.html:51
+msgid "Mon-Fri"
+msgstr "Mo–Fr"
+
+#: templates/shop/contact.html:52
+msgid "Sat, Sun, & Public Holidays"
+msgstr "Sa, So & Feiertage"
+
+#: templates/shop/contact.html:52
+msgid "closed"
+msgstr "geschlossen"
+
+#: templates/shop/contact.html:59
+msgid ""
+"Please check also <a href=\"/blog/business-calendar-2026/\" "
+"class=\"underline underline-offset-4 decoration-[1px] hover:opacity-70 "
+"transition-opacity\">our business calendar 2026</a>."
+msgstr ""
+"Bitte beachten Sie auch unseren <a href=\"/de/blog/business-calendar-2026/\" "
+"class=\"underline underline-offset-4 decoration-[1px] hover:opacity-70 "
+"transition-opacity\">Geschäftskalender 2026</a>."
 
 #: templates/shop/delivery_policy.html:5
 msgid "Shipping methods, costs, and delivery times."
@@ -516,7 +553,7 @@ msgstr "Möchten Sie mehr über die Pflege Ihrer Keramikstücke erfahren?"
 msgid "View Care Instructions"
 msgstr "Pflegehinweise ansehen"
 
-#: templates/shop/product_detail.html:51 templates/shop/product_list.html:59
+#: templates/shop/product_detail.html:51 templates/shop/product_list.html:61
 msgid "In Stock"
 msgstr "Auf Lager"
 
@@ -532,7 +569,7 @@ msgstr "In den Warenkorb"
 msgid "View Cart"
 msgstr "Warenkorb anzeigen"
 
-#: templates/shop/product_detail.html:71 templates/shop/product_list.html:136
+#: templates/shop/product_detail.html:71 templates/shop/product_list.html:138
 msgid "Out of Stock"
 msgstr "Nicht verfügbar"
 
@@ -540,7 +577,7 @@ msgstr "Nicht verfügbar"
 msgid "Contact us to request more"
 msgstr "Kontaktieren Sie uns für Nachbestellungen"
 
-#: templates/shop/product_detail.html:88 templates/shop/product_list.html:72
+#: templates/shop/product_detail.html:88 templates/shop/product_list.html:74
 msgid "Type"
 msgstr "Produktart"
 
@@ -558,48 +595,48 @@ msgid ""
 "Curated collection of handcrafted Japanese ceramics, pottery, and tableware."
 msgstr ""
 
-#: templates/shop/product_list.html:52
+#: templates/shop/product_list.html:54
 msgid "Stock Status"
 msgstr "Lagerstatus"
 
-#: templates/shop/product_list.html:87
+#: templates/shop/product_list.html:89
 msgid "Clear all"
 msgstr "Alle löschen"
 
-#: templates/shop/product_list.html:99
+#: templates/shop/product_list.html:101
 msgid "Refine selection"
 msgstr "Auswahl verfeinern"
 
-#: templates/shop/product_list.html:104
+#: templates/shop/product_list.html:106
 msgid "Sort by"
 msgstr "Sortieren nach"
 
-#: templates/shop/product_list.html:106
+#: templates/shop/product_list.html:108
 msgid "New in Shop"
 msgstr "Neu im Shop"
 
-#: templates/shop/product_list.html:109
+#: templates/shop/product_list.html:111
 msgid "Lowest Price"
 msgstr "Niedrigster Preis"
 
-#: templates/shop/product_list.html:112
+#: templates/shop/product_list.html:114
 msgid "Highest Price"
 msgstr "Höchster Preis"
 
-#: templates/shop/product_list.html:157
+#: templates/shop/product_list.html:159
 msgid "No products found."
 msgstr "Keine Produkte gefunden."
 
-#: templates/shop/product_list.html:165
+#: templates/shop/product_list.html:167
 msgid "Previous"
 msgstr "Vorherige"
 
-#: templates/shop/product_list.html:168
+#: templates/shop/product_list.html:170
 #, python-format
 msgid "Page %(current)s of %(total)s"
 msgstr "Seite %(current)s von %(total)s"
 
-#: templates/shop/product_list.html:171
+#: templates/shop/product_list.html:173
 msgid "Next"
 msgstr "Nächste"
 
@@ -638,6 +675,11 @@ msgstr "Französisch"
 #: tetote/settings.py:161
 msgid "Japanese"
 msgstr "Japanisch"
+
+#, fuzzy
+#~| msgid "Contact"
+#~ msgid "Contact Us"
+#~ msgstr "Kontakt"
 
 #~ msgid "Main Photo URL"
 #~ msgstr "Hauptfoto URL"

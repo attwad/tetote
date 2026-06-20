@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-13 07:46+0000\n"
+"POT-Creation-Date: 2026-06-20 16:31+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -32,7 +32,7 @@ msgstr ""
 msgid "Preview"
 msgstr "前へ"
 
-#: shop/admin.py:132
+#: shop/admin.py:140
 msgid "Stripe Dashboard URL"
 msgstr ""
 
@@ -59,12 +59,12 @@ msgid "Brand"
 msgstr "ブランド"
 
 #: shop/models.py:21 templates/base.html:53 templates/base.html:111
-#: templates/shop/product_list.html:22
+#: templates/shop/product_list.html:24
 msgid "Brands"
 msgstr "Brands"
 
 #: shop/models.py:42 shop/models.py:89 templates/shop/product_detail.html:85
-#: templates/shop/product_list.html:37
+#: templates/shop/product_list.html:39
 msgid "Glaze"
 msgstr "釉薬"
 
@@ -109,7 +109,7 @@ msgid "Stock Quantity"
 msgstr "在庫数"
 
 #: shop/models.py:73 templates/shop/product_detail.html:69
-#: templates/shop/product_list.html:66 templates/shop/product_list.html:134
+#: templates/shop/product_list.html:68 templates/shop/product_list.html:136
 msgid "Soon in stock"
 msgstr "入荷予定"
 
@@ -287,7 +287,7 @@ msgid "Blog"
 msgstr "Blog"
 
 #: templates/base.html:66 templates/base.html:123 templates/base.html:174
-#: templates/shop/contact.html:4
+#: templates/shop/contact.html:4 templates/shop/contact.html:12
 msgid "Contact"
 msgstr "Contact"
 
@@ -464,11 +464,48 @@ msgstr "まもなく確認メールが送信されます。"
 msgid "Contact us for questions about our Japanese ceramics or your order."
 msgstr "陶器やご注文に関するお問い合わせはこちらから。"
 
-#: templates/shop/contact.html:9
-#, fuzzy
-#| msgid "Contact"
-msgid "Contact Us"
-msgstr "Contact"
+#: templates/shop/contact.html:17
+msgid ""
+"If you have any questions or inquiries, please feel free to reach out to us."
+msgstr "ご質問やご相談がございましたら、お気軽にお問い合わせください。"
+
+#: templates/shop/contact.html:18
+msgid "We will get back to you as soon as possible."
+msgstr "なるべく早く返信させていただきます。"
+
+#: templates/shop/contact.html:27 templates/shop/contact.html:30
+msgid "Mail"
+msgstr "メール"
+
+#: templates/shop/contact.html:38 templates/shop/contact.html:41
+msgid "Instagram"
+msgstr "Instagram"
+
+#: templates/shop/contact.html:49
+msgid "Operating Hours (for Shipping):"
+msgstr "営業時間（配送業務）:"
+
+#: templates/shop/contact.html:51
+msgid "Mon-Fri"
+msgstr "月-金"
+
+#: templates/shop/contact.html:52
+msgid "Sat, Sun, & Public Holidays"
+msgstr "土・日・祝日"
+
+#: templates/shop/contact.html:52
+msgid "closed"
+msgstr "定休日"
+
+#: templates/shop/contact.html:59
+msgid ""
+"Please check also <a href=\"/blog/business-calendar-2026/\" "
+"class=\"underline underline-offset-4 decoration-[1px] hover:opacity-70 "
+"transition-opacity\">our business calendar 2026</a>."
+msgstr ""
+"2026年の<a href=\"/ja/blog/business-calendar-2026/\" class=\"underline "
+"underline-offset-4 decoration-[1px] hover:opacity-70 transition-opacity\">営"
+"業カレンダー</a>もご確認ください。"
 
 #: templates/shop/delivery_policy.html:5
 msgid "Shipping methods, costs, and delivery times."
@@ -510,7 +547,7 @@ msgstr "陶器のお手入れ方法について詳しく知りたいですか？
 msgid "View Care Instructions"
 msgstr "お手入れ方法を見る"
 
-#: templates/shop/product_detail.html:51 templates/shop/product_list.html:59
+#: templates/shop/product_detail.html:51 templates/shop/product_list.html:61
 msgid "In Stock"
 msgstr "在庫あり"
 
@@ -526,7 +563,7 @@ msgstr "カートに追加"
 msgid "View Cart"
 msgstr "カートを見る"
 
-#: templates/shop/product_detail.html:71 templates/shop/product_list.html:136
+#: templates/shop/product_detail.html:71 templates/shop/product_list.html:138
 msgid "Out of Stock"
 msgstr "在庫切れ"
 
@@ -534,7 +571,7 @@ msgstr "在庫切れ"
 msgid "Contact us to request more"
 msgstr "お取り寄せのご相談はこちら"
 
-#: templates/shop/product_detail.html:88 templates/shop/product_list.html:72
+#: templates/shop/product_detail.html:88 templates/shop/product_list.html:74
 msgid "Type"
 msgstr "商品タイプ"
 
@@ -552,48 +589,48 @@ msgid ""
 "Curated collection of handcrafted Japanese ceramics, pottery, and tableware."
 msgstr ""
 
-#: templates/shop/product_list.html:52
+#: templates/shop/product_list.html:54
 msgid "Stock Status"
 msgstr "在庫"
 
-#: templates/shop/product_list.html:87
+#: templates/shop/product_list.html:89
 msgid "Clear all"
 msgstr "すべてクリア"
 
-#: templates/shop/product_list.html:99
+#: templates/shop/product_list.html:101
 msgid "Refine selection"
 msgstr "絞り込み"
 
-#: templates/shop/product_list.html:104
+#: templates/shop/product_list.html:106
 msgid "Sort by"
 msgstr "並び替え"
 
-#: templates/shop/product_list.html:106
+#: templates/shop/product_list.html:108
 msgid "New in Shop"
 msgstr "新着順"
 
-#: templates/shop/product_list.html:109
+#: templates/shop/product_list.html:111
 msgid "Lowest Price"
 msgstr "価格の安い順"
 
-#: templates/shop/product_list.html:112
+#: templates/shop/product_list.html:114
 msgid "Highest Price"
 msgstr "価格の高い順"
 
-#: templates/shop/product_list.html:157
+#: templates/shop/product_list.html:159
 msgid "No products found."
 msgstr "商品が見つかりませんでした。"
 
-#: templates/shop/product_list.html:165
+#: templates/shop/product_list.html:167
 msgid "Previous"
 msgstr "前へ"
 
-#: templates/shop/product_list.html:168
+#: templates/shop/product_list.html:170
 #, python-format
 msgid "Page %(current)s of %(total)s"
 msgstr "%(total)s ページ中 %(current)s ページ目"
 
-#: templates/shop/product_list.html:171
+#: templates/shop/product_list.html:173
 msgid "Next"
 msgstr "次へ"
 
@@ -632,6 +669,11 @@ msgstr "フランス語"
 #: tetote/settings.py:161
 msgid "Japanese"
 msgstr "日本語"
+
+#, fuzzy
+#~| msgid "Contact"
+#~ msgid "Contact Us"
+#~ msgstr "Contact"
 
 #~ msgid "Main Photo URL"
 #~ msgstr "メイン写真URL"
