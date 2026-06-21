@@ -367,7 +367,7 @@ msgid "Care and maintenance tips for your Japanese ceramics."
 msgstr "Pflege- und Wartungstipps für Ihre japanische Keramik."
 
 #: templates/shop/care_instructions.html:13
-msgid "Want to learn more about the unique features of our ceramics?"
+msgid "Want to learn more about the unique features of handcrafted ceramics?"
 msgstr ""
 "Möchten Sie mehr über die einzigartigen Eigenschaften unserer Keramik "
 "erfahren?"

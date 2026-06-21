@@ -234,7 +234,7 @@ msgstr "カートは空です"
 
 #: shop/views.py:254
 msgid "Invalid cart items"
-msgstr "カート内の商品が不正です"
+msgstr "商品の入力が正しくありません"
 
 #: shop/views.py:270
 #, python-format
@@ -327,7 +327,7 @@ msgstr "ブログ一覧に戻る"
 
 #: templates/blog/blog_list.html:31
 msgid "We are sorry, there are no blog posts yet."
-msgstr "申し訳ありません。まだブログ記事がありません。"
+msgstr "ブログ記事がありません。"
 
 #: templates/news/news_index_page.html:20
 msgid "There are no news items at the moment."
@@ -371,8 +371,8 @@ msgid "Care and maintenance tips for your Japanese ceramics."
 msgstr "日本の陶器のお手入れとメンテナンスのヒント。"
 
 #: templates/shop/care_instructions.html:13
-msgid "Want to learn more about the unique features of our ceramics?"
-msgstr "陶器ならではの独特な風合いや特徴について詳しく知りたいですか？"
+msgid "Want to learn more about the unique features of handcrafted ceramics?"
+msgstr "手作りの陶器ならではの風合いや個性について詳しく知りたいですか？"
 
 #: templates/shop/care_instructions.html:15
 msgid "View Product Characteristics"
@@ -429,7 +429,7 @@ msgstr "削除"
 #: templates/shop/cart.html:124 templates/shop/product_detail.html:158
 msgid ""
 "Only X items are available in stock. If you need more, please contact us!"
-msgstr "在庫は残り X 点です。さらに多く必要な場合は、お問い合わせください。"
+msgstr "在庫は残り X 点です。さらに必要な場合は、お問い合わせください。"
 
 #: templates/shop/cart.html:143
 msgid "Are you sure you want to clear your cart?"
@@ -448,8 +448,7 @@ msgid ""
 "Your transaction was successful. We are now carefully preparing your "
 "artisanal ceramics for their journey to you."
 msgstr ""
-"お支払いが完了しました。現在、お客様のもとへお届けする職人仕立ての陶器を慎重"
-"に準備しております。"
+"お支払いが完了しました。ただいま配送準備中です。しばらくお待ちください。"
 
 #: templates/shop/checkout_success.html:24
 msgid "Continue Shopping"
@@ -502,7 +501,7 @@ msgid ""
 "class=\"underline underline-offset-4 decoration-[1px] hover:opacity-70 "
 "transition-opacity\">our business calendar 2026</a>."
 msgstr ""
-"2026年の<a href=\"/ja/blog/business-calendar-2026/\" class=\"underline "
+"<a href=\"/ja/blog/business-calendar-2026/\" class=\"underline "
 "underline-offset-4 decoration-[1px] hover:opacity-70 transition-opacity\">営"
 "業カレンダー</a>もご確認ください。"
 

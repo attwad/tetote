@@ -331,7 +331,7 @@ msgstr "Nous sommes désolés, il n'y a pas encore d'articles sur le blog."
 
 #: templates/news/news_index_page.html:20
 msgid "There are no news items at the moment."
-msgstr ""
+msgstr "Aucun article pour le moment"
 
 #: templates/news/news_item.html:19
 #, fuzzy
@@ -351,7 +351,7 @@ msgstr ""
 
 #: templates/shop/brand_detail.html:9
 msgid "Deidei"
-msgstr ""
+msgstr "Deidei"
 
 #: templates/shop/brand_detail.html:20
 msgid "No description available for this brand."
@@ -371,9 +371,9 @@ msgid "Care and maintenance tips for your Japanese ceramics."
 msgstr "Conseils d'entretien pour vos céramiques japonaises."
 
 #: templates/shop/care_instructions.html:13
-msgid "Want to learn more about the unique features of our ceramics?"
+msgid "Want to learn more about the unique features of handcrafted ceramics?"
 msgstr ""
-"Vous souhaitez en savoir plus sur les caractéristiques uniques de nos "
+"Vous souhaitez en savoir plus sur les caractéristiques uniques des "
 "céramiques ?"
 
 #: templates/shop/care_instructions.html:15
@@ -435,7 +435,7 @@ msgid ""
 "Only X items are available in stock. If you need more, please contact us!"
 msgstr ""
 "Seulement X articles sont disponibles en stock. Si vous en avez besoin de "
-"plus, veuillez nous contacter !"
+"plus, merci de nous contacter."
 
 #: templates/shop/cart.html:143
 msgid "Are you sure you want to clear your cart?"
