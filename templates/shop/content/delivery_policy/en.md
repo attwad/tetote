@@ -48,7 +48,7 @@ In the case of partial shipment, additional shipping costs will be borne by our 
 Before placing your order, please carefully confirm that there are no errors or omissions in the address entered and that the address is within a deliverable area.
 We cannot accept address changes after the shipping label has been created.<br>
 If a shipment is returned to us due to an incorrect or incomplete address, the order will be deemed canceled, and the amount will be refunded after deducting the shipping fee and return handling fee (CHF 7.50).<br>
-If you wish to have the item re-shipped, please contact us via the contact form. In such cases, the reshipping cost shall be borne by the customer.<br>
+If you wish to have the item re-shipped, please contact us via the contact page. In such cases, the reshipping cost shall be borne by the customer.<br>
 
 ### Continued Absence at Delivery
 If you are not present at the time of delivery, the carrier will leave a delivery notice. Please arrange redelivery or pick up the parcel at the post office within the specified period.<br>
@@ -73,7 +73,7 @@ Furthermore, we shall not be liable for any loss or theft occurring after the tr
 <br>
 
 ## International Shipping
-Currently, shipping outside Switzerland is handled on an individual basis. If you wish to place an international order, please contact us via the inquiry form before placing your order.
+Currently, shipping outside Switzerland is handled on an individual basis. If you wish to place an international order, please contact us via the contact page before placing your order.
 Customs duties, import VAT, and customs clearance fees related to international shipping shall be borne by the recipient.<br>
 <br>
 

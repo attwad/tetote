@@ -273,7 +273,7 @@ msgstr ""
 #: templates/base.html:48 templates/base.html:106
 #: templates/shop/about_us.html:4
 msgid "About us"
-msgstr "À propos de nous"
+msgstr "À propos"
 
 #: templates/base.html:49 templates/base.html:107
 #: templates/shop/product_list.html:4

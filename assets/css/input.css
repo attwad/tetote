@@ -50,36 +50,36 @@
 
 html[lang="ja"] {
   --font-serif: "Noto Serif JP", serif;
-  font-size: 90%;
+  font-size: 80%;
 
   .site-header,
   #mobile-menu-drawer {
     .text-\[1\.6rem\] {
-      font-size: 1.77778rem;
+      font-size: 2rem;
     }
 
     .text-\[1\.25rem\] {
-      font-size: 1.38889rem;
+      font-size: 1.5625rem;
     }
 
     .text-\[1\.2rem\] {
-      font-size: 1.33333rem;
+      font-size: 1.5rem;
     }
 
     .text-\[1\.1rem\] {
-      font-size: 1.22222rem;
+      font-size: 1.375rem;
     }
 
     .text-\[1rem\] {
-      font-size: 1.11111rem;
+      font-size: 1.25rem;
     }
 
     .text-\[0\.9rem\] {
-      font-size: 1rem;
+      font-size: 1.125rem;
     }
 
     .text-\[0\.8rem\] {
-      font-size: 0.88889rem;
+      font-size: 1rem;
     }
   }
 }
@@ -237,7 +237,7 @@ html[lang="ja"] {
   }
 
   .filter-overlay {
-    @apply fixed inset-0 bg-black/50 z-[1001] hidden opacity-0 transition-opacity duration-300 md:hidden !;
+    @apply fixed inset-0 bg-black/50 z-[1001] hidden opacity-0 transition-opacity duration-300 md:!hidden;
   }
 
   .filter-overlay.show {
@@ -405,7 +405,7 @@ html[lang="ja"] {
   }
 
   .story-image-side img {
-    @apply w-full rounded-[2px] shadow-[0_4px_20px_rgba(0, 0, 0, 0.03)];
+    @apply w-full rounded-[2px] shadow-[0_4px_20px_rgba(0,0,0,0.03)];
   }
 
   .gallery-grid {
@@ -444,7 +444,7 @@ html[lang="ja"] {
   }
 
   .toast {
-    @apply min-w-[280px] p-[1.2rem] bg-white text-brand-text border border-brand-border shadow-[0_10px_30px_rgba(0, 0_0, 0.05)] flex justify-between items-center animate-slide-down text-base;
+    @apply min-w-[280px] p-[1.2rem] bg-white text-brand-text border border-brand-border shadow-[0_10px_30px_rgba(0,0,0,0.05)] flex justify-between items-center animate-slide-down text-base;
   }
 
   .toast.error {

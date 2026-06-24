@@ -48,7 +48,7 @@ En cas de livraison partielle, les frais de livraison supplémentaires seront pr
 Avant de passer commande, veuillez vérifier attentivement qu’il n’y a pas d’erreur ou d’omission dans l’adresse saisie et que celle-ci se situe dans une zone livrable.
 Aucune modification d’adresse ne peut être acceptée après la création de l’étiquette d’expédition.<br>
 Si le colis nous est retourné en raison d’une adresse incorrecte ou incomplète, la commande sera considérée comme annulée et le montant sera remboursé après déduction des frais de livraison et des frais de retour (CHF 7.50).<br>
-Si vous souhaitez une réexpédition, veuillez nous contacter via le formulaire de contact. Dans ce cas, les frais de réexpédition seront à la charge du client.<br>
+Si vous souhaitez une réexpédition, veuillez nous contacter via la page de contact. Dans ce cas, les frais de réexpédition seront à la charge du client.<br>
 
 ### Absence lors de la livraison
 En cas d’absence lors de la livraison, le transporteur laissera un avis de passage. Veuillez organiser une nouvelle livraison ou récupérer le colis au bureau de poste dans le délai imparti.<br>
@@ -73,9 +73,9 @@ En outre, nous ne pouvons être tenus responsables des pertes ou vols survenant 
 <br>
 
 ## Livraison internationale
-Actuellement, les livraisons en dehors de la Suisse sont traitées au cas par cas. Si vous souhaitez passer une commande internationale, veuillez nous contacter via le formulaire de contact avant de passer commande.<br>
+Actuellement, les livraisons en dehors de la Suisse sont traitées au cas par cas. Si vous souhaitez passer une commande internationale, veuillez nous contacter via la page de contact avant de passer commande.<br>
 Les droits de douane, la TVA à l’importation et les frais de dédouanement liés aux envois internationaux sont à la charge du destinataire.<br>
 
 ## Contact
-Pour toute demande concernant la livraison, veuillez nous contacter via [Contact](/contact/).<br>
+Pour toute demande concernant la livraison, veuillez nous contacter via [Contact](/fr/contact/).<br>
 <br>
