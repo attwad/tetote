@@ -46,11 +46,19 @@
 
     <!-- Operating Hours -->
     <div class="mb-8">
-        <h2 class="text-brand-text">{% translate "Operating Hours (for Shipping):" %}</h2>
-        <p class="text-[1.2rem] leading-[1.7] text-brand-text">
-            <span class="inline-block w-[90px] flex-shrink-0">{% translate "Mon-Fri" %}</span>9:00-18:00<br>
-            <span class="inline-block w-[240px] flex-shrink-0">{% translate "Sat, Sun, & Public Holidays" %}</span>{% translate "closed" %}
-        </p>
+        <h2 class="text-brand-text mb-4">{% translate "Operating Hours (for Shipping):" %}</h2>
+        <table class="text-[1.2rem] leading-[1.7] text-brand-text border-none">
+            <tbody>
+                <tr>
+                    <td class="pr-12 pb-1.5 align-top">{% translate "Mon-Fri" %}</td>
+                    <td class="pb-1.5 align-top">9:00-18:00</td>
+                </tr>
+                <tr>
+                    <td class="pr-12 align-top">{% translate "Sat, Sun, & Public Holidays" %}</td>
+                    <td class="align-top">{% translate "closed" %}</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
     <!-- Calendar Link Section -->
