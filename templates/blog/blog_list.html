@@ -4,32 +4,33 @@
 {% block title %}{% translate "Blog" %} - Tetote{% endblock %}
 
 {% block content %}
-    <div class="max-w-[800px] mx-auto pt-12">
-        {% if not posts %}
-            <h1 class="mb-12 font-serif italic text-4xl">{% translate "Blog" %}</h1>
-        {% endif %}
+<div class="max-w-[800px] mx-auto pt-12">
+    <h1 class="mb-12 font-serif italic text-4xl">{% translate "Blog" %}</h1>
 
-        {% for post in posts %}
-            <article class="mb-6">
-                <h2 class="mb-1">
-                    <a href="{% url 'blog:detail' slug=post.slug %}" class="no-underline text-brand-text hover:underline text-2xl font-serif">
-                        {{ post.title }}
-                    </a>
-                    {% if post.is_draft %}
-                        <span class="ml-2 text-xs uppercase tracking-widest px-2 py-1 border border-brand-muted text-brand-muted italic">{% translate "Draft" %}</span>
-                    {% endif %}
-                </h2>
-                <p class="text-brand-muted text-[0.85rem] mb-0">
-                    {{ post.date|date:"F j, Y" }}
-                </p>
-            </article>
-            {% if not forloop.last %}
-                <hr class="border-none border-t border-brand-border my-6">
+    {% for post in posts %}
+    <article class="mb-6">
+        <h2 class="mb-1">
+            <a href="{% url 'blog:detail' slug=post.slug %}"
+                class="no-underline text-brand-text hover:underline text-2xl font-serif">
+                {{ post.title }}
+            </a>
+            {% if post.is_draft %}
+            <span
+                class="ml-2 text-xs uppercase tracking-widest px-2 py-1 border border-brand-muted text-brand-muted italic">{%
+                translate "Draft" %}</span>
             {% endif %}
-        {% empty %}
-            <div class="text-center py-20 text-brand-muted italic">
-                {% translate "We are sorry, there are no blog posts yet." %}
-            </div>
-        {% endfor %}
+        </h2>
+        <p class="text-brand-muted text-[0.85rem] mb-0">
+            {{ post.date|date:"F j, Y" }}
+        </p>
+    </article>
+    {% if not forloop.last %}
+    <hr class="border-none border-t border-brand-border my-6">
+    {% endif %}
+    {% empty %}
+    <div class="text-center py-20 text-brand-muted italic">
+        {% translate "We are sorry, there are no blog posts yet." %}
     </div>
+    {% endfor %}
+</div>
 {% endblock %}
