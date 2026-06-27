@@ -317,3 +317,84 @@ class IntegrationTests(StaticLiveServerTestCase):
             self.assertNotIn("Kyoto Plate", page.content())
 
             browser.close()
+
+    def test_user_journey_blog_listing(self):
+        """
+        User Journey: Verify Blog Listing Page Layout, Optional Cover Image, and Excerpts
+        """
+        from django.core.files.uploadedfile import SimpleUploadedFile
+        from blog.models import BlogPost
+        from django.utils import timezone
+
+        # 1. Create a blog post with a cover image
+        small_gif = (
+            b"\x47\x49\x46\x38\x39\x61\x01\x00\x01\x00\x80\x00\x00\x00\x00\x00"
+            b"\xff\xff\xff\x21\xf9\x04\x01\x00\x00\x00\x00\x2c\x00\x00\x00\x00"
+            b"\x01\x00\x01\x00\x00\x02\x02\x4c\x01\x00\x3b"
+        )
+        post_with_image = BlogPost.objects.create(
+            title="Blog Post With Image",
+            slug="with-image",
+            content="This is a long blog post content that should definitely exceed fifty characters in length.",
+            date=timezone.now().date(),
+            is_draft=False,
+            cover_image=SimpleUploadedFile(
+                "small.gif", small_gif, content_type="image/gif"
+            ),
+        )
+
+        # 2. Create a blog post without a cover image (using title starting with Z for fallback placeholder)
+        post_without_image = BlogPost.objects.create(
+            title="Zblog Post Without Image",
+            slug="without-image",
+            content="Short content.",
+            date=timezone.now().date(),
+            is_draft=False,
+        )
+
+        try:
+            with sync_playwright() as p:
+                browser = p.chromium.launch(headless=True)
+                page = browser.new_page()
+                page.set_default_timeout(60000)
+
+                # Go to the blog listing page
+                page.goto(
+                    f"{self.live_server_url}{reverse('blog:index')}",
+                    wait_until="networkidle",
+                )
+                self.wait_for_js_ready(page)
+
+                # Verify that both blog posts are listed
+                self.assertIn("Blog Post With Image", page.content())
+                self.assertIn("Zblog Post Without Image", page.content())
+
+                # Verify the excerpt is shown
+                self.assertIn(
+                    "This is a long blog post content that should...", page.content()
+                )
+                self.assertIn("Short content.", page.content())
+
+                # Verify the cover image is rendered for the first post
+                cover_img_locator = page.locator(f"img[alt='{post_with_image.title}']")
+                self.assertTrue(cover_img_locator.count() > 0)
+
+                # Verify that the second post has the fallback letter placeholder (first letter of title: Z)
+                fallback_placeholder = page.locator("div:has-text('Z')")
+                self.assertTrue(fallback_placeholder.count() > 0)
+
+                # Click a post to navigate to its detail page
+                page.click("text=Blog Post With Image")
+                page.wait_for_url(
+                    f"**{reverse('blog:detail', kwargs={'slug': post_with_image.slug})}",
+                    wait_until="networkidle",
+                )
+                self.assertIn("This is a long blog post content", page.content())
+
+                browser.close()
+        finally:
+            # Clean up uploaded files
+            if post_with_image.cover_image:
+                post_with_image.cover_image.delete()
+            if post_without_image.cover_image:
+                post_without_image.cover_image.delete()
