@@ -9,7 +9,7 @@ from django.conf import settings
 from django.core.files.base import ContentFile
 from django.db import transaction
 from django.db.models import F
-from django.http import HttpResponse
+from django.http import HttpRequest, HttpResponse
 from django.utils.text import slugify
 from django.views.decorators.csrf import csrf_exempt
 
@@ -43,7 +43,7 @@ def get_attr_or_key(obj: Any, key: str, default: Any = None) -> Any:
 
 
 @csrf_exempt
-def stripe_webhook(request) -> HttpResponse:
+def stripe_webhook(request: HttpRequest) -> HttpResponse:
     payload = request.body
     sig_header = request.META.get("HTTP_STRIPE_SIGNATURE")
     endpoint_secret = settings.STRIPE_WEBHOOK_SECRET

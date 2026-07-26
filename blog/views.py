@@ -1,4 +1,5 @@
-from django.views.generic import ListView, DetailView
+from django.db.models import QuerySet
+from django.views.generic import DetailView, ListView
 from .models import BlogPost
 
 
@@ -7,7 +8,7 @@ class BlogListView(ListView):
     template_name = "blog/blog_list.html"
     context_object_name = "posts"
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[BlogPost]:
         qs = super().get_queryset()
         if not self.request.user.is_staff:
             qs = qs.filter(is_draft=False)
@@ -19,7 +20,7 @@ class BlogDetailView(DetailView):
     template_name = "blog/blog_detail.html"
     context_object_name = "post"
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[BlogPost]:
         qs = super().get_queryset()
         if not self.request.user.is_staff:
             qs = qs.filter(is_draft=False)

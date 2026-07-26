@@ -21,14 +21,14 @@ class Brand(models.Model):
         verbose_name_plural = _("Brands")
         ordering = ["name"]
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse("shop:brand_detail", kwargs={"brand_slug": self.slug})
 
     @property
-    def full_content_slug(self):
+    def full_content_slug(self) -> str:
         if self.content_slug:
             return f"brands/{self.content_slug}"
         return ""
@@ -42,7 +42,7 @@ class Glaze(models.Model):
         verbose_name = _("Glaze")
         verbose_name_plural = _("Glazes")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
 
@@ -54,7 +54,7 @@ class ProductType(models.Model):
         verbose_name = _("Product Type")
         verbose_name_plural = _("Product Types")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
 
@@ -103,14 +103,14 @@ class Product(models.Model):
         verbose_name_plural = _("Products")
         ordering = ["-date_added"]
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse("shop:product_detail", kwargs={"product_slug": self.slug})
 
     @property
-    def main_photo(self):
+    def main_photo(self) -> str:
         """
         Returns the URL of the first image in the gallery (order=0).
         """
@@ -120,11 +120,11 @@ class Product(models.Model):
         return ""
 
     @property
-    def price_in_chf(self):
+    def price_in_chf(self) -> float:
         return self.price / 100.0
 
     @property
-    def is_in_stock(self):
+    def is_in_stock(self) -> bool:
         return self.stock_quantity > 0
 
 
@@ -146,11 +146,11 @@ class ProductImage(models.Model):
         verbose_name_plural = _("Product Images")
         ordering = ["order"]
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Image for {self.product.name}"
 
     @property
-    def image_url(self):
+    def image_url(self) -> str:
         """
         Returns the local file URL. We no longer serve images from Stripe URLs directly.
         """
@@ -168,7 +168,7 @@ class StoreAnnouncement(models.Model):
         verbose_name = _("Store Announcement")
         verbose_name_plural = _("Store Announcements")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.text[:50]
 
 
@@ -179,7 +179,7 @@ class StoreSettings(models.Model):
         verbose_name = _("Store Settings")
         verbose_name_plural = _("Store Settings")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return str(_("Store Settings"))
 
 
@@ -209,11 +209,11 @@ class CarouselImage(models.Model):
         verbose_name_plural = _("Carousel Images")
         ordering = ["order", "-created_at"]
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Carousel Image {self.id}"
 
     @property
-    def localized_link(self):
+    def localized_link(self) -> str:
         """
         Returns the link with the current language prefix if it's an internal path.
         """

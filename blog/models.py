@@ -28,14 +28,14 @@ class BlogPost(models.Model):
         verbose_name = "Blog Post"
         verbose_name_plural = "Blog Posts"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.title
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse("blog:detail", kwargs={"slug": self.slug})
 
     @property
-    def excerpt(self):
+    def excerpt(self) -> str:
         if not self.content:
             return ""
         import markdown

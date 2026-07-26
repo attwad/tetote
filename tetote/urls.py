@@ -1,15 +1,16 @@
-from django.contrib import admin
-from django.urls import path, include
+from typing import List
+
 from django.conf import settings
 from django.conf.urls.i18n import i18n_patterns
 from django.conf.urls.static import static
+from django.contrib import admin
+from django.contrib.sitemaps import Sitemap
 from django.contrib.sitemaps.views import sitemap
-from django.http import HttpResponse
+from django.http import HttpRequest, HttpResponse
+from django.urls import include, path, reverse
 from integrations.views import stripe_webhook
 
-from shop.sitemaps import ProductSitemap, BrandSitemap
-from django.contrib.sitemaps import Sitemap
-from django.urls import reverse
+from shop.sitemaps import BrandSitemap, ProductSitemap
 
 
 class StaticViewSitemap(Sitemap):
@@ -17,7 +18,7 @@ class StaticViewSitemap(Sitemap):
     priority = 0.5
     changefreq = "monthly"
 
-    def items(self):
+    def items(self) -> List[str]:
         items = [
             "shop:home",
             "shop:product_list",
@@ -29,7 +30,7 @@ class StaticViewSitemap(Sitemap):
             items.insert(1, "shop:cart")
         return items
 
-    def location(self, item):
+    def location(self, item: str) -> str:
         return reverse(item)
 
 
@@ -46,7 +47,7 @@ if not getattr(settings, "SHOP_DISABLED", False):
     )
 
 
-def robots_txt(request):
+def robots_txt(request: HttpRequest) -> HttpResponse:
     lines = [
         "User-agent: *",
         "Allow: /",

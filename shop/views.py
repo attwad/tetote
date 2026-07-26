@@ -1,14 +1,18 @@
-from django.conf import settings
-import stripe
-from django.views.generic import ListView, DetailView, View, TemplateView
-from django.contrib.auth.mixins import UserPassesTestMixin
-from django.http import JsonResponse
-from django.urls import reverse
-from django.db import transaction, models
-from django.utils.translation import gettext as _, get_language
-from .models import Product, Brand, Glaze, ProductType, StoreSettings, CarouselImage
-from news.models import NewsItem
 import json
+from typing import Any, Dict
+
+from django.conf import settings
+from django.contrib.auth.mixins import UserPassesTestMixin
+from django.db import models, transaction
+from django.db.models import QuerySet
+from django.http import HttpRequest, JsonResponse
+from django.urls import reverse
+from django.utils.translation import get_language, gettext as _
+from django.views.generic import DetailView, ListView, TemplateView, View
+import stripe
+
+from news.models import NewsItem
+from .models import Brand, CarouselImage, Glaze, Product, ProductType, StoreSettings
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -16,8 +20,8 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 class HomeView(TemplateView):
     template_name = "shop/home.html"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context: Dict[str, Any] = super().get_context_data(**kwargs)
         context["carousel_images"] = CarouselImage.objects.all()
 
         news_qs = NewsItem.objects.all()
@@ -43,11 +47,11 @@ class ProductDetailView(DetailView):
     slug_field = "slug"
     slug_url_kwarg = "product_slug"
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[Product]:
         return super().get_queryset().filter(public=True)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context: Dict[str, Any] = super().get_context_data(**kwargs)
         # Recommendation Logic: Other products from the same Brand
         context["related_products"] = (
             Product.objects.filter(brand=self.object.brand, public=True)
@@ -96,7 +100,7 @@ class CheckoutSuccessView(TemplateView):
 class AdminHelpView(UserPassesTestMixin, TemplateView):
     template_name = "shop/admin_documentation.html"
 
-    def test_func(self):
+    def test_func(self) -> bool | None:
         return self.request.user.is_staff
 
 
@@ -105,7 +109,7 @@ class ProductInfoView(View):
     Helper view to get product details for the cart UI
     """
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> JsonResponse:
         price_ids = request.GET.getlist("price_ids[]")
         products = Product.objects.filter(stripe_price_id__in=price_ids)
         data = []
@@ -131,7 +135,7 @@ class ProductListView(ListView):
     context_object_name = "products"
     paginate_by = 24
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[Product]:
         queryset = (
             super()
             .get_queryset()
@@ -169,8 +173,8 @@ class ProductListView(ListView):
 
         return queryset
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context: Dict[str, Any] = super().get_context_data(**kwargs)
         context["brands"] = Brand.objects.filter(products__public=True).distinct()
 
         # Sort glazes and types so that 'Other/Others' is always at the bottom
@@ -220,7 +224,7 @@ class ProductListView(ListView):
 
 
 class CreateCheckoutSessionView(View):
-    def post(self, request, *args, **kwargs):
+    def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> JsonResponse:
         # Check if sales are paused
         store_settings = StoreSettings.objects.first()
         if store_settings and store_settings.sales_paused:
