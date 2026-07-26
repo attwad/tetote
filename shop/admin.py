@@ -135,7 +135,7 @@ class ProductAdmin(SortableAdminBase, TabbedTranslationAdmin, MarkdownxModelAdmi
     inlines = [ProductImageInline]
 
     def has_add_permission(self, request):
-        return True
+        return False
 
     @admin.display(description=_("Stripe Dashboard URL"))
     def stripe_dashboard_url(self, obj):

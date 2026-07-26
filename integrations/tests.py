@@ -435,3 +435,6 @@ class ProductAdminTest(TestCase):
         )
         self.assertIn(expected_url, url)
         self.assertIn('target="_blank"', url)
+
+    def test_has_add_permission_returns_false(self):
+        self.assertFalse(self.admin.has_add_permission(MagicMock()))
