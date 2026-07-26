@@ -1,6 +1,7 @@
 import datetime
 import logging
 import os
+from typing import Any, Dict, List, Optional, Union
 
 import requests
 import stripe
@@ -17,9 +18,32 @@ from shop.models import Product, ProductImage
 logger = logging.getLogger(__name__)
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
+# Type alias for Stripe webhook payloads (SDK StripeObjects, dicts, or test Mocks)
+StripePayload = Union[stripe.StripeObject, Dict[str, Any], Any]
+
+
+def get_attr_or_key(obj: Any, key: str, default: Any = None) -> Any:
+    """
+    Safely retrieves a property from a Stripe SDK object (e.g. stripe.Event,
+    stripe.Product), a dictionary, or a mock object.
+
+    Stripe Python SDK objects expose properties via attribute access (obj.key)
+    and dictionary key subscription (obj["key"]), but do not implement dict.get().
+    """
+    if obj is None:
+        return default
+    if isinstance(obj, dict):
+        return obj.get(key, default)
+    try:
+        if key in obj:
+            return obj[key]
+    except (TypeError, KeyError, AttributeError):
+        pass
+    return getattr(obj, key, default)
+
 
 @csrf_exempt
-def stripe_webhook(request):
+def stripe_webhook(request) -> HttpResponse:
     payload = request.body
     sig_header = request.META.get("HTTP_STRIPE_SIGNATURE")
     endpoint_secret = settings.STRIPE_WEBHOOK_SECRET
@@ -28,7 +52,9 @@ def stripe_webhook(request):
         logger.error("STRIPE_WEBHOOK_SECRET is not configured in settings")
 
     try:
-        event = stripe.Webhook.construct_event(payload, sig_header, endpoint_secret)
+        event: stripe.Event = stripe.Webhook.construct_event(
+            payload, sig_header, endpoint_secret
+        )
     except ValueError as e:
         logger.warning(f"Invalid payload received in Stripe webhook: {e}")
         return HttpResponse(status=400)
@@ -39,20 +65,20 @@ def stripe_webhook(request):
         logger.exception(f"Unexpected error constructing Stripe webhook event: {e}")
         return HttpResponse(status=500)
 
-    event_type = event.get("type", "unknown")
-    event_id = event.get("id", "unknown")
+    event_type: str = get_attr_or_key(event, "type", "unknown")
+    event_id: str = get_attr_or_key(event, "id", "unknown")
     logger.info(f"Received Stripe webhook event: {event_type} (ID: {event_id})")
 
     try:
+        data: StripePayload = get_attr_or_key(event, "data", {})
+        data_object: StripePayload = get_attr_or_key(data, "object", {})
+
         if event_type in ["product.created", "product.updated"]:
-            product_data = event["data"]["object"]
-            sync_product(product_data)
+            sync_product(data_object)
         elif event_type in ["price.created", "price.updated"]:
-            price_data = event["data"]["object"]
-            sync_price(price_data)
+            sync_price(data_object)
         elif event_type == "checkout.session.completed":
-            session = event["data"]["object"]
-            handle_checkout_completed(session)
+            handle_checkout_completed(data_object)
         else:
             logger.info(f"Unhandled Stripe webhook event type: {event_type}")
     except Exception as e:
@@ -64,21 +90,22 @@ def stripe_webhook(request):
     return HttpResponse(status=200)
 
 
-def sync_product(product_data):
+def sync_product(product_data: StripePayload) -> None:
     """
     Syncs a single product from Stripe.
     Only updates fields present in the Stripe Product object.
     """
-    product_id = product_data.get("id")
+    product_id: Optional[str] = get_attr_or_key(product_data, "id")
     if not product_id:
         logger.error(f"Stripe product payload missing 'id': {product_data}")
         return
 
-    images = product_data.get("images", [])
-    stripe_name = product_data.get("name", "")
-    slug = product_data.get("metadata", {}).get("slug") or slugify(stripe_name)
+    images: List[str] = get_attr_or_key(product_data, "images", [])
+    stripe_name: str = get_attr_or_key(product_data, "name", "")
+    metadata: StripePayload = get_attr_or_key(product_data, "metadata", {})
+    slug: str = get_attr_or_key(metadata, "slug") or slugify(stripe_name)
 
-    created_timestamp = product_data.get("created")
+    created_timestamp: Optional[int] = get_attr_or_key(product_data, "created")
     if created_timestamp:
         date_added = datetime.datetime.fromtimestamp(
             created_timestamp, tz=datetime.timezone.utc
@@ -141,15 +168,15 @@ def sync_product(product_data):
         raise
 
 
-def sync_price(price_data):
+def sync_price(price_data: StripePayload) -> None:
     """
     Syncs price info for a product.
     Only updates if the price is active.
     """
-    price_id = price_data.get("id")
-    product_id = price_data.get("product")
+    price_id: Optional[str] = get_attr_or_key(price_data, "id")
+    product_id: Optional[str] = get_attr_or_key(price_data, "product")
 
-    if not price_data.get("active", True):
+    if not get_attr_or_key(price_data, "active", True):
         logger.info(f"Ignoring inactive price {price_id} for product {product_id}")
         return
 
@@ -163,7 +190,7 @@ def sync_price(price_data):
 
     try:
         product = Product.objects.get(stripe_product_id=product_id)
-        unit_amount = price_data.get("unit_amount")
+        unit_amount: Optional[int] = get_attr_or_key(price_data, "unit_amount")
         if unit_amount is None:
             logger.warning(
                 f"Price '{price_id}' unit_amount is None, updating stripe_price_id only"
@@ -187,11 +214,11 @@ def sync_price(price_data):
         raise
 
 
-def handle_checkout_completed(session):
+def handle_checkout_completed(session: StripePayload) -> None:
     """
     Decrement stock levels on successful checkout.
     """
-    session_id = session.get("id")
+    session_id: Optional[str] = get_attr_or_key(session, "id")
     logger.info(f"Handling checkout.session.completed for session: {session_id}")
 
     try:
@@ -204,16 +231,9 @@ def handle_checkout_completed(session):
 
     with transaction.atomic():
         for item in line_items.data:
-            try:
-                price_id = item.price.id
-                quantity = item.quantity
-            except AttributeError:
-                price_id = (
-                    item.get("price", {}).get("id")
-                    if isinstance(item.get("price"), dict)
-                    else None
-                )
-                quantity = item.get("quantity", 0)
+            price_obj: StripePayload = get_attr_or_key(item, "price")
+            price_id: Optional[str] = get_attr_or_key(price_obj, "id")
+            quantity: int = get_attr_or_key(item, "quantity", 0)
 
             if not price_id:
                 logger.warning(
