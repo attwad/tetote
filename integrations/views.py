@@ -1,16 +1,18 @@
-import stripe
 import datetime
-import requests
+import logging
 import os
+
+import requests
+import stripe
 from django.conf import settings
-from django.http import HttpResponse
-from django.views.decorators.csrf import csrf_exempt
+from django.core.files.base import ContentFile
 from django.db import transaction
 from django.db.models import F
+from django.http import HttpResponse
 from django.utils.text import slugify
-from django.core.files.base import ContentFile
+from django.views.decorators.csrf import csrf_exempt
+
 from shop.models import Product, ProductImage
-import logging
 
 logger = logging.getLogger(__name__)
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -22,23 +24,42 @@ def stripe_webhook(request):
     sig_header = request.META.get("HTTP_STRIPE_SIGNATURE")
     endpoint_secret = settings.STRIPE_WEBHOOK_SECRET
 
+    if not endpoint_secret:
+        logger.error("STRIPE_WEBHOOK_SECRET is not configured in settings")
+
     try:
         event = stripe.Webhook.construct_event(payload, sig_header, endpoint_secret)
-    except ValueError:
+    except ValueError as e:
+        logger.warning(f"Invalid payload received in Stripe webhook: {e}")
         return HttpResponse(status=400)
-    except stripe.error.SignatureVerificationError:
+    except stripe.error.SignatureVerificationError as e:
+        logger.warning(f"Signature verification failed for Stripe webhook: {e}")
         return HttpResponse(status=400)
+    except Exception as e:
+        logger.exception(f"Unexpected error constructing Stripe webhook event: {e}")
+        return HttpResponse(status=500)
 
-    # Handle the event
-    if event["type"] in ["product.created", "product.updated"]:
-        product_data = event["data"]["object"]
-        sync_product(product_data)
-    elif event["type"] in ["price.created", "price.updated"]:
-        price_data = event["data"]["object"]
-        sync_price(price_data)
-    elif event["type"] == "checkout.session.completed":
-        session = event["data"]["object"]
-        handle_checkout_completed(session)
+    event_type = event.get("type", "unknown")
+    event_id = event.get("id", "unknown")
+    logger.info(f"Received Stripe webhook event: {event_type} (ID: {event_id})")
+
+    try:
+        if event_type in ["product.created", "product.updated"]:
+            product_data = event["data"]["object"]
+            sync_product(product_data)
+        elif event_type in ["price.created", "price.updated"]:
+            price_data = event["data"]["object"]
+            sync_price(price_data)
+        elif event_type == "checkout.session.completed":
+            session = event["data"]["object"]
+            handle_checkout_completed(session)
+        else:
+            logger.info(f"Unhandled Stripe webhook event type: {event_type}")
+    except Exception as e:
+        logger.exception(
+            f"Error processing Stripe webhook event '{event_type}' (ID: {event_id}): {e}"
+        )
+        return HttpResponse(status=500)
 
     return HttpResponse(status=200)
 
@@ -48,55 +69,76 @@ def sync_product(product_data):
     Syncs a single product from Stripe.
     Only updates fields present in the Stripe Product object.
     """
-    product_id = product_data["id"]
+    product_id = product_data.get("id")
+    if not product_id:
+        logger.error(f"Stripe product payload missing 'id': {product_data}")
+        return
 
-    # Extract images
     images = product_data.get("images", [])
-
-    # Generate slug from Name
-    stripe_name = product_data["name"]
+    stripe_name = product_data.get("name", "")
     slug = product_data.get("metadata", {}).get("slug") or slugify(stripe_name)
 
-    with transaction.atomic():
-        product, created = Product.objects.get_or_create(
-            stripe_product_id=product_id,
-            defaults={
-                "name": stripe_name,  # Initial name
-                "stripe_name": stripe_name,
-                "slug": slug,
-                "price": 0,  # Placeholder until price event arrives
-                "date_added": datetime.datetime.fromtimestamp(
-                    product_data["created"], tz=datetime.timezone.utc
-                ),
-            },
+    created_timestamp = product_data.get("created")
+    if created_timestamp:
+        date_added = datetime.datetime.fromtimestamp(
+            created_timestamp, tz=datetime.timezone.utc
         )
+    else:
+        date_added = datetime.datetime.now(tz=datetime.timezone.utc)
 
-        # Surgical update: only touch fields that belong to the Stripe Product object
-        # and that we WANT to keep in sync even after creation.
-        product.stripe_name = stripe_name
+    logger.info(f"Syncing product '{product_id}' (name: '{stripe_name}')")
 
-        # Django is the source of truth for images.
-        # We only pull images from Stripe if the product has NO images in Django yet
-        # (e.g., during the initial sync of a new product).
-        if not product.images.exists() and images:
-            for i, img_url in enumerate(images):
-                new_img = ProductImage.objects.create(
-                    product=product, url=img_url, order=i
-                )
-                # Immediately download and save locally
-                try:
-                    response = requests.get(img_url, timeout=10)
-                    if response.status_code == 200:
-                        filename = os.path.basename(img_url.split("?")[0])
-                        if not filename or "." not in filename:
-                            filename = f"product_{product.id}_{i}.jpg"
-                        new_img.image_file.save(
-                            filename, ContentFile(response.content), save=True
+    try:
+        with transaction.atomic():
+            product, created = Product.objects.get_or_create(
+                stripe_product_id=product_id,
+                defaults={
+                    "name": stripe_name,  # Initial name
+                    "stripe_name": stripe_name,
+                    "slug": slug,
+                    "price": 0,  # Placeholder until price event arrives
+                    "date_added": date_added,
+                },
+            )
+
+            # Surgical update: only touch fields that belong to the Stripe Product object
+            # and that we WANT to keep in sync even after creation.
+            product.stripe_name = stripe_name
+
+            # Django is the source of truth for images.
+            # We only pull images from Stripe if the product has NO images in Django yet
+            # (e.g., during the initial sync of a new product).
+            if not product.images.exists() and images:
+                for i, img_url in enumerate(images):
+                    new_img = ProductImage.objects.create(
+                        product=product, url=img_url, order=i
+                    )
+                    # Immediately download and save locally
+                    try:
+                        response = requests.get(img_url, timeout=10)
+                        if response.status_code == 200:
+                            filename = os.path.basename(img_url.split("?")[0])
+                            if not filename or "." not in filename:
+                                filename = f"product_{product.id}_{i}.jpg"
+                            new_img.image_file.save(
+                                filename, ContentFile(response.content), save=True
+                            )
+                        else:
+                            logger.warning(
+                                f"Failed to download image from Stripe, status code {response.status_code}: {img_url}"
+                            )
+                    except Exception as e:
+                        logger.exception(
+                            f"Failed to download image from Stripe ({img_url}): {e}"
                         )
-                except Exception as e:
-                    logger.error(f"Failed to download image from Stripe: {e}")
 
-        product.save()
+            product.save()
+            logger.info(
+                f"Successfully synced product '{product_id}' (created={created})"
+            )
+    except Exception as e:
+        logger.exception(f"Error in sync_product for product '{product_id}': {e}")
+        raise
 
 
 def sync_price(price_data):
@@ -104,35 +146,95 @@ def sync_price(price_data):
     Syncs price info for a product.
     Only updates if the price is active.
     """
+    price_id = price_data.get("id")
+    product_id = price_data.get("product")
+
     if not price_data.get("active", True):
-        logger.info(
-            f"Ignoring inactive price {price_data['id']} for product {price_data['product']}"
+        logger.info(f"Ignoring inactive price {price_id} for product {product_id}")
+        return
+
+    if not product_id or not price_id:
+        logger.error(
+            f"Invalid price_data payload missing product or price ID: {price_data}"
         )
         return
 
-    product_id = price_data["product"]
+    logger.info(f"Syncing price '{price_id}' for product '{product_id}'")
+
     try:
         product = Product.objects.get(stripe_product_id=product_id)
-        product.stripe_price_id = price_data["id"]
-        product.price = price_data["unit_amount"]
+        unit_amount = price_data.get("unit_amount")
+        if unit_amount is None:
+            logger.warning(
+                f"Price '{price_id}' unit_amount is None, updating stripe_price_id only"
+            )
+        else:
+            product.price = unit_amount
+        product.stripe_price_id = price_id
         product.save()
+        logger.info(
+            f"Successfully updated price for product '{product_id}' to {unit_amount} (price_id: {price_id})"
+        )
     except Product.DoesNotExist:
         # Product will be created by product.created event
-        pass
+        logger.info(
+            f"Product '{product_id}' does not exist in DB yet for price '{price_id}' sync; skipping until product event arrives"
+        )
+    except Exception as e:
+        logger.exception(
+            f"Error in sync_price for price '{price_id}', product '{product_id}': {e}"
+        )
+        raise
 
 
 def handle_checkout_completed(session):
     """
     Decrement stock levels on successful checkout.
     """
-    line_items = stripe.checkout.Session.list_line_items(session["id"])
+    session_id = session.get("id")
+    logger.info(f"Handling checkout.session.completed for session: {session_id}")
+
+    try:
+        line_items = stripe.checkout.Session.list_line_items(session_id)
+    except Exception as e:
+        logger.exception(
+            f"Failed to retrieve line items from Stripe for session '{session_id}': {e}"
+        )
+        raise
 
     with transaction.atomic():
         for item in line_items.data:
-            price_id = item.price.id
             try:
-                Product.objects.filter(stripe_price_id=price_id).update(
-                    stock_quantity=F("stock_quantity") - item.quantity
+                price_id = item.price.id
+                quantity = item.quantity
+            except AttributeError:
+                price_id = (
+                    item.get("price", {}).get("id")
+                    if isinstance(item.get("price"), dict)
+                    else None
                 )
+                quantity = item.get("quantity", 0)
+
+            if not price_id:
+                logger.warning(
+                    f"Line item missing price ID in session '{session_id}': {item}"
+                )
+                continue
+
+            try:
+                updated_count = Product.objects.filter(stripe_price_id=price_id).update(
+                    stock_quantity=F("stock_quantity") - quantity
+                )
+                if updated_count == 0:
+                    logger.warning(
+                        f"No product found with stripe_price_id '{price_id}' when decrementing stock by {quantity} for session '{session_id}'"
+                    )
+                else:
+                    logger.info(
+                        f"Successfully decremented stock by {quantity} for stripe_price_id '{price_id}' (session: {session_id})"
+                    )
             except Exception as e:
-                logger.error(f"Error updating stock for price_id {price_id}: {e}")
+                logger.exception(
+                    f"Error updating stock for price_id '{price_id}' in session '{session_id}': {e}"
+                )
+                raise

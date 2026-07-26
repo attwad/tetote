@@ -303,6 +303,25 @@ class StripeIntegrationTest(TestCase):
         )
         self.assertEqual(response.status_code, 400)
 
+    @patch("integrations.views.sync_product")
+    @patch("stripe.Webhook.construct_event")
+    def test_stripe_webhook_server_error(
+        self, mock_construct, mock_sync_product, mock_requests_get
+    ):
+        mock_construct.return_value = {
+            "type": "product.created",
+            "data": {"object": {"id": "prod_err"}},
+        }
+        mock_sync_product.side_effect = RuntimeError("Database connection failed")
+        url = reverse("stripe_webhook")
+        response = self.client.post(
+            url,
+            data=b"payload",
+            content_type="application/json",
+            HTTP_STRIPE_SIGNATURE="sig",
+        )
+        self.assertEqual(response.status_code, 500)
+
 
 class ProductAdminTest(TestCase):
     def setUp(self):
