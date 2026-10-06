@@ -1,5 +1,7 @@
+import markdown
 from django.db import models
 from django.urls import reverse
+from django.utils.html import strip_tags
 from django.utils.translation import gettext_lazy as _
 from markdownx.models import MarkdownxField
 
@@ -38,8 +40,6 @@ class BlogPost(models.Model):
     def excerpt(self) -> str:
         if not self.content:
             return ""
-        import markdown
-        from django.utils.html import strip_tags
 
         html_content = markdown.markdown(
             self.content, extensions=["fenced_code", "tables", "nl2br"]

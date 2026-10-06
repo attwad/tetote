@@ -1,8 +1,8 @@
 from django.conf import settings
 from django.db import models
-from django.utils import timezone
-from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
+from django.utils import timezone
+from django.utils.translation import get_language, gettext_lazy as _
 from markdownx.models import MarkdownxField
 
 
@@ -222,8 +222,6 @@ class CarouselImage(models.Model):
 
         if self.link.startswith(("http://", "https://", "mailto:", "tel:")):
             return self.link
-
-        from django.utils.translation import get_language
 
         lang = get_language()
         # If it's a path and not the default language, prepend the language code

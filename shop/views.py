@@ -1,4 +1,5 @@
 import json
+import logging
 from typing import Any, Dict
 
 from django.conf import settings
@@ -14,6 +15,7 @@ import stripe
 from news.models import NewsItem
 from .models import Brand, CarouselImage, Glaze, Product, ProductType, StoreSettings
 
+logger = logging.getLogger(__name__)
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
@@ -321,10 +323,6 @@ class CreateCheckoutSessionView(View):
             checkout_session = stripe.checkout.Session.create(**session_kwargs)
             return JsonResponse({"url": checkout_session.url})
         except Exception as e:
-            # Import logging and use it for internal debugging
-            import logging
-
-            logger = logging.getLogger(__name__)
             logger.error(f"Error creating Stripe checkout session: {e}")
             return JsonResponse(
                 {"error": _("An error occurred while creating the checkout session")},

@@ -66,7 +66,6 @@ urlpatterns += i18n_patterns(
     path(settings.ADMIN_URL, admin.site.urls),
     path("", include("shop.urls")),
     path("blog/", include("blog.urls")),
-    path("news/", include("news.urls")),
     prefix_default_language=False,
 )
 
