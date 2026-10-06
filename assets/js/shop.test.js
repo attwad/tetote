@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { getCart, saveCart, updateCartUI, showToast, getNewURL, toggleMobileMenu } from './assets/js/shop.js';
+import { getCart, saveCart, updateCartUI, showToast, getNewURL, toggleMobileMenu } from './shop.js';
 
 describe('Shop Logic Tests', () => {
     beforeEach(() => {
