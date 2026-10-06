@@ -19,16 +19,14 @@ class StaticViewSitemap(Sitemap):
     changefreq = "monthly"
 
     def items(self) -> List[str]:
-        items = [
+        return [
             "shop:home",
+            "shop:cart",
             "shop:product_list",
             "shop:privacy_policy",
             "shop:return_policy",
             "shop:terms",
         ]
-        if not getattr(settings, "SHOP_DISABLED", False):
-            items.insert(1, "shop:cart")
-        return items
 
     def location(self, item: str) -> str:
         return reverse(item)
@@ -36,15 +34,9 @@ class StaticViewSitemap(Sitemap):
 
 sitemaps = {
     "static": StaticViewSitemap,
+    "products": ProductSitemap,
+    "brands": BrandSitemap,
 }
-
-if not getattr(settings, "SHOP_DISABLED", False):
-    sitemaps.update(
-        {
-            "products": ProductSitemap,
-            "brands": BrandSitemap,
-        }
-    )
 
 
 def robots_txt(request: HttpRequest) -> HttpResponse:

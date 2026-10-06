@@ -86,7 +86,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "shop.middleware.ShopDisabledMiddleware",
 ]
 
 ROOT_URLCONF = "tetote.urls"
@@ -106,7 +105,6 @@ TEMPLATES = [
                 "shop.context_processors.announcement",
                 "shop.context_processors.store_settings",
                 "shop.context_processors.analytics",
-                "shop.context_processors.shop_status",
                 "shop.context_processors.brands",
             ],
         },
@@ -199,9 +197,6 @@ STRIPE_PUBLIC_KEY = env("STRIPE_PUBLIC_KEY", default="")
 STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY", default="")
 STRIPE_WEBHOOK_SECRET = env("STRIPE_WEBHOOK_SECRET", default="")
 STRIPE_SHIPPING_RATES = env.list("STRIPE_SHIPPING_RATES", default=[])
-
-# Shop settings
-SHOP_DISABLED = env.bool("SHOP_DISABLED", default=False)
 
 # Umami Analytics
 UMAMI_WEBSITE_ID = env("UMAMI_WEBSITE_ID", default="")

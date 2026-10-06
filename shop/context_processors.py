@@ -31,13 +31,6 @@ def analytics(request: HttpRequest) -> Dict[str, Any]:
     return {"UMAMI_WEBSITE_ID": getattr(settings, "UMAMI_WEBSITE_ID", "")}
 
 
-def shop_status(request: HttpRequest) -> Dict[str, Any]:
-    """
-    Returns whether the shop is disabled via environment variable.
-    """
-    return {"SHOP_DISABLED": getattr(settings, "SHOP_DISABLED", False)}
-
-
 def brands(request: HttpRequest) -> Dict[str, Any]:
     """
     Returns brands that have at least one public product.
