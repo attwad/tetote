@@ -7,6 +7,28 @@
 {% block content %}
     <h1>{% translate "Your selection" %}</h1>
 
+    <template id="cart-item-template">
+        <div class="cart-item-card">
+            <div class="cart-item-image hidden">
+                <img class="cart-item-img" src="" alt="">
+            </div>
+            <div class="cart-item-info">
+                <h3><a class="cart-item-link" href=""></a></h3>
+                <p class="cart-item-price-unit"></p>
+            </div>
+            <div class="cart-item-actions">
+                <div class="qty-control">
+                    <label>{% translate "Qty" %}</label>
+                    <input class="cart-item-qty" type="number" min="1">
+                </div>
+                <p class="item-total"></p>
+                <button type="button" class="remove-btn">
+                    {% translate "Remove" %}
+                </button>
+            </div>
+        </div>
+    </template>
+
     <div id="cart-container">
         <div id="cart-items" class="mb-8">
             <!-- Loaded via JS -->
@@ -58,6 +80,7 @@
         const container = document.getElementById('cart-items');
         const emptyDiv = document.getElementById('empty-cart');
         const cartDiv = document.getElementById('cart-container');
+        const template = document.getElementById('cart-item-template');
 
         if (cart.length === 0) {
             cartDiv.classList.add('hidden');
@@ -85,30 +108,36 @@
             const itemTotal = info.price * item.qty;
             total += itemTotal;
 
-            const card = document.createElement('div');
-            card.className = 'cart-item-card';
+            const clone = template.content.cloneNode(true);
 
-            card.innerHTML = `
-                <div class="cart-item-image">
-                    <img src="${info.image}?w=160" alt="${info.name}">
-                </div>
-                <div class="cart-item-info">
-                    <h3><a href="${info.url}">${info.name}</a></h3>
-                    <p class="cart-item-price-unit">CHF ${info.price.toFixed(2)}</p>
-                </div>
-                <div class="cart-item-actions">
-                    <div class="qty-control">
-                        <label>{% translate "Qty" %}</label>
-                        <input type="number" value="${item.qty}" min="1" max="${info.stock}"
-                               onchange="updateQty('${item.price_id}', this.value, ${info.stock})">
-                    </div>
-                    <p class="item-total">CHF ${itemTotal.toFixed(2)}</p>
-                    <button class="remove-btn" onclick="removeItem('${item.price_id}')">
-                        {% translate "Remove" %}
-                    </button>
-                </div>
-            `;
-            container.appendChild(card);
+            if (info.image) {
+                const imageContainer = clone.querySelector('.cart-item-image');
+                const img = clone.querySelector('.cart-item-img');
+                img.src = info.image;
+                img.alt = info.name;
+                imageContainer.classList.remove('hidden');
+            }
+
+            const link = clone.querySelector('.cart-item-link');
+            link.href = info.url;
+            link.textContent = info.name;
+
+            clone.querySelector('.cart-item-price-unit').textContent = `CHF ${info.price.toFixed(2)}`;
+            clone.querySelector('.item-total').textContent = `CHF ${itemTotal.toFixed(2)}`;
+
+            const qtyInput = clone.querySelector('.cart-item-qty');
+            qtyInput.value = item.qty;
+            qtyInput.max = info.stock;
+            qtyInput.addEventListener('change', (e) => {
+                updateQty(item.price_id, e.target.value, info.stock);
+            });
+
+            const removeBtn = clone.querySelector('.remove-btn');
+            removeBtn.addEventListener('click', () => {
+                removeItem(item.price_id);
+            });
+
+            container.appendChild(clone);
         });
 
         document.getElementById('cart-total').textContent = `CHF ${total.toFixed(2)}`;
