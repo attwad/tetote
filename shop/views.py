@@ -13,6 +13,7 @@ from django.views.generic import DetailView, ListView, TemplateView, View
 import stripe
 
 from news.models import NewsItem
+from .context_processors import brands as brands_context
 from .models import Brand, CarouselImage, Glaze, Product, ProductType, StoreSettings
 
 logger = logging.getLogger(__name__)
@@ -177,7 +178,18 @@ class ProductListView(ListView):
 
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context: Dict[str, Any] = super().get_context_data(**kwargs)
-        context["brands"] = Brand.objects.filter(products__public=True).distinct()
+        if hasattr(self, "request") and self.request:
+            context["brands"] = brands_context(self.request)["all_brands"]
+        else:
+            context["brands"] = (
+                Brand.objects.annotate(
+                    public_product_count=models.Count(
+                        "products", filter=models.Q(products__public=True)
+                    )
+                )
+                .filter(public_product_count__gt=0)
+                .order_by("name")
+            )
 
         # Sort glazes and types so that 'Other/Others' is always at the bottom
         context["glazes"] = (

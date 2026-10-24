@@ -10,18 +10,22 @@ def announcement(request: HttpRequest) -> Dict[str, Any]:
     """
     Returns the latest active announcement.
     """
-    active_announcement = (
-        StoreAnnouncement.objects.filter(is_active=True).order_by("-updated_at").first()
-    )
-    return {"active_announcement": active_announcement}
+    if not hasattr(request, "_active_announcement"):
+        request._active_announcement = (
+            StoreAnnouncement.objects.filter(is_active=True)
+            .order_by("-updated_at")
+            .first()
+        )
+    return {"active_announcement": request._active_announcement}
 
 
 def store_settings(request: HttpRequest) -> Dict[str, Any]:
     """
     Returns the store settings.
     """
-    settings = StoreSettings.objects.first()
-    return {"store_settings": settings}
+    if not hasattr(request, "_store_settings"):
+        request._store_settings = StoreSettings.objects.first()
+    return {"store_settings": request._store_settings}
 
 
 def analytics(request: HttpRequest) -> Dict[str, Any]:
@@ -35,10 +39,12 @@ def brands(request: HttpRequest) -> Dict[str, Any]:
     """
     Returns brands that have at least one public product.
     """
-    return {
-        "all_brands": Brand.objects.annotate(
-            public_product_count=Count("products", filter=Q(products__public=True))
+    if not hasattr(request, "_all_brands"):
+        request._all_brands = (
+            Brand.objects.annotate(
+                public_product_count=Count("products", filter=Q(products__public=True))
+            )
+            .filter(public_product_count__gt=0)
+            .order_by("name")
         )
-        .filter(public_product_count__gt=0)
-        .order_by("name")
-    }
+    return {"all_brands": request._all_brands}

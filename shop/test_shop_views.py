@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.utils import translation
 
 from shop.models import Brand, Glaze, Product, ProductImage, ProductType
+from shop.views import ProductListView
 
 
 class ShopViewTests(TestCase):
@@ -304,3 +305,51 @@ class ShopViewTests(TestCase):
 
         # Verify that only the product with a secondary image has the class
         self.assertEqual(content.count("has-secondary-image"), 1)
+
+    def test_product_list_deduplicates_brand_queries(self):
+        from django.db import connection
+        from django.test.utils import CaptureQueriesContext
+
+        url = reverse("shop:product_list")
+        with CaptureQueriesContext(connection) as queries:
+            response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+        # Context brands should reuse all_brands from the context processor
+        self.assertIs(response.context["brands"], response.context["all_brands"])
+
+        # Exactly 1 query should select FROM shop_brand instead of querying twice
+        brand_list_queries = [
+            q for q in queries.captured_queries if 'FROM "shop_brand"' in q["sql"]
+        ]
+        self.assertEqual(
+            len(brand_list_queries),
+            1,
+            f"Expected exactly 1 brand list query, got {len(brand_list_queries)}: {brand_list_queries}",
+        )
+
+    def test_product_list_context_with_request(self):
+        from django.test import RequestFactory
+
+        view = ProductListView()
+        view.setup(RequestFactory().get("/shop/"))
+        view.object_list = Product.objects.none()
+        context = view.get_context_data()
+        self.assertIn("brands", context)
+
+    def test_context_processors_request_caching(self):
+        from django.test import RequestFactory
+        from shop.context_processors import announcement, brands, store_settings
+
+        request = RequestFactory().get("/shop/")
+        b1 = brands(request)["all_brands"]
+        b2 = brands(request)["all_brands"]
+        self.assertIs(b1, b2)
+
+        s1 = store_settings(request)["store_settings"]
+        s2 = store_settings(request)["store_settings"]
+        self.assertIs(s1, s2)
+
+        a1 = announcement(request)["active_announcement"]
+        a2 = announcement(request)["active_announcement"]
+        self.assertIs(a1, a2)
