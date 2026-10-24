@@ -4,7 +4,8 @@ from unittest.mock import MagicMock, patch
 import requests
 import stripe
 from django.core.management import call_command
-from django.test import TestCase
+from django.db import connection
+from django.test import TestCase, TransactionTestCase
 from django.urls import reverse
 
 from integrations.views import (
@@ -570,3 +571,78 @@ class StripeIntegrationTest(TestCase):
             with self.assertRaises(stripe.error.APIConnectionError):
                 call_command("sync_stripe", stdout=out)
         self.assertIn("Stripe API error after 3 attempts", out.getvalue())
+
+
+class StripeAtomicSeparationTest(TransactionTestCase):
+    @patch("integrations.views.requests.get")
+    def test_sync_product_downloads_images_outside_transaction(self, mock_requests_get):
+        was_inside_atomic = None
+
+        def fake_get(url, timeout=10):
+            nonlocal was_inside_atomic
+            was_inside_atomic = connection.in_atomic_block
+            mock_resp = MagicMock()
+            mock_resp.status_code = 200
+            mock_resp.content = b"fake image data"
+            return mock_resp
+
+        mock_requests_get.side_effect = fake_get
+
+        product_data = {
+            "id": "prod_atomic_test",
+            "name": "Atomic Test Product",
+            "images": ["http://test.com/atomic.jpg"],
+            "created": 1700000000,
+        }
+
+        sync_product(product_data)
+
+        self.assertEqual(mock_requests_get.call_count, 1)
+        self.assertFalse(was_inside_atomic)
+        product = Product.objects.get(stripe_product_id="prod_atomic_test")
+        self.assertEqual(product.images.count(), 1)
+        self.assertTrue(product.images.first().image_file)
+
+    @patch("integrations.views.requests.get")
+    def test_sync_product_db_error_does_not_download_images(self, mock_requests_get):
+        with patch("shop.models.Product.objects.get_or_create") as mock_create:
+            mock_create.side_effect = RuntimeError("DB connection error")
+            product_data = {
+                "id": "prod_db_err",
+                "name": "DB Error Product",
+                "images": ["http://test.com/fail.jpg"],
+            }
+            with self.assertRaises(RuntimeError):
+                sync_product(product_data)
+
+        mock_requests_get.assert_not_called()
+
+    @patch("integrations.views.requests.get")
+    def test_sync_product_multiple_images_outside_transaction(self, mock_requests_get):
+        download_states = []
+
+        def fake_get(url, timeout=10):
+            download_states.append(connection.in_atomic_block)
+            mock_resp = MagicMock()
+            mock_resp.status_code = 200
+            mock_resp.content = b"fake image data"
+            return mock_resp
+
+        mock_requests_get.side_effect = fake_get
+
+        product_data = {
+            "id": "prod_multi_img",
+            "name": "Multi Image Product",
+            "images": [
+                "http://test.com/img1.jpg",
+                "http://test.com/img2.jpg",
+            ],
+            "created": 1700000000,
+        }
+
+        sync_product(product_data)
+
+        self.assertEqual(len(download_states), 2)
+        self.assertTrue(all(state is False for state in download_states))
+        product = Product.objects.get(stripe_product_id="prod_multi_img")
+        self.assertEqual(product.images.count(), 2)

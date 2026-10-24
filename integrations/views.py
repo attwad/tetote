@@ -1,7 +1,7 @@
 import datetime
 import logging
 import os
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import requests
 import stripe
@@ -115,6 +115,7 @@ def sync_product(product_data: StripePayload) -> None:
 
     logger.info(f"Syncing product '{product_id}' (name: '{stripe_name}')")
 
+    images_to_download: List[Tuple[ProductImage, str, int]] = []
     try:
         with transaction.atomic():
             product, created = Product.objects.get_or_create(
@@ -140,24 +141,7 @@ def sync_product(product_data: StripePayload) -> None:
                     new_img = ProductImage.objects.create(
                         product=product, url=img_url, order=i
                     )
-                    # Immediately download and save locally
-                    try:
-                        response = requests.get(img_url, timeout=10)
-                        if response.status_code == 200:
-                            filename = os.path.basename(img_url.split("?")[0])
-                            if not filename or "." not in filename:
-                                filename = f"product_{product.id}_{i}.jpg"
-                            new_img.image_file.save(
-                                filename, ContentFile(response.content), save=True
-                            )
-                        else:
-                            logger.warning(
-                                f"Failed to download image from Stripe, status code {response.status_code}: {img_url}"
-                            )
-                    except Exception as e:
-                        logger.exception(
-                            f"Failed to download image from Stripe ({img_url}): {e}"
-                        )
+                    images_to_download.append((new_img, img_url, i))
 
             product.save()
             logger.info(
@@ -166,6 +150,24 @@ def sync_product(product_data: StripePayload) -> None:
     except Exception as e:
         logger.exception(f"Error in sync_product for product '{product_id}': {e}")
         raise
+
+    for new_img, img_url, i in images_to_download:
+        # Immediately download and save locally outside of the transaction
+        try:
+            response = requests.get(img_url, timeout=10)
+            if response.status_code == 200:
+                filename = os.path.basename(img_url.split("?")[0])
+                if not filename or "." not in filename:
+                    filename = f"product_{new_img.product_id}_{i}.jpg"
+                new_img.image_file.save(
+                    filename, ContentFile(response.content), save=True
+                )
+            else:
+                logger.warning(
+                    f"Failed to download image from Stripe, status code {response.status_code}: {img_url}"
+                )
+        except Exception as e:
+            logger.exception(f"Failed to download image from Stripe ({img_url}): {e}")
 
 
 def sync_price(price_data: StripePayload) -> None:
