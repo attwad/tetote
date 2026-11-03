@@ -47,4 +47,15 @@ urlpatterns = [
         views.CheckoutSuccessView.as_view(),
         name="checkout_success",
     ),
+    path("pos/", views.PosView.as_view(), name="pos"),
+    path(
+        "pos/api/sales/",
+        views.PosCreateSaleView.as_view(),
+        name="pos_create_sale",
+    ),
+    path(
+        "pos/api/sales/<int:sale_id>/status/",
+        views.PosSaleStatusView.as_view(),
+        name="pos_sale_status",
+    ),
 ]

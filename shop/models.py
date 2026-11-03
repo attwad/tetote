@@ -231,3 +231,106 @@ class CarouselImage(models.Model):
             if not self.link.startswith(f"/{lang}/"):
                 return f"/{lang}{self.link}"
         return self.link
+
+
+class PosSale(models.Model):
+    STATUS_PENDING = "pending"
+    STATUS_COMPLETED = "completed"
+    STATUS_CANCELED = "canceled"
+    STATUS_CHOICES = [
+        (STATUS_PENDING, _("Pending")),
+        (STATUS_COMPLETED, _("Completed")),
+        (STATUS_CANCELED, _("Canceled")),
+    ]
+
+    METHOD_TAP_TO_PAY = "tap_to_pay"
+    METHOD_TWINT = "twint"
+    METHOD_CHOICES = [
+        (METHOD_TAP_TO_PAY, _("Tap to Pay (Card)")),
+        (METHOD_TWINT, _("TWINT")),
+    ]
+
+    status = models.CharField(
+        _("Status"), max_length=20, choices=STATUS_CHOICES, default=STATUS_PENDING
+    )
+    payment_method = models.CharField(
+        _("Payment Method"),
+        max_length=20,
+        choices=METHOD_CHOICES,
+        default=METHOD_TAP_TO_PAY,
+    )
+    subtotal_amount = models.PositiveIntegerField(_("Subtotal (CHF cents)"))
+    discount_amount = models.PositiveIntegerField(_("Discount (CHF cents)"), default=0)
+    total_amount = models.PositiveIntegerField(_("Total (CHF cents)"))
+    customer_email = models.EmailField(_("Customer Email"), blank=True)
+    stripe_payment_intent_id = models.CharField(
+        _("Stripe PaymentIntent ID"), max_length=255, blank=True, null=True, unique=True
+    )
+    twint_redirect_url = models.URLField(
+        _("TWINT Redirect URL"), max_length=1000, blank=True
+    )
+    receipt_sent = models.BooleanField(_("Receipt Sent"), default=False)
+    created_at = models.DateTimeField(_("Created At"), auto_now_add=True)
+    completed_at = models.DateTimeField(_("Completed At"), null=True, blank=True)
+
+    class Meta:
+        verbose_name = _("POS Sale")
+        verbose_name_plural = _("POS Sales")
+        ordering = ["-created_at"]
+
+    def __str__(self) -> str:
+        return f"POS Sale #{self.id} ({self.get_status_display()} - CHF {self.total_in_chf:.2f})"
+
+    @property
+    def subtotal_in_chf(self) -> float:
+        return self.subtotal_amount / 100.0
+
+    @property
+    def discount_in_chf(self) -> float:
+        return self.discount_amount / 100.0
+
+    @property
+    def total_in_chf(self) -> float:
+        return self.total_amount / 100.0
+
+    def items_summary(self) -> str:
+        parts = [
+            f"{item.quantity}x {item.product.name}"
+            for item in self.items.select_related("product").all()
+        ]
+        summary = f"POS Sale #{self.id}: " + ", ".join(parts)
+        if self.discount_amount > 0:
+            summary += f" (Discount: CHF {self.discount_in_chf:.2f})"
+        return summary
+
+
+class PosSaleItem(models.Model):
+    sale = models.ForeignKey(
+        PosSale,
+        on_delete=models.CASCADE,
+        related_name="items",
+        verbose_name=_("POS Sale"),
+    )
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.PROTECT,
+        related_name="pos_sale_items",
+        verbose_name=_("Product"),
+    )
+    quantity = models.PositiveIntegerField(_("Quantity"))
+    unit_price = models.PositiveIntegerField(_("Unit Price (CHF cents)"))
+
+    class Meta:
+        verbose_name = _("POS Sale Item")
+        verbose_name_plural = _("POS Sale Items")
+
+    def __str__(self) -> str:
+        return f"{self.quantity}x {self.product.name}"
+
+    @property
+    def unit_price_in_chf(self) -> float:
+        return self.unit_price / 100.0
+
+    @property
+    def line_total_in_chf(self) -> float:
+        return (self.unit_price * self.quantity) / 100.0

@@ -1,0 +1,373 @@
+{% load i18n %}{% load static %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="robots" content="noindex, nofollow">
+    <title>{% translate "Market POS" %} - Tetote</title>
+    <link rel="icon" type="image/svg+xml" href="{% static 'images/logo.min.svg' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Noto+Serif+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body class="bg-brand-bg text-brand-text font-serif select-none touch-manipulation">
+    <div
+        id="pos-app"
+        class="max-w-md mx-auto min-h-screen flex flex-col pb-28 relative"
+        data-create-sale-url="{% url 'shop:pos_create_sale' %}"
+        data-status-url-template="{% url 'shop:pos_sale_status' sale_id=0 %}"
+        data-csrf-token="{{ csrf_token }}"
+        data-i18n-stock-limit="{% translate 'Only X left in stock' %}"
+        data-i18n-copied="{% translate 'Copied to clipboard' %}"
+        data-i18n-receipt-sent="{% translate 'Receipt emailed' %}"
+    >
+        <!-- Sticky Top Mobile Header & Filters -->
+        <header class="sticky top-0 z-30 bg-brand-bg/95 backdrop-blur border-b border-brand-border px-4 pt-3 pb-2.5">
+            <div class="flex items-center justify-between mb-2.5">
+                <div class="flex items-center gap-2.5">
+                    <a href="{% url 'shop:home' %}" class="no-underline text-brand-text flex items-center gap-2">
+                        <img src="{% static 'images/logo.min.svg' %}" alt="Tetote" class="w-7 h-7">
+                    </a>
+                    <h1 class="text-[1.35rem] font-semibold tracking-wider uppercase m-0">{% translate "Market POS" %}</h1>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button
+                        type="button"
+                        id="pos-in-stock-toggle"
+                        class="chip active text-[0.8rem] px-3 py-1"
+                    >
+                        {% translate "In Stock" %}
+                    </button>
+                    <button
+                        type="button"
+                        id="pos-clear-basket-btn"
+                        class="text-[0.85rem] text-brand-muted underline bg-transparent border-none p-1 cursor-pointer"
+                    >
+                        {% translate "Reset" %}
+                    </button>
+                </div>
+            </div>
+
+            <!-- Instant Search -->
+            <div class="mb-2">
+                <input
+                    type="search"
+                    id="pos-search-input"
+                    placeholder="{% translate 'Search item, brand, glaze...' %}"
+                    class="w-full px-3 py-2 text-[1rem] rounded-[4px] border border-brand-border bg-white focus:outline-none focus:border-brand-accent"
+                >
+            </div>
+
+            <!-- Horizontal Scrollable Brand & Type Filter Chips -->
+            <div class="flex gap-1.5 overflow-x-auto pb-1 no-scrollbar items-center">
+                {% for brand in brands %}
+                    <button
+                        type="button"
+                        data-pos-brand="{{ brand.slug }}"
+                        class="chip text-[0.8rem] px-2.5 py-0.5 whitespace-nowrap flex-shrink-0"
+                    >
+                        {{ brand.name }}
+                    </button>
+                {% endfor %}
+                {% if brands and product_types %}
+                    <span class="text-brand-border mx-0.5">|</span>
+                {% endif %}
+                {% for pt in product_types %}
+                    <button
+                        type="button"
+                        data-pos-type="{{ pt.slug }}"
+                        class="chip text-[0.8rem] px-2.5 py-0.5 whitespace-nowrap flex-shrink-0"
+                    >
+                        {{ pt.name }}
+                    </button>
+                {% endfor %}
+            </div>
+        </header>
+
+        <!-- Product Grid -->
+        <main class="px-3 pt-3 flex-grow">
+            <div id="pos-product-grid" class="grid grid-cols-2 gap-2.5">
+                <!-- Populated by pos.js -->
+            </div>
+            <div id="pos-empty-state" class="hidden text-center py-12 text-brand-muted">
+                <p>{% translate "No matching products found." %}</p>
+            </div>
+        </main>
+
+        <!-- Sticky Bottom Summary Bar -->
+        <div
+            id="pos-bottom-bar"
+            class="fixed bottom-0 left-0 right-0 z-30 max-w-md mx-auto bg-brand-text text-white px-4 py-3 shadow-lg transition-transform duration-200 translate-y-full flex items-center justify-between"
+        >
+            <div>
+                <p class="m-0 text-[0.8rem] uppercase tracking-widest opacity-80">
+                    <span id="pos-bottom-count">0</span> {% translate "items selected" %}
+                </p>
+                <p id="pos-bottom-total" class="m-0 text-[1.45rem] font-semibold leading-tight">CHF 0.00</p>
+            </div>
+            <button
+                type="button"
+                id="pos-open-drawer-btn"
+                class="bg-brand-accent text-white border-none px-5 py-2.5 rounded-[4px] text-[1.05rem] font-semibold tracking-wider uppercase cursor-pointer"
+            >
+                {% translate "Checkout" %}
+            </button>
+        </div>
+
+        <!-- Checkout Drawer Overlay -->
+        <div
+            id="pos-checkout-overlay"
+            class="fixed inset-0 bg-black/50 z-40 hidden"
+        ></div>
+
+        <!-- Slide-Up Checkout Sheet -->
+        <section
+            id="pos-checkout-drawer"
+            class="fixed bottom-0 left-0 right-0 z-50 max-w-md mx-auto bg-brand-bg rounded-t-[12px] shadow-2xl border-t border-brand-border p-4 max-h-[90vh] overflow-y-auto transition-transform duration-300 translate-y-full"
+        >
+            <div class="flex items-center justify-between pb-3 border-b border-brand-border">
+                <h2 class="text-[1.35rem] font-semibold m-0">{% translate "Review & Charge" %}</h2>
+                <button
+                    type="button"
+                    id="pos-close-drawer-btn"
+                    class="bg-transparent border-none text-brand-muted text-2xl leading-none px-2 py-0.5 cursor-pointer"
+                >
+                    &times;
+                </button>
+            </div>
+
+            <!-- Selected Basket Items -->
+            <div id="pos-basket-items" class="max-h-48 overflow-y-auto my-2">
+                <!-- Populated by pos.js -->
+            </div>
+
+            <!-- Market Discount Section -->
+            <div class="py-3 border-b border-brand-border">
+                <p class="m-0 mb-2 text-[0.85rem] uppercase tracking-wider text-brand-muted font-semibold">
+                    {% translate "Discount" %}
+                </p>
+                <div class="flex gap-1.5 flex-wrap mb-2.5">
+                    <button type="button" data-pos-discount-pct="0" class="chip active text-[0.85rem] px-3 py-1">{% translate "None" %}</button>
+                    <button type="button" data-pos-discount-pct="5" class="chip text-[0.85rem] px-3 py-1">-5%</button>
+                    <button type="button" data-pos-discount-pct="10" class="chip text-[0.85rem] px-3 py-1">-10%</button>
+                    <button type="button" data-pos-discount-pct="15" class="chip text-[0.85rem] px-3 py-1">-15%</button>
+                    <button type="button" data-pos-discount-pct="20" class="chip text-[0.85rem] px-3 py-1">-20%</button>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label for="pos-custom-discount-input" class="block text-[0.8rem] text-brand-muted mb-0.5">
+                            {% translate "Discount (CHF)" %}
+                        </label>
+                        <input
+                            type="number"
+                            id="pos-custom-discount-input"
+                            min="0"
+                            step="0.5"
+                            placeholder="0.00"
+                            class="w-full px-2.5 py-1.5 text-[0.95rem] rounded border border-brand-border bg-white"
+                        >
+                    </div>
+                    <div>
+                        <label for="pos-custom-total-input" class="block text-[0.8rem] text-brand-muted mb-0.5">
+                            {% translate "Or Final Total (CHF)" %}
+                        </label>
+                        <input
+                            type="number"
+                            id="pos-custom-total-input"
+                            min="0.5"
+                            step="0.5"
+                            placeholder="0.00"
+                            class="w-full px-2.5 py-1.5 text-[0.95rem] rounded border border-brand-border bg-white"
+                        >
+                    </div>
+                </div>
+            </div>
+
+            <!-- Customer Email Receipt Section -->
+            <div class="py-3 border-b border-brand-border">
+                <p class="m-0 mb-2 text-[0.85rem] uppercase tracking-wider text-brand-muted font-semibold">
+                    {% translate "Customer Receipt" %}
+                </p>
+                <div class="grid grid-cols-2 gap-2">
+                    <button
+                        type="button"
+                        id="pos-receipt-no"
+                        class="chip active text-center py-2 text-[0.95rem]"
+                    >
+                        {% translate "No Receipt" %}
+                    </button>
+                    <button
+                        type="button"
+                        id="pos-receipt-yes"
+                        class="chip text-center py-2 text-[0.95rem]"
+                    >
+                        {% translate "Email Receipt" %}
+                    </button>
+                </div>
+                <div id="pos-receipt-email-wrap" class="hidden mt-2.5">
+                    <input
+                        type="email"
+                        id="pos-receipt-email-input"
+                        placeholder="{% translate 'customer@example.com' %}"
+                        class="w-full px-3 py-2 text-[1rem] rounded border border-brand-border bg-white"
+                    >
+                </div>
+            </div>
+
+            <!-- Totals Breakdown -->
+            <div class="py-3 space-y-1">
+                <div class="flex justify-between text-[0.95rem] text-brand-muted">
+                    <span>{% translate "Subtotal" %}</span>
+                    <span id="pos-subtotal-display">CHF 0.00</span>
+                </div>
+                <div id="pos-discount-row" class="hidden flex justify-between text-[0.95rem] text-brand-accent font-medium">
+                    <span>{% translate "Discount" %}</span>
+                    <span id="pos-discount-display">- CHF 0.00</span>
+                </div>
+                <div class="flex justify-between text-[1.45rem] font-semibold pt-1">
+                    <span>{% translate "Total" %}</span>
+                    <span id="pos-total-display">CHF 0.00</span>
+                </div>
+            </div>
+
+            <!-- Payment Method Triggers -->
+            <div class="flex flex-col gap-2.5 pt-2">
+                <button
+                    type="button"
+                    id="pos-btn-tap-to-pay"
+                    class="w-full py-3.5 px-4 bg-brand-accent text-white border-none rounded-[4px] text-[1.1rem] font-semibold tracking-wider uppercase cursor-pointer flex items-center justify-between"
+                >
+                    <span>{% translate "Tap to Pay (Stripe App)" %}</span>
+                    <span class="pos-btn-amount">CHF 0.00</span>
+                </button>
+                <button
+                    type="button"
+                    id="pos-btn-twint"
+                    class="w-full py-3.5 px-4 bg-brand-text text-white border-none rounded-[4px] text-[1.1rem] font-semibold tracking-wider uppercase cursor-pointer flex items-center justify-between"
+                >
+                    <span>{% translate "TWINT (QR Code)" %}</span>
+                    <span class="pos-btn-amount">CHF 0.00</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Active Payment Waiting & Completion Modal -->
+        <div
+            id="pos-payment-modal"
+            class="fixed inset-0 z-50 bg-brand-bg flex flex-col justify-between p-6 max-w-md mx-auto hidden overflow-y-auto"
+        >
+            <!-- Waiting State -->
+            <div id="pos-waiting-view" class="my-auto text-center">
+                <p class="text-[0.85rem] uppercase tracking-widest text-brand-muted m-0 mb-1">
+                    {% translate "Amount to Charge" %}
+                </p>
+                <p id="pos-waiting-amount" class="text-[2.6rem] font-semibold m-0 mb-4 leading-none">
+                    CHF 0.00
+                </p>
+
+                <!-- Tap to Pay Instructions -->
+                <div id="pos-tap-instructions" class="bg-white border border-brand-border rounded-[6px] p-4 mb-6 text-left space-y-2.5">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[0.9rem] font-semibold uppercase tracking-wider text-brand-accent">
+                            {% translate "Tap to Pay Ready" %}
+                        </span>
+                        <button
+                            type="button"
+                            id="pos-copy-amount-btn"
+                            class="text-[0.85rem] px-2.5 py-1 rounded border border-brand-border bg-brand-bg cursor-pointer"
+                        >
+                            {% translate "Copy CHF Amount" %}
+                        </button>
+                    </div>
+                    <ol class="m-0 pl-5 text-[0.95rem] space-y-1.5 text-brand-text">
+                        <li>{% translate "Open the Stripe Dashboard app on your phone." %}</li>
+                        <li>{% translate "Tap '+' then 'Charge a card' -> 'Tap to Pay'." %}</li>
+                        <li>{% translate "Paste the copied amount and let the customer tap their card." %}</li>
+                    </ol>
+                    <p class="m-0 pt-2 text-[0.85rem] text-brand-muted italic">
+                        {% translate "Waiting for Stripe confirmation... Stock and receipt will update automatically." %}
+                    </p>
+                </div>
+
+                <!-- TWINT QR Code Display -->
+                <div id="pos-twint-qr-container" class="hidden bg-white border border-brand-border rounded-[6px] p-4 mb-6 text-center">
+                    <p class="m-0 mb-2 text-[0.95rem] font-medium">
+                        {% translate "Ask the customer to scan with their phone to pay with TWINT:" %}
+                    </p>
+                    <div id="pos-twint-svg" class="w-56 h-56 mx-auto my-2 flex items-center justify-center"></div>
+                    <a
+                        id="pos-twint-external-link"
+                        href="#"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="inline-block mt-2 text-[0.85rem] text-brand-accent underline"
+                    >
+                        {% translate "Open Stripe TWINT QR Page" %}
+                    </a>
+                </div>
+
+                <button
+                    type="button"
+                    id="pos-cancel-sale-btn"
+                    class="w-full py-3 bg-white border border-brand-border text-brand-muted rounded-[4px] text-[1rem] uppercase tracking-wider cursor-pointer"
+                >
+                    {% translate "Cancel Payment" %}
+                </button>
+            </div>
+
+            <!-- Completed State -->
+            <div id="pos-completed-view" class="hidden my-auto text-center space-y-5">
+                <div class="w-16 h-16 rounded-full bg-brand-accent text-white flex items-center justify-center mx-auto text-3xl">
+                    &#10003;
+                </div>
+                <div>
+                    <h2 class="text-[1.8rem] font-semibold m-0">{% translate "Payment Confirmed" %}</h2>
+                    <p id="pos-completed-total" class="text-[1.4rem] text-brand-muted m-0 mt-1">CHF 0.00</p>
+                    <p class="text-[0.9rem] text-brand-accent mt-2 m-0">
+                        {% translate "Stock quantities have been updated." %}
+                    </p>
+                </div>
+
+                <p id="pos-late-receipt-sent" class="hidden text-[0.95rem] text-brand-accent font-medium bg-white border border-brand-border rounded p-3"></p>
+
+                <!-- Optional Post-Sale Receipt Input -->
+                <div id="pos-late-receipt-wrap" class="bg-white border border-brand-border rounded-[6px] p-4 text-left space-y-2">
+                    <label for="pos-late-receipt-email" class="block text-[0.9rem] font-medium">
+                        {% translate "Send email receipt to customer:" %}
+                    </label>
+                    <div class="flex gap-2">
+                        <input
+                            type="email"
+                            id="pos-late-receipt-email"
+                            placeholder="{% translate 'customer@example.com' %}"
+                            class="flex-grow px-3 py-2 text-[0.95rem] rounded border border-brand-border bg-white"
+                        >
+                        <button
+                            type="button"
+                            id="pos-late-receipt-btn"
+                            class="px-4 py-2 bg-brand-accent text-white border-none rounded text-[0.95rem] font-medium cursor-pointer"
+                        >
+                            {% translate "Send" %}
+                        </button>
+                    </div>
+                </div>
+
+                <button
+                    type="button"
+                    id="pos-new-sale-btn"
+                    class="w-full py-3.5 bg-brand-text text-white border-none rounded-[4px] text-[1.1rem] font-semibold uppercase tracking-wider cursor-pointer"
+                >
+                    {% translate "New Sale" %}
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container" class="toast-container"></div>
+
+    <script id="pos-products-data" type="application/json">{{ pos_products_json|safe }}</script>
+    <script type="module" src="{% static 'js/bundles/pos.js' %}"></script>
+</body>
+</html>

@@ -9,8 +9,8 @@
     "test:integration": "npm run build && uv run python manage.py test shop.playwright_tests",
     "build:css": "npx tailwindcss -i ./assets/css/input.css -o ./static/css/styles.css",
     "watch:css": "npx tailwindcss -i ./assets/css/input.css -o ./static/css/styles.css --watch",
-    "build:js": "esbuild assets/js/main.js assets/js/product-detail.js assets/js/home.js --bundle --minify --outdir=static/js/bundles --format=esm --splitting",
-    "watch:js": "esbuild assets/js/main.js assets/js/product-detail.js assets/js/home.js --bundle --sourcemap --outdir=static/js/bundles --format=esm --splitting --watch",
+    "build:js": "esbuild assets/js/main.js assets/js/product-detail.js assets/js/home.js assets/js/pos.js --bundle --minify --outdir=static/js/bundles --format=esm --splitting",
+    "watch:js": "esbuild assets/js/main.js assets/js/product-detail.js assets/js/home.js assets/js/pos.js --bundle --sourcemap --outdir=static/js/bundles --format=esm --splitting --watch",
     "build": "npm run build:css && npm run build:js"
   },
   "keywords": [],
@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "@splidejs/splide": "^4.1.4",
-    "photoswipe": "^5.4.4"
+    "photoswipe": "^5.4.4",
+    "qrcode": "^1.5.4"
   }
 }

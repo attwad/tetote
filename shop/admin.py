@@ -19,6 +19,8 @@ from .models import (
     StoreAnnouncement,
     StoreSettings,
     CarouselImage,
+    PosSale,
+    PosSaleItem,
 )
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -243,3 +245,78 @@ class ProductAdmin(SortableAdminBase, TabbedTranslationAdmin, MarkdownxModelAdmi
             },
         ),
     )
+
+
+class PosSaleItemInline(admin.TabularInline):
+    model = PosSaleItem
+    extra = 0
+    readonly_fields = ("product", "quantity", "unit_price", "line_total_display")
+    can_delete = False
+
+    @admin.display(description=_("Line Total (CHF)"))
+    def line_total_display(self, obj):
+        if obj.pk:
+            return f"CHF {obj.line_total_in_chf:.2f}"
+        return "-"
+
+
+@admin.register(PosSale)
+class PosSaleAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "status",
+        "payment_method",
+        "subtotal_display",
+        "discount_display",
+        "total_display",
+        "customer_email",
+        "receipt_sent",
+        "stripe_payment_intent_link",
+        "created_at",
+        "completed_at",
+    )
+    list_filter = ("status", "payment_method", "receipt_sent", "created_at")
+    search_fields = ("id", "customer_email", "stripe_payment_intent_id")
+    readonly_fields = (
+        "status",
+        "payment_method",
+        "subtotal_amount",
+        "discount_amount",
+        "total_amount",
+        "customer_email",
+        "stripe_payment_intent_id",
+        "stripe_payment_intent_link",
+        "twint_redirect_url",
+        "receipt_sent",
+        "created_at",
+        "completed_at",
+    )
+    inlines = [PosSaleItemInline]
+
+    def has_add_permission(self, request):
+        return False
+
+    @admin.display(description=_("Subtotal"))
+    def subtotal_display(self, obj):
+        return f"CHF {obj.subtotal_in_chf:.2f}"
+
+    @admin.display(description=_("Discount"))
+    def discount_display(self, obj):
+        return f"CHF {obj.discount_in_chf:.2f}"
+
+    @admin.display(description=_("Total"))
+    def total_display(self, obj):
+        return f"CHF {obj.total_in_chf:.2f}"
+
+    @admin.display(description=_("Stripe Payment"))
+    def stripe_payment_intent_link(self, obj):
+        if obj.stripe_payment_intent_id:
+            url = (
+                f"https://dashboard.stripe.com/payments/{obj.stripe_payment_intent_id}"
+            )
+            return format_html(
+                '<a href="{url}" target="_blank">{pi_id}</a>',
+                url=url,
+                pi_id=obj.stripe_payment_intent_id,
+            )
+        return "-"

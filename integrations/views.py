@@ -10,10 +10,11 @@ from django.core.files.base import ContentFile
 from django.db import transaction
 from django.db.models import F
 from django.http import HttpRequest, HttpResponse
+from django.utils import timezone
 from django.utils.text import slugify
 from django.views.decorators.csrf import csrf_exempt
 
-from shop.models import Product, ProductImage
+from shop.models import PosSale, Product, ProductImage
 
 logger = logging.getLogger(__name__)
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -79,6 +80,8 @@ def stripe_webhook(request: HttpRequest) -> HttpResponse:
             sync_price(data_object)
         elif event_type == "checkout.session.completed":
             handle_checkout_completed(data_object)
+        elif event_type == "payment_intent.succeeded":
+            handle_payment_intent_succeeded(data_object)
         else:
             logger.info(f"Unhandled Stripe webhook event type: {event_type}")
     except Exception as e:
@@ -260,3 +263,218 @@ def handle_checkout_completed(session: StripePayload) -> None:
                     f"Error updating stock for price_id '{price_id}' in session '{session_id}': {e}"
                 )
                 raise
+
+
+def is_card_present_payment_intent(payment_intent: StripePayload) -> bool:
+    """
+    Returns True if the PaymentIntent was processed via Tap to Pay / Terminal (card_present).
+    """
+    pm_types = get_attr_or_key(payment_intent, "payment_method_types", []) or []
+    if "card_present" in pm_types:
+        return True
+
+    charges = get_attr_or_key(payment_intent, "charges")
+    charges_data = get_attr_or_key(charges, "data", []) if charges else []
+    for charge in charges_data:
+        pm_details = get_attr_or_key(charge, "payment_method_details", {})
+        if get_attr_or_key(pm_details, "type") == "card_present":
+            return True
+    return False
+
+
+def extract_latest_charge_id(
+    payment_intent: Optional[StripePayload], pi_id: Optional[str] = None
+) -> Optional[str]:
+    """
+    Extracts the Charge ID from a PaymentIntent object/dict, or retrieves the PaymentIntent from Stripe.
+    """
+    if payment_intent is not None:
+        latest_charge = get_attr_or_key(payment_intent, "latest_charge")
+        if isinstance(latest_charge, str) and latest_charge:
+            return latest_charge
+        if latest_charge is not None:
+            charge_id = get_attr_or_key(latest_charge, "id")
+            if charge_id:
+                return charge_id
+
+        charges = get_attr_or_key(payment_intent, "charges")
+        charges_data = get_attr_or_key(charges, "data", []) if charges else []
+        if charges_data:
+            first_charge_id = get_attr_or_key(charges_data[0], "id")
+            if first_charge_id:
+                return first_charge_id
+
+    target_pi_id = pi_id or get_attr_or_key(payment_intent, "id")
+    if target_pi_id:
+        try:
+            retrieved_pi = stripe.PaymentIntent.retrieve(target_pi_id)
+            latest_charge = get_attr_or_key(retrieved_pi, "latest_charge")
+            if isinstance(latest_charge, str) and latest_charge:
+                return latest_charge
+            if latest_charge is not None:
+                return get_attr_or_key(latest_charge, "id")
+        except Exception as e:
+            logger.warning(
+                f"Failed to retrieve PaymentIntent '{target_pi_id}' for charge lookup: {e}"
+            )
+    return None
+
+
+def send_pos_receipt(
+    sale: PosSale,
+    email: Optional[str] = None,
+    payment_intent: Optional[StripePayload] = None,
+) -> bool:
+    """
+    Updates the underlying Stripe Charge's receipt_email to trigger an automatic Stripe email receipt.
+    """
+    target_email = (email or sale.customer_email or "").strip()
+    if not target_email or not sale.stripe_payment_intent_id:
+        return False
+
+    charge_id = extract_latest_charge_id(
+        payment_intent, pi_id=sale.stripe_payment_intent_id
+    )
+    if not charge_id:
+        logger.warning(
+            f"Could not find latest_charge for POS Sale #{sale.id} (PI: {sale.stripe_payment_intent_id})"
+        )
+        return False
+
+    try:
+        stripe.Charge.modify(charge_id, receipt_email=target_email)
+        sale.customer_email = target_email
+        sale.receipt_sent = True
+        sale.save(update_fields=["customer_email", "receipt_sent"])
+        logger.info(
+            f"Sent Stripe receipt for POS Sale #{sale.id} (charge: {charge_id}) to {target_email}"
+        )
+        return True
+    except Exception as e:
+        logger.warning(
+            f"Failed to send Stripe receipt for POS Sale #{sale.id} (charge: {charge_id}): {e}"
+        )
+        return False
+
+
+def complete_pos_sale(
+    sale_id: int, payment_intent: Optional[StripePayload] = None
+) -> bool:
+    """
+    Atomically marks a PENDING PosSale as COMPLETED, decrements item stock levels,
+    enriches the Stripe PaymentIntent metadata/description, and triggers the customer receipt email.
+    Returns True if the sale transitioned from PENDING to COMPLETED, False otherwise.
+    """
+    pi_id: Optional[str] = (
+        get_attr_or_key(payment_intent, "id") if payment_intent else None
+    )
+
+    with transaction.atomic():
+        try:
+            sale = PosSale.objects.select_for_update().get(id=sale_id)
+        except PosSale.DoesNotExist:
+            logger.warning(f"PosSale #{sale_id} not found during completion")
+            return False
+
+        if sale.status != PosSale.STATUS_PENDING:
+            logger.info(
+                f"PosSale #{sale_id} already has status '{sale.status}'; skipping completion"
+            )
+            return False
+
+        if (
+            pi_id
+            and PosSale.objects.filter(stripe_payment_intent_id=pi_id)
+            .exclude(id=sale.id)
+            .exists()
+        ):
+            logger.warning(
+                f"PaymentIntent '{pi_id}' is already linked to another PosSale; skipping PosSale #{sale_id}"
+            )
+            return False
+
+        for item in sale.items.all():
+            Product.objects.filter(id=item.product_id).update(
+                stock_quantity=F("stock_quantity") - item.quantity
+            )
+
+        sale.status = PosSale.STATUS_COMPLETED
+        sale.completed_at = timezone.now()
+        if pi_id:
+            sale.stripe_payment_intent_id = pi_id
+        sale.save()
+
+    logger.info(f"Completed POS Sale #{sale.id} (PI: {sale.stripe_payment_intent_id})")
+
+    summary = sale.items_summary()
+    if sale.stripe_payment_intent_id:
+        try:
+            stripe.PaymentIntent.modify(
+                sale.stripe_payment_intent_id,
+                description=summary,
+                metadata={
+                    "pos_sale_id": str(sale.id),
+                    "items": summary[:500],
+                    "subtotal_chf": f"{sale.subtotal_in_chf:.2f}",
+                    "discount_chf": f"{sale.discount_in_chf:.2f}",
+                    "total_chf": f"{sale.total_in_chf:.2f}",
+                },
+            )
+        except Exception as e:
+            logger.warning(
+                f"Failed to update metadata on PaymentIntent '{sale.stripe_payment_intent_id}' for POS Sale #{sale.id}: {e}"
+            )
+
+        if sale.customer_email and not sale.receipt_sent:
+            send_pos_receipt(sale, payment_intent=payment_intent)
+
+    return True
+
+
+def handle_payment_intent_succeeded(payment_intent: StripePayload) -> None:
+    """
+    Reconciles a succeeded PaymentIntent with an active PosSale (from TWINT or Stripe Dashboard Tap to Pay).
+    """
+    pi_id: Optional[str] = get_attr_or_key(payment_intent, "id")
+    amount: Optional[int] = get_attr_or_key(payment_intent, "amount")
+    metadata: StripePayload = get_attr_or_key(payment_intent, "metadata", {}) or {}
+    pos_sale_id_raw = get_attr_or_key(metadata, "pos_sale_id")
+
+    logger.info(
+        f"Handling payment_intent.succeeded for PI: {pi_id} (amount: {amount}, pos_sale_id: {pos_sale_id_raw})"
+    )
+
+    sale: Optional[PosSale] = None
+
+    if pi_id:
+        sale = PosSale.objects.filter(stripe_payment_intent_id=pi_id).first()
+
+    if not sale and pos_sale_id_raw:
+        try:
+            sale = PosSale.objects.filter(id=int(pos_sale_id_raw)).first()
+        except (ValueError, TypeError):
+            pass
+
+    if (
+        not sale
+        and amount is not None
+        and is_card_present_payment_intent(payment_intent)
+    ):
+        cutoff = timezone.now() - datetime.timedelta(minutes=30)
+        sale = (
+            PosSale.objects.filter(
+                status=PosSale.STATUS_PENDING,
+                payment_method=PosSale.METHOD_TAP_TO_PAY,
+                total_amount=amount,
+                created_at__gte=cutoff,
+            )
+            .order_by("-created_at")
+            .first()
+        )
+
+    if sale:
+        complete_pos_sale(sale.id, payment_intent=payment_intent)
+    else:
+        logger.info(
+            f"No matching pending PosSale found for PaymentIntent '{pi_id}' (ignoring)"
+        )
