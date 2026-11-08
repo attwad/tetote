@@ -179,7 +179,7 @@ describe('POS Logic & UI Tests', () => {
                      data-i18n-receipt-sent="Receipt sent">
                     <button id="pos-in-stock-toggle" class="chip active"></button>
                     <button id="pos-clear-basket-btn"></button>
-                    <input id="pos-search-input" type="search">
+                    <input id="pos-search-input" type="search" readonly>
                     <button data-pos-brand="bizen"></button>
                     <button data-pos-type="mug"></button>
                     <div id="pos-product-grid"></div>
@@ -190,13 +190,16 @@ describe('POS Logic & UI Tests', () => {
                         <button id="pos-open-drawer-btn"></button>
                     </div>
                     <div id="pos-checkout-overlay" class="hidden"></div>
-                    <section id="pos-checkout-drawer" class="translate-y-full">
+                    <section id="pos-checkout-drawer" class="translate-y-full hidden">
                         <button id="pos-close-drawer-btn"></button>
                         <div id="pos-basket-items"></div>
                         <button data-pos-discount-pct="0" class="active"></button>
                         <button data-pos-discount-pct="10"></button>
-                        <input id="pos-custom-discount-input" type="number">
-                        <input id="pos-custom-total-input" type="number">
+                        <button id="pos-discount-custom-btn"></button>
+                        <div id="pos-custom-discount-wrap" class="hidden">
+                            <input id="pos-custom-discount-input" type="number">
+                            <input id="pos-custom-total-input" type="number">
+                        </div>
                         <button id="pos-receipt-no" class="active"></button>
                         <button id="pos-receipt-yes"></button>
                         <div id="pos-receipt-email-wrap" class="hidden">
@@ -266,7 +269,10 @@ describe('POS Logic & UI Tests', () => {
             document.querySelector('[data-pos-discount-pct="10"]').click();
             expect(document.getElementById('pos-total-display').textContent).toBe('CHF 81.00');
 
-            // Apply custom total
+            // Toggle custom discount section and apply custom total
+            expect(document.getElementById('pos-custom-discount-wrap').classList.contains('hidden')).toBe(true);
+            document.getElementById('pos-discount-custom-btn').click();
+            expect(document.getElementById('pos-custom-discount-wrap').classList.contains('hidden')).toBe(false);
             const customTotalInput = document.getElementById('pos-custom-total-input');
             customTotalInput.value = '80';
             customTotalInput.dispatchEvent(new Event('input'));
@@ -373,6 +379,35 @@ describe('POS Logic & UI Tests', () => {
             expect(document.getElementById('pos-payment-modal').classList.contains('hidden')).toBe(true);
             expect(document.getElementById('pos-bottom-count').textContent).toBe('0');
             vi.useRealTimers();
+        });
+
+        it('prevents virtual keyboard popup by keeping inputs blurred and readonly on item, +, and checkout taps', () => {
+            initPosApp();
+            const searchInput = document.getElementById('pos-search-input');
+            const drawer = document.getElementById('pos-checkout-drawer');
+
+            expect(searchInput.hasAttribute('readonly')).toBe(true);
+            expect(drawer.classList.contains('hidden')).toBe(true);
+
+            // Unlock search on direct tap, then verify clicking item blurs and re-locks it
+            searchInput.dispatchEvent(new Event('touchstart'));
+            expect(searchInput.hasAttribute('readonly')).toBe(false);
+            searchInput.focus();
+            expect(document.activeElement).toBe(searchInput);
+
+            // Tap product card -> blurs search input and sets readonly back
+            document.querySelectorAll('.pos-product-card')[0].click();
+            expect(document.activeElement).not.toBe(searchInput);
+            expect(searchInput.hasAttribute('readonly')).toBe(true);
+
+            // Tap + button -> no input focused
+            document.querySelector('.pos-step-plus').click();
+            expect(document.activeElement.tagName).not.toBe('INPUT');
+
+            // Tap Checkout -> opens drawer without focusing any input
+            document.getElementById('pos-open-drawer-btn').click();
+            expect(drawer.classList.contains('hidden')).toBe(false);
+            expect(document.activeElement.tagName).not.toBe('INPUT');
         });
     });
 });

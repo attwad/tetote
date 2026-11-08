@@ -188,6 +188,8 @@ export function initPosApp() {
     const discountRowEl = document.getElementById('pos-discount-row');
     const discountEl = document.getElementById('pos-discount-display');
     const totalEl = document.getElementById('pos-total-display');
+    const customDiscountBtn = document.getElementById('pos-discount-custom-btn');
+    const customDiscountWrap = document.getElementById('pos-custom-discount-wrap');
     const customDiscountInput = document.getElementById('pos-custom-discount-input');
     const customTotalInput = document.getElementById('pos-custom-total-input');
     const receiptNoBtn = document.getElementById('pos-receipt-no');
@@ -215,21 +217,37 @@ export function initPosApp() {
     const lateReceiptSendBtn = document.getElementById('pos-late-receipt-btn');
     const newSaleBtn = document.getElementById('pos-new-sale-btn');
 
+    function blurActiveInput() {
+        if (searchInput) {
+            searchInput.setAttribute('readonly', '');
+            searchInput.setAttribute('tabindex', '-1');
+        }
+        const active = document.activeElement;
+        if (
+            active &&
+            (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.tagName === 'SELECT') &&
+            typeof active.blur === 'function'
+        ) {
+            active.blur();
+        }
+    }
+
     function syncUrl() {
         const nextUrl = getPosUrl(window.location.href, filters, isDrawerOpen);
         window.history.replaceState(null, '', nextUrl);
     }
 
     function setDrawerOpen(open) {
+        blurActiveInput();
         const totals = calculateTotals(products, basket, discountConfig);
         if (open && totals.itemCount === 0) return;
         isDrawerOpen = open;
         if (checkoutDrawer && checkoutOverlay) {
             if (open) {
-                checkoutDrawer.classList.remove('translate-y-full');
+                checkoutDrawer.classList.remove('hidden', 'translate-y-full');
                 checkoutOverlay.classList.remove('hidden');
             } else {
-                checkoutDrawer.classList.add('translate-y-full');
+                checkoutDrawer.classList.add('translate-y-full', 'hidden');
                 checkoutOverlay.classList.add('hidden');
             }
         }
@@ -237,6 +255,7 @@ export function initPosApp() {
     }
 
     function handleQtyChange(productId, targetQty) {
+        blurActiveInput();
         const result = updateBasketItem(products, basket, productId, targetQty);
         basket = result.basket;
         if (result.limitReached) {
@@ -314,6 +333,8 @@ export function initPosApp() {
             `;
 
             card.addEventListener('click', (e) => {
+                e.preventDefault();
+                blurActiveInput();
                 if (outOfStock) return;
                 if (e.target.closest('.pos-step-minus')) {
                     e.stopPropagation();
@@ -357,13 +378,20 @@ export function initPosApp() {
         if (totalEl) totalEl.textContent = `CHF ${totals.totalChf}`;
 
         // Discount pills active state
+        const isCustomMode =
+            discountConfig.mode === 'custom_discount' || discountConfig.mode === 'custom_total';
         document.querySelectorAll('[data-pos-discount-pct]').forEach(btn => {
             const pct = Number(btn.dataset.posDiscountPct);
             const isActive =
-                (pct === 0 && discountConfig.mode === 'none') ||
-                (discountConfig.mode === 'percent' && Number(discountConfig.value) === pct);
+                !isCustomMode &&
+                ((pct === 0 && discountConfig.mode === 'none') ||
+                    (discountConfig.mode === 'percent' && Number(discountConfig.value) === pct));
             btn.classList.toggle('active', isActive);
         });
+        if (customDiscountBtn) {
+            const isWrapVisible = customDiscountWrap && !customDiscountWrap.classList.contains('hidden');
+            customDiscountBtn.classList.toggle('active', isCustomMode || Boolean(isWrapVisible));
+        }
 
         if (basketList) {
             basketList.innerHTML = '';
@@ -522,6 +550,17 @@ export function initPosApp() {
 
     // Event bindings
     if (searchInput) {
+        const unlockSearch = () => {
+            searchInput.removeAttribute('readonly');
+            searchInput.removeAttribute('tabindex');
+        };
+        searchInput.addEventListener('pointerdown', unlockSearch);
+        searchInput.addEventListener('touchstart', unlockSearch, { passive: true });
+        searchInput.addEventListener('mousedown', unlockSearch);
+        searchInput.addEventListener('blur', () => {
+            searchInput.setAttribute('readonly', '');
+            searchInput.setAttribute('tabindex', '-1');
+        });
         searchInput.addEventListener('input', (e) => {
             filters.query = e.target.value;
             syncUrl();
@@ -531,6 +570,7 @@ export function initPosApp() {
 
     if (inStockToggle) {
         inStockToggle.addEventListener('click', () => {
+            blurActiveInput();
             filters.inStockOnly = !filters.inStockOnly;
             syncUrl();
             renderAll();
@@ -539,6 +579,7 @@ export function initPosApp() {
 
     document.querySelectorAll('[data-pos-brand]').forEach(btn => {
         btn.addEventListener('click', () => {
+            blurActiveInput();
             const slug = btn.dataset.posBrand;
             filters.brand = filters.brand === slug ? '' : slug;
             syncUrl();
@@ -548,6 +589,7 @@ export function initPosApp() {
 
     document.querySelectorAll('[data-pos-type]').forEach(btn => {
         btn.addEventListener('click', () => {
+            blurActiveInput();
             const slug = btn.dataset.posType;
             filters.type = filters.type === slug ? '' : slug;
             syncUrl();
@@ -557,11 +599,17 @@ export function initPosApp() {
 
     const openDrawerBtn = document.getElementById('pos-open-drawer-btn');
     if (openDrawerBtn) {
-        openDrawerBtn.addEventListener('click', () => setDrawerOpen(true));
+        openDrawerBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            setDrawerOpen(true);
+        });
     }
     const closeDrawerBtn = document.getElementById('pos-close-drawer-btn');
     if (closeDrawerBtn) {
-        closeDrawerBtn.addEventListener('click', () => setDrawerOpen(false));
+        closeDrawerBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            setDrawerOpen(false);
+        });
     }
     if (checkoutOverlay) {
         checkoutOverlay.addEventListener('click', () => setDrawerOpen(false));
@@ -570,10 +618,12 @@ export function initPosApp() {
     const clearBasketBtn = document.getElementById('pos-clear-basket-btn');
     if (clearBasketBtn) {
         clearBasketBtn.addEventListener('click', () => {
+            blurActiveInput();
             basket = {};
             discountConfig = { mode: 'none', value: 0 };
             if (customDiscountInput) customDiscountInput.value = '';
             if (customTotalInput) customTotalInput.value = '';
+            if (customDiscountWrap) customDiscountWrap.classList.add('hidden');
             setDrawerOpen(false);
             renderAll();
         });
@@ -581,6 +631,7 @@ export function initPosApp() {
 
     document.querySelectorAll('[data-pos-discount-pct]').forEach(btn => {
         btn.addEventListener('click', () => {
+            blurActiveInput();
             const pct = Number(btn.dataset.posDiscountPct);
             if (pct === 0 || (discountConfig.mode === 'percent' && Number(discountConfig.value) === pct)) {
                 discountConfig = { mode: 'none', value: 0 };
@@ -589,9 +640,24 @@ export function initPosApp() {
             }
             if (customDiscountInput) customDiscountInput.value = '';
             if (customTotalInput) customTotalInput.value = '';
+            if (customDiscountWrap) customDiscountWrap.classList.add('hidden');
             renderBasketAndTotals();
         });
     });
+
+    if (customDiscountBtn && customDiscountWrap) {
+        customDiscountBtn.addEventListener('click', () => {
+            blurActiveInput();
+            const willShow = customDiscountWrap.classList.contains('hidden');
+            customDiscountWrap.classList.toggle('hidden', !willShow);
+            if (!willShow) {
+                discountConfig = { mode: 'none', value: 0 };
+                if (customDiscountInput) customDiscountInput.value = '';
+                if (customTotalInput) customTotalInput.value = '';
+            }
+            renderBasketAndTotals();
+        });
+    }
 
     if (customDiscountInput) {
         customDiscountInput.addEventListener('input', (e) => {
@@ -621,6 +687,7 @@ export function initPosApp() {
 
     if (receiptNoBtn && receiptYesBtn && receiptEmailWrap) {
         receiptNoBtn.addEventListener('click', () => {
+            blurActiveInput();
             wantsReceipt = false;
             receiptNoBtn.classList.add('active');
             receiptYesBtn.classList.remove('active');
@@ -714,6 +781,7 @@ export function initPosApp() {
 
     if (newSaleBtn) {
         newSaleBtn.addEventListener('click', () => {
+            blurActiveInput();
             basket = {};
             discountConfig = { mode: 'none', value: 0 };
             wantsReceipt = false;
@@ -721,6 +789,7 @@ export function initPosApp() {
             activeSaleId = null;
             if (customDiscountInput) customDiscountInput.value = '';
             if (customTotalInput) customTotalInput.value = '';
+            if (customDiscountWrap) customDiscountWrap.classList.add('hidden');
             if (receiptEmailInput) receiptEmailInput.value = '';
             if (receiptNoBtn) receiptNoBtn.classList.add('active');
             if (receiptYesBtn) receiptYesBtn.classList.remove('active');

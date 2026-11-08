@@ -55,6 +55,9 @@
                 <input
                     type="search"
                     id="pos-search-input"
+                    readonly
+                    tabindex="-1"
+                    autocomplete="off"
                     placeholder="{% translate 'Search item, brand, glaze...' %}"
                     class="w-full px-3 py-2 text-[1rem] rounded-[4px] border border-brand-border bg-white focus:outline-none focus:border-brand-accent"
                 >
@@ -125,7 +128,7 @@
         <!-- Slide-Up Checkout Sheet -->
         <section
             id="pos-checkout-drawer"
-            class="fixed bottom-0 left-0 right-0 z-50 max-w-md mx-auto bg-brand-bg rounded-t-[12px] shadow-2xl border-t border-brand-border p-4 max-h-[90vh] overflow-y-auto transition-transform duration-300 translate-y-full"
+            class="fixed bottom-0 left-0 right-0 z-50 max-w-md mx-auto bg-brand-bg rounded-t-[12px] shadow-2xl border-t border-brand-border p-4 max-h-[90vh] overflow-y-auto transition-transform duration-300 translate-y-full hidden"
         >
             <div class="flex items-center justify-between pb-3 border-b border-brand-border">
                 <h2 class="text-[1.35rem] font-semibold m-0">{% translate "Review & Charge" %}</h2>
@@ -154,8 +157,9 @@
                     <button type="button" data-pos-discount-pct="10" class="chip text-[0.85rem] px-3 py-1">-10%</button>
                     <button type="button" data-pos-discount-pct="15" class="chip text-[0.85rem] px-3 py-1">-15%</button>
                     <button type="button" data-pos-discount-pct="20" class="chip text-[0.85rem] px-3 py-1">-20%</button>
+                    <button type="button" id="pos-discount-custom-btn" class="chip text-[0.85rem] px-3 py-1">{% translate "Custom" %}</button>
                 </div>
-                <div class="grid grid-cols-2 gap-2">
+                <div id="pos-custom-discount-wrap" class="hidden grid grid-cols-2 gap-2">
                     <div>
                         <label for="pos-custom-discount-input" class="block text-[0.8rem] text-brand-muted mb-0.5">
                             {% translate "Discount (CHF)" %}
