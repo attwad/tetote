@@ -286,7 +286,7 @@ export function initPosApp() {
     function renderProducts() {
         if (!productGrid) return;
         const visible = filterProducts(products, filters);
-        productGrid.innerHTML = '';
+        productGrid.replaceChildren();
 
         if (visible.length === 0) {
             if (emptyState) emptyState.classList.remove('hidden');
@@ -303,34 +303,74 @@ export function initPosApp() {
                     ? 'border-brand-accent ring-1 ring-brand-accent bg-[#f7f9f7]'
                     : 'border-brand-border'
             } ${outOfStock ? 'opacity-50' : 'cursor-pointer'}`;
-            card.dataset.productId = p.id;
+            card.dataset.productId = String(p.id);
 
-            const imgHtml = p.image
-                ? `<img src="${p.image}" alt="${p.name}" class="w-full aspect-square object-cover rounded-[2px] mb-2">`
-                : `<div class="w-full aspect-square bg-brand-border/40 rounded-[2px] mb-2 flex items-center justify-center text-brand-muted text-xs">No image</div>`;
+            const topSection = document.createElement('div');
+            const imageWrapper = document.createElement('div');
+            imageWrapper.className = 'relative';
 
-            const controlsHtml = selectedQty > 0
-                ? `<div class="flex items-center justify-between mt-2 pt-2 border-t border-brand-border" data-pos-stepper>
-                        <button type="button" class="pos-step-minus w-8 h-8 flex items-center justify-center bg-white border border-brand-border rounded text-lg leading-none" data-id="${p.id}">-</button>
-                        <span class="font-bold text-base">${selectedQty}</span>
-                        <button type="button" class="pos-step-plus w-8 h-8 flex items-center justify-center bg-brand-accent text-white border-none rounded text-lg leading-none" data-id="${p.id}">+</button>
-                   </div>`
-                : '';
+            if (p.image) {
+                const img = document.createElement('img');
+                img.src = p.image;
+                img.alt = p.name;
+                img.className = 'w-full aspect-square object-cover rounded-[2px] mb-2';
+                imageWrapper.appendChild(img);
+            } else {
+                const noImg = document.createElement('div');
+                noImg.className = 'w-full aspect-square bg-brand-border/40 rounded-[2px] mb-2 flex items-center justify-center text-brand-muted text-xs';
+                noImg.textContent = 'No image';
+                imageWrapper.appendChild(noImg);
+            }
 
-            card.innerHTML = `
-                <div>
-                    <div class="relative">
-                        ${imgHtml}
-                        <span class="absolute top-1.5 right-1.5 bg-white/90 px-1.5 py-0.5 text-[0.75rem] rounded border border-brand-border text-brand-text">
-                            ${p.stock} left
-                        </span>
-                    </div>
-                    <p class="text-[0.75rem] text-brand-muted uppercase tracking-wider truncate m-0">${p.brand_name || '&nbsp;'}</p>
-                    <h3 class="text-[1rem] font-medium leading-tight m-0 mt-0.5 line-clamp-2">${p.name}</h3>
-                    <p class="text-[0.95rem] font-semibold text-brand-text m-0 mt-1">CHF ${p.price_chf.toFixed(2)}</p>
-                </div>
-                ${controlsHtml}
-            `;
+            const stockBadge = document.createElement('span');
+            stockBadge.className = 'absolute top-1.5 right-1.5 bg-white/90 px-1.5 py-0.5 text-[0.75rem] rounded border border-brand-border text-brand-text';
+            stockBadge.textContent = `${p.stock} left`;
+            imageWrapper.appendChild(stockBadge);
+
+            const brandEl = document.createElement('p');
+            brandEl.className = 'text-[0.75rem] text-brand-muted uppercase tracking-wider truncate m-0';
+            brandEl.textContent = p.brand_name || '\u00a0';
+
+            const nameEl = document.createElement('h3');
+            nameEl.className = 'text-[1rem] font-medium leading-tight m-0 mt-0.5 line-clamp-2';
+            nameEl.textContent = p.name;
+
+            const priceEl = document.createElement('p');
+            priceEl.className = 'text-[0.95rem] font-semibold text-brand-text m-0 mt-1';
+            priceEl.textContent = `CHF ${p.price_chf.toFixed(2)}`;
+
+            topSection.appendChild(imageWrapper);
+            topSection.appendChild(brandEl);
+            topSection.appendChild(nameEl);
+            topSection.appendChild(priceEl);
+            card.appendChild(topSection);
+
+            if (selectedQty > 0) {
+                const stepper = document.createElement('div');
+                stepper.className = 'flex items-center justify-between mt-2 pt-2 border-t border-brand-border';
+                stepper.dataset.posStepper = '';
+
+                const minusBtn = document.createElement('button');
+                minusBtn.type = 'button';
+                minusBtn.className = 'pos-step-minus w-8 h-8 flex items-center justify-center bg-white border border-brand-border rounded text-lg leading-none';
+                minusBtn.dataset.id = String(p.id);
+                minusBtn.textContent = '-';
+
+                const qtySpan = document.createElement('span');
+                qtySpan.className = 'font-bold text-base';
+                qtySpan.textContent = String(selectedQty);
+
+                const plusBtn = document.createElement('button');
+                plusBtn.type = 'button';
+                plusBtn.className = 'pos-step-plus w-8 h-8 flex items-center justify-center bg-brand-accent text-white border-none rounded text-lg leading-none';
+                plusBtn.dataset.id = String(p.id);
+                plusBtn.textContent = '+';
+
+                stepper.appendChild(minusBtn);
+                stepper.appendChild(qtySpan);
+                stepper.appendChild(plusBtn);
+                card.appendChild(stepper);
+            }
 
             card.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -394,7 +434,7 @@ export function initPosApp() {
         }
 
         if (basketList) {
-            basketList.innerHTML = '';
+            basketList.replaceChildren();
             for (const [idStr, qty] of Object.entries(basket)) {
                 const productId = parseInt(idStr, 10);
                 const product = products.find(p => p.id === productId);
@@ -403,19 +443,48 @@ export function initPosApp() {
                 const row = document.createElement('div');
                 row.className = 'flex items-center justify-between py-2.5 border-b border-brand-border gap-3';
                 const lineChf = formatChf(product.price_cents * qty);
-                row.innerHTML = `
-                    <div class="flex-grow min-w-0">
-                        <p class="m-0 font-medium text-[1rem] truncate">${product.name}</p>
-                        <p class="m-0 text-[0.85rem] text-brand-muted">CHF ${product.price_chf.toFixed(2)} &times; ${qty} = CHF ${lineChf}</p>
-                    </div>
-                    <div class="flex items-center gap-2 flex-shrink-0">
-                        <button type="button" class="pos-drawer-minus w-8 h-8 flex items-center justify-center bg-white border border-brand-border rounded" data-id="${product.id}">-</button>
-                        <span class="w-6 text-center font-semibold">${qty}</span>
-                        <button type="button" class="pos-drawer-plus w-8 h-8 flex items-center justify-center bg-white border border-brand-border rounded" data-id="${product.id}">+</button>
-                    </div>
-                `;
-                row.querySelector('.pos-drawer-minus').addEventListener('click', () => handleQtyChange(product.id, qty - 1));
-                row.querySelector('.pos-drawer-plus').addEventListener('click', () => handleQtyChange(product.id, qty + 1));
+
+                const infoDiv = document.createElement('div');
+                infoDiv.className = 'flex-grow min-w-0';
+
+                const titleP = document.createElement('p');
+                titleP.className = 'm-0 font-medium text-[1rem] truncate';
+                titleP.textContent = product.name;
+
+                const subP = document.createElement('p');
+                subP.className = 'm-0 text-[0.85rem] text-brand-muted';
+                subP.textContent = `CHF ${product.price_chf.toFixed(2)} \u00d7 ${qty} = CHF ${lineChf}`;
+
+                infoDiv.appendChild(titleP);
+                infoDiv.appendChild(subP);
+
+                const actionsDiv = document.createElement('div');
+                actionsDiv.className = 'flex items-center gap-2 flex-shrink-0';
+
+                const minusBtn = document.createElement('button');
+                minusBtn.type = 'button';
+                minusBtn.className = 'pos-drawer-minus w-8 h-8 flex items-center justify-center bg-white border border-brand-border rounded';
+                minusBtn.dataset.id = String(product.id);
+                minusBtn.textContent = '-';
+                minusBtn.addEventListener('click', () => handleQtyChange(product.id, qty - 1));
+
+                const qtySpan = document.createElement('span');
+                qtySpan.className = 'w-6 text-center font-semibold';
+                qtySpan.textContent = String(qty);
+
+                const plusBtn = document.createElement('button');
+                plusBtn.type = 'button';
+                plusBtn.className = 'pos-drawer-plus w-8 h-8 flex items-center justify-center bg-white border border-brand-border rounded';
+                plusBtn.dataset.id = String(product.id);
+                plusBtn.textContent = '+';
+                plusBtn.addEventListener('click', () => handleQtyChange(product.id, qty + 1));
+
+                actionsDiv.appendChild(minusBtn);
+                actionsDiv.appendChild(qtySpan);
+                actionsDiv.appendChild(plusBtn);
+
+                row.appendChild(infoDiv);
+                row.appendChild(actionsDiv);
                 basketList.appendChild(row);
             }
         }
@@ -534,7 +603,11 @@ export function initPosApp() {
                 if (twintQrContainer) twintQrContainer.classList.remove('hidden');
                 if (twintSvgHolder && data.twint_redirect_url) {
                     const svg = await renderQrSvg(data.twint_redirect_url);
-                    twintSvgHolder.innerHTML = svg;
+                    const parsedDoc = new DOMParser().parseFromString(svg, 'image/svg+xml');
+                    const svgEl = parsedDoc.querySelector('svg');
+                    if (svgEl) {
+                        twintSvgHolder.replaceChildren(svgEl);
+                    }
                 }
                 if (twintExternalLink && data.twint_redirect_url) {
                     twintExternalLink.href = data.twint_redirect_url;
