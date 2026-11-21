@@ -37,12 +37,15 @@ def analytics(request: HttpRequest) -> Dict[str, Any]:
 
 def brands(request: HttpRequest) -> Dict[str, Any]:
     """
-    Returns brands that have at least one public product.
+    Returns brands that have at least one public online product.
     """
     if not hasattr(request, "_all_brands"):
         request._all_brands = (
             Brand.objects.annotate(
-                public_product_count=Count("products", filter=Q(products__public=True))
+                public_product_count=Count(
+                    "products",
+                    filter=Q(products__public=True, products__pos_only=False),
+                )
             )
             .filter(public_product_count__gt=0)
             .order_by("name")

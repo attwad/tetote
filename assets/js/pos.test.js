@@ -97,12 +97,18 @@ describe('POS Logic & UI Tests', () => {
     });
 
     describe('filterProducts', () => {
-        it('filters in-stock by default and supports search/brand/type', () => {
+        it('filters in-stock by default, always includes pos_only items, and supports search/brand/type', () => {
             expect(filterProducts(mockProducts, {}).map(p => p.id)).toEqual([1, 2]);
             expect(filterProducts(mockProducts, { inStockOnly: false }).map(p => p.id)).toEqual([1, 2, 3]);
             expect(filterProducts(mockProducts, { brand: 'bizen' }).map(p => p.id)).toEqual([1]);
             expect(filterProducts(mockProducts, { type: 'bowl' }).map(p => p.id)).toEqual([2]);
             expect(filterProducts(mockProducts, { query: 'oribe' }).map(p => p.id)).toEqual([2]);
+
+            const withPosOnly = [
+                ...mockProducts,
+                { id: 4, name: 'Event Cup', price_cents: 3000, price_chf: 30.0, stock: 0, pos_only: true },
+            ];
+            expect(filterProducts(withPosOnly, { inStockOnly: true }).map(p => p.id)).toEqual([1, 2, 4]);
         });
     });
 
@@ -155,6 +161,13 @@ describe('POS Logic & UI Tests', () => {
 
             const unknown = updateBasketItem(mockProducts, {}, 999, 1);
             expect(unknown.basket).toEqual({});
+
+            const posOnlyProducts = [
+                { id: 4, name: 'Event Cup', price_cents: 3000, price_chf: 30.0, stock: 0, pos_only: true },
+            ];
+            const posRes = updateBasketItem(posOnlyProducts, {}, 4, 15);
+            expect(posRes.basket).toEqual({ 4: 15 });
+            expect(posRes.limitReached).toBe(false);
         });
     });
 

@@ -72,6 +72,13 @@ class Product(models.Model):
     stock_quantity = models.IntegerField(_("Stock Quantity"), default=0)
     soon_in_stock = models.BooleanField(_("Soon in stock"), default=False)
     public = models.BooleanField(_("Public"), default=settings.DEBUG)
+    pos_only = models.BooleanField(
+        _("POS Only"),
+        default=False,
+        help_text=_(
+            "If checked (along with Public), this item appears only in /pos/ without stock tracking, and is hidden from the online shop."
+        ),
+    )
     brand = models.ForeignKey(
         Brand,
         on_delete=models.SET_NULL,
@@ -125,7 +132,7 @@ class Product(models.Model):
 
     @property
     def is_in_stock(self) -> bool:
-        return self.stock_quantity > 0
+        return self.pos_only or self.stock_quantity > 0
 
 
 class ProductImage(models.Model):

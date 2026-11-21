@@ -837,3 +837,112 @@ class PosTest(TestCase):
                 "action": {"failure_code": "timed_out", "failure_message": "Timed out"},
             }
         )
+
+    def test_pos_only_products_excluded_from_online_shop_and_no_stock_tracking(self):
+        pos_only_brand = Brand.objects.create(name="Event Brand", slug="event-brand")
+        pos_only_glaze = Glaze.objects.create(name="Event Glaze", slug="event-glaze")
+        pos_only_type = ProductType.objects.create(name="Event Type", slug="event-type")
+        pos_only_item = Product.objects.create(
+            stripe_product_id="prod_pos_only_1",
+            stripe_price_id="price_pos_only_1",
+            name="Market Exclusive Cup",
+            slug="market-exclusive-cup",
+            price=3500,
+            stock_quantity=0,
+            public=True,
+            pos_only=True,
+            brand=pos_only_brand,
+            glaze=pos_only_glaze,
+            product_type=pos_only_type,
+        )
+        inactive_pos_only = Product.objects.create(
+            stripe_product_id="prod_pos_only_inactive",
+            stripe_price_id="price_pos_only_inactive",
+            name="Draft Event Cup",
+            slug="draft-event-cup",
+            price=3500,
+            stock_quantity=0,
+            public=False,
+            pos_only=True,
+        )
+
+        # is_in_stock is True for pos_only even with stock_quantity=0
+        self.assertTrue(pos_only_item.is_in_stock)
+
+        # Excluded from online ProductListView and online filter chips
+        shop_resp = self.client.get(reverse("shop:product_list"))
+        self.assertEqual(shop_resp.status_code, 200)
+        self.assertNotContains(shop_resp, "Market Exclusive Cup")
+        self.assertNotContains(shop_resp, "Event Brand")
+        self.assertNotContains(shop_resp, "Event Glaze")
+        self.assertNotContains(shop_resp, "Event Type")
+
+        # Excluded from online ProductDetailView (404)
+        detail_resp = self.client.get(
+            reverse(
+                "shop:product_detail",
+                kwargs={"product_slug": pos_only_item.slug},
+            )
+        )
+        self.assertEqual(detail_resp.status_code, 404)
+
+        # Excluded from online ProductInfoView and CreateCheckoutSessionView
+        info_resp = self.client.get(
+            reverse("shop:product_info") + "?price_ids[]=price_pos_only_1"
+        )
+        self.assertEqual(info_resp.json()["products"], [])
+
+        checkout_resp = self.client.post(
+            reverse("shop:create_checkout_session"),
+            data=json.dumps({"items": [{"price_id": "price_pos_only_1", "qty": 1}]}),
+            content_type="application/json",
+        )
+        self.assertEqual(checkout_resp.status_code, 400)
+
+        # Excluded from sitemap
+        sitemap_resp = self.client.get("/sitemap.xml")
+        self.assertNotContains(sitemap_resp, pos_only_item.slug)
+
+        # Included in /pos/ when public=True & pos_only=True, excluded when public=False
+        self.client.force_login(self.staff_user)
+        pos_resp = self.client.get(reverse("shop:pos"))
+        pos_products = json.loads(pos_resp.context["pos_products_json"])
+        pos_by_id = {p["id"]: p for p in pos_products}
+        self.assertIn(pos_only_item.id, pos_by_id)
+        self.assertTrue(pos_by_id[pos_only_item.id]["pos_only"])
+        self.assertNotIn(inactive_pos_only.id, pos_by_id)
+
+        # Can sell arbitrary quantity of pos_only_item (stock_quantity=0) alongside normal product
+        sale_resp = self.client.post(
+            reverse("shop:pos_create_sale"),
+            data=json.dumps(
+                {
+                    "items": [
+                        {"product_id": pos_only_item.id, "qty": 12},
+                        {"product_id": self.product1.id, "qty": 1},
+                    ],
+                    "payment_method": "tap_to_pay",
+                }
+            ),
+            content_type="application/json",
+        )
+        self.assertEqual(sale_resp.status_code, 200)
+        sale_id = sale_resp.json()["sale_id"]
+
+        with patch("stripe.PaymentIntent.modify"):
+            self.assertTrue(
+                complete_pos_sale(sale_id, payment_intent={"id": "pi_pos_only_sale"})
+            )
+
+        # pos_only_item stock_quantity is untouched (still 0), normal product stock decremented
+        pos_only_item.refresh_from_db()
+        self.product1.refresh_from_db()
+        self.assertEqual(pos_only_item.stock_quantity, 0)
+        self.assertEqual(self.product1.stock_quantity, 4)
+
+        status_resp = self.client.get(
+            reverse("shop:pos_sale_status", kwargs={"sale_id": sale_id})
+        )
+        updated_stocks = status_resp.json()["updated_stocks"]
+        self.assertNotIn(str(pos_only_item.id), updated_stocks)
+        self.assertEqual(updated_stocks[str(self.product1.id)], 4)

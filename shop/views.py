@@ -69,13 +69,13 @@ class ProductDetailView(DetailView):
     slug_url_kwarg = "product_slug"
 
     def get_queryset(self) -> QuerySet[Product]:
-        return super().get_queryset().filter(public=True)
+        return super().get_queryset().filter(public=True, pos_only=False)
 
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context: Dict[str, Any] = super().get_context_data(**kwargs)
         # Recommendation Logic: Other products from the same Brand
         context["related_products"] = (
-            Product.objects.filter(brand=self.object.brand, public=True)
+            Product.objects.filter(brand=self.object.brand, public=True, pos_only=False)
             .exclude(id=self.object.id)
             .distinct()[:4]
         )
@@ -132,7 +132,7 @@ class ProductInfoView(View):
 
     def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> JsonResponse:
         price_ids = request.GET.getlist("price_ids[]")
-        products = Product.objects.filter(stripe_price_id__in=price_ids)
+        products = Product.objects.filter(stripe_price_id__in=price_ids, pos_only=False)
         data = []
         for p in products:
             data.append(
@@ -160,7 +160,7 @@ class ProductListView(ListView):
         queryset = (
             super()
             .get_queryset()
-            .filter(public=True)
+            .filter(public=True, pos_only=False)
             .prefetch_related("images")
             .select_related("brand", "glaze", "product_type")
         )
@@ -202,7 +202,10 @@ class ProductListView(ListView):
             context["brands"] = (
                 Brand.objects.annotate(
                     public_product_count=models.Count(
-                        "products", filter=models.Q(products__public=True)
+                        "products",
+                        filter=models.Q(
+                            products__public=True, products__pos_only=False
+                        ),
                     )
                 )
                 .filter(public_product_count__gt=0)
@@ -211,7 +214,7 @@ class ProductListView(ListView):
 
         # Sort glazes and types so that 'Other/Others' is always at the bottom
         context["glazes"] = (
-            Glaze.objects.filter(products__public=True)
+            Glaze.objects.filter(products__public=True, products__pos_only=False)
             .distinct()
             .order_by(
                 models.Case(
@@ -223,7 +226,7 @@ class ProductListView(ListView):
             )
         )
         context["product_types"] = (
-            ProductType.objects.filter(products__public=True)
+            ProductType.objects.filter(products__public=True, products__pos_only=False)
             .distinct()
             .order_by(
                 models.Case(
@@ -294,7 +297,7 @@ class CreateCheckoutSessionView(View):
         with transaction.atomic():
             price_ids = list(aggregated_items.keys())
             products = Product.objects.select_for_update().filter(
-                stripe_price_id__in=price_ids
+                stripe_price_id__in=price_ids, pos_only=False
             )
             product_map = {p.stripe_price_id: p for p in products}
 
@@ -376,7 +379,7 @@ class PosView(UserPassesTestMixin, TemplateView):
             Product.objects.filter(public=True)
             .prefetch_related("images")
             .select_related("brand", "glaze", "product_type")
-            .order_by("-stock_quantity", "name")
+            .order_by("-pos_only", "-stock_quantity", "name")
         )
         pos_products = []
         for p in products:
@@ -387,6 +390,7 @@ class PosView(UserPassesTestMixin, TemplateView):
                     "price_cents": p.price,
                     "price_chf": p.price_in_chf,
                     "stock": p.stock_quantity,
+                    "pos_only": p.pos_only,
                     "image": p.main_photo,
                     "brand_name": p.brand.name if p.brand else "",
                     "brand_slug": p.brand.slug if p.brand else "",
@@ -480,7 +484,7 @@ class PosCreateSaleView(UserPassesTestMixin, View):
                     return JsonResponse(
                         {"error": _("Product not found or not public")}, status=400
                     )
-                if product.stock_quantity < qty:
+                if not product.pos_only and product.stock_quantity < qty:
                     return JsonResponse(
                         {
                             "error": _("Only %(qty)s left of %(name)s")
@@ -652,7 +656,8 @@ class PosSaleStatusView(UserPassesTestMixin, View):
         updated_stocks = {}
         if sale.status == PosSale.STATUS_COMPLETED:
             for item in sale.items.select_related("product").all():
-                updated_stocks[item.product_id] = item.product.stock_quantity
+                if not item.product.pos_only:
+                    updated_stocks[item.product_id] = item.product.stock_quantity
 
         return {
             "sale_id": sale.id,

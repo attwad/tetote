@@ -11,7 +11,7 @@ class ProductSitemap(Sitemap):
     priority = 0.8
 
     def items(self) -> QuerySet[Product]:
-        return Product.objects.filter(public=True)
+        return Product.objects.filter(public=True, pos_only=False)
 
     def lastmod(self, obj: Product) -> datetime.datetime:
         return obj.date_added

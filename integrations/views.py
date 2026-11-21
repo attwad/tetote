@@ -398,7 +398,7 @@ def complete_pos_sale(
             return False
 
         for item in sale.items.all():
-            Product.objects.filter(id=item.product_id).update(
+            Product.objects.filter(id=item.product_id, pos_only=False).update(
                 stock_quantity=F("stock_quantity") - item.quantity
             )
 

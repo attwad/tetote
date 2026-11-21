@@ -55,7 +55,7 @@ export function filterProducts(products, filters = {}) {
     const inStockOnly = filters.inStockOnly !== undefined ? Boolean(filters.inStockOnly) : true;
 
     return products.filter(p => {
-        if (inStockOnly && p.stock <= 0) return false;
+        if (inStockOnly && !p.pos_only && p.stock <= 0) return false;
         if (brand && p.brand_slug !== brand) return false;
         if (type && p.type_slug !== type) return false;
         if (query) {
@@ -113,7 +113,7 @@ export function updateBasketItem(products, basket, productId, newQty) {
         return { basket: nextBasket, limitReached: false, maxStock: product.stock };
     }
 
-    if (parsedQty > product.stock) {
+    if (!product.pos_only && parsedQty > product.stock) {
         if (product.stock > 0) {
             nextBasket[productId] = product.stock;
         } else {
@@ -299,7 +299,7 @@ export function initPosApp() {
 
         visible.forEach(p => {
             const selectedQty = basket[p.id] || 0;
-            const outOfStock = p.stock <= 0;
+            const outOfStock = !p.pos_only && p.stock <= 0;
             const card = document.createElement('div');
             card.className = `pos-product-card bg-white border rounded-[4px] p-2.5 flex flex-col justify-between transition-all ${
                 selectedQty > 0
@@ -327,7 +327,7 @@ export function initPosApp() {
 
             const stockBadge = document.createElement('span');
             stockBadge.className = 'absolute top-1.5 right-1.5 bg-white/90 px-1.5 py-0.5 text-[0.75rem] rounded border border-brand-border text-brand-text';
-            stockBadge.textContent = `${p.stock} left`;
+            stockBadge.textContent = p.pos_only ? 'POS' : `${p.stock} left`;
             imageWrapper.appendChild(stockBadge);
 
             const brandEl = document.createElement('p');

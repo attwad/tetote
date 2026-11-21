@@ -102,6 +102,7 @@ class ProductAdmin(SortableAdminBase, TabbedTranslationAdmin, MarkdownxModelAdmi
         "name",
         "stripe_name",
         "public",
+        "pos_only",
         "price",
         "stock_quantity",
         "soon_in_stock",
@@ -111,9 +112,10 @@ class ProductAdmin(SortableAdminBase, TabbedTranslationAdmin, MarkdownxModelAdmi
         "is_in_stock",
         "date_added",
     )
-    list_editable = ("public", "soon_in_stock")
+    list_editable = ("public", "pos_only", "soon_in_stock")
     list_filter = (
         "public",
+        "pos_only",
         "soon_in_stock",
         "brand",
         "glaze",
@@ -236,6 +238,7 @@ class ProductAdmin(SortableAdminBase, TabbedTranslationAdmin, MarkdownxModelAdmi
             {
                 "fields": (
                     "public",
+                    "pos_only",
                     "brand",
                     "glaze",
                     "product_type",
