@@ -10,6 +10,8 @@ from integrations.views import (
     complete_pos_sale,
     extract_latest_charge_id,
     handle_payment_intent_succeeded,
+    handle_terminal_reader_action_failed,
+    handle_terminal_reader_action_succeeded,
     is_card_present_payment_intent,
     send_pos_receipt,
 )
@@ -605,3 +607,233 @@ class PosTest(TestCase):
             )
         sale2.refresh_from_db()
         self.assertEqual(sale2.status, PosSale.STATUS_COMPLETED)
+
+    @patch("stripe.terminal.Reader.cancel_action")
+    @patch("stripe.terminal.Reader.process_payment_intent")
+    @patch("stripe.PaymentIntent.create")
+    @patch("stripe.PaymentIntent.retrieve")
+    @patch("stripe.PaymentIntent.modify")
+    @patch("stripe.PaymentIntent.cancel")
+    def test_pos_terminal_reader_flow_polling_and_cancel(
+        self,
+        mock_pi_cancel,
+        mock_pi_modify,
+        mock_pi_retrieve,
+        mock_pi_create,
+        mock_reader_process,
+        mock_reader_cancel,
+    ):
+        self.client.force_login(self.staff_user)
+        mock_pi_create.return_value = {
+            "id": "pi_terminal_4500",
+            "status": "requires_payment_method",
+        }
+        mock_reader_process.return_value = {
+            "id": "tmr_Gv4sDw0KkwPJMA",
+            "action": {"type": "process_payment_intent", "status": "in_progress"},
+        }
+
+        resp = self.client.post(
+            reverse("shop:pos_create_sale"),
+            data=json.dumps(
+                {
+                    "items": [{"product_id": self.product1.id, "qty": 1}],
+                    "payment_method": "terminal",
+                    "customer_email": "reader@example.com",
+                }
+            ),
+            content_type="application/json",
+        )
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertEqual(data["payment_method"], "terminal")
+        self.assertEqual(data["reader_id"], "tmr_Gv4sDw0KkwPJMA")
+        sale_id = data["sale_id"]
+
+        mock_pi_create.assert_called_once()
+        create_kwargs = mock_pi_create.call_args.kwargs
+        self.assertEqual(create_kwargs["payment_method_types"], ["card_present"])
+        self.assertEqual(create_kwargs["capture_method"], "automatic")
+        self.assertEqual(create_kwargs["amount"], 4500)
+        self.assertEqual(create_kwargs["currency"], "chf")
+        self.assertEqual(create_kwargs["receipt_email"], "reader@example.com")
+
+        mock_reader_process.assert_called_once_with(
+            "tmr_Gv4sDw0KkwPJMA",
+            payment_intent="pi_terminal_4500",
+        )
+
+        # Poll status when succeeded on Stripe
+        mock_pi_retrieve.return_value = {
+            "id": "pi_terminal_4500",
+            "amount": 4500,
+            "status": "succeeded",
+            "latest_charge": {"id": "ch_terminal_1"},
+        }
+        with patch("stripe.Charge.modify") as mock_charge_mod:
+            status_resp = self.client.get(
+                reverse("shop:pos_sale_status", kwargs={"sale_id": sale_id})
+            )
+            self.assertEqual(status_resp.status_code, 200)
+            status_data = status_resp.json()
+            self.assertEqual(status_data["status"], "completed")
+            self.assertTrue(status_data["receipt_sent"])
+            self.assertEqual(status_data["updated_stocks"][str(self.product1.id)], 4)
+            mock_charge_mod.assert_called_once_with(
+                "ch_terminal_1", receipt_email="reader@example.com"
+            )
+
+        # Create a second terminal sale and cancel it (verifying Reader.cancel_action is called,
+        # and that exceptions from Reader.cancel_action / PaymentIntent.cancel are gracefully handled)
+        mock_pi_create.return_value = {"id": "pi_terminal_cancel"}
+        mock_reader_cancel.side_effect = RuntimeError("No active reader action")
+        mock_pi_cancel.side_effect = RuntimeError("Already canceled")
+        resp2 = self.client.post(
+            reverse("shop:pos_create_sale"),
+            data=json.dumps(
+                {
+                    "items": [{"product_id": self.product1.id, "qty": 1}],
+                    "payment_method": "terminal",
+                }
+            ),
+            content_type="application/json",
+        )
+        sale2_id = resp2.json()["sale_id"]
+        cancel_resp = self.client.post(
+            reverse("shop:pos_sale_status", kwargs={"sale_id": sale2_id}),
+            data=json.dumps({"action": "cancel"}),
+            content_type="application/json",
+        )
+        self.assertEqual(cancel_resp.status_code, 200)
+        self.assertEqual(cancel_resp.json()["status"], "canceled")
+        mock_reader_cancel.assert_called_once_with("tmr_Gv4sDw0KkwPJMA")
+        mock_pi_cancel.assert_called_once_with("pi_terminal_cancel")
+
+    @patch("stripe.terminal.Reader.process_payment_intent")
+    @patch("stripe.PaymentIntent.create")
+    @patch("stripe.PaymentIntent.cancel")
+    def test_pos_terminal_reader_error_cancels_payment_intent_and_sale(
+        self, mock_pi_cancel, mock_pi_create, mock_reader_process
+    ):
+        self.client.force_login(self.staff_user)
+        mock_pi_create.return_value = {"id": "pi_terminal_err"}
+        mock_reader_process.side_effect = RuntimeError("Reader offline")
+        mock_pi_cancel.side_effect = RuntimeError("Cancel failed too")
+
+        resp = self.client.post(
+            reverse("shop:pos_create_sale"),
+            data=json.dumps(
+                {
+                    "items": [{"product_id": self.product1.id, "qty": 1}],
+                    "payment_method": "terminal",
+                }
+            ),
+            content_type="application/json",
+        )
+        self.assertEqual(resp.status_code, 500)
+        mock_pi_cancel.assert_called_once_with("pi_terminal_err")
+        sale = PosSale.objects.first()
+        self.assertEqual(sale.status, PosSale.STATUS_CANCELED)
+
+        # Also test when PaymentIntent.create itself fails before reader call
+        mock_pi_create.side_effect = RuntimeError("Stripe PI create error")
+        mock_pi_cancel.reset_mock()
+        resp2 = self.client.post(
+            reverse("shop:pos_create_sale"),
+            data=json.dumps(
+                {
+                    "items": [{"product_id": self.product1.id, "qty": 1}],
+                    "payment_method": "terminal",
+                }
+            ),
+            content_type="application/json",
+        )
+        self.assertEqual(resp2.status_code, 500)
+        mock_pi_cancel.assert_not_called()
+
+    @patch("stripe.PaymentIntent.modify")
+    @patch("stripe.Webhook.construct_event")
+    def test_pos_terminal_reader_webhook_events(self, mock_construct, mock_pi_modify):
+        sale = PosSale.objects.create(
+            status=PosSale.STATUS_PENDING,
+            payment_method=PosSale.METHOD_TERMINAL,
+            subtotal_amount=4500,
+            total_amount=4500,
+            stripe_payment_intent_id="pi_reader_webhook_1",
+        )
+        PosSaleItem.objects.create(
+            sale=sale, product=self.product1, quantity=1, unit_price=4500
+        )
+
+        mock_construct.return_value = {
+            "id": "evt_reader_succ_1",
+            "type": "terminal.reader.action_succeeded",
+            "data": {
+                "object": {
+                    "id": "tmr_Gv4sDw0KkwPJMA",
+                    "action": {
+                        "type": "process_payment_intent",
+                        "status": "succeeded",
+                        "process_payment_intent": {
+                            "payment_intent": "pi_reader_webhook_1",
+                        },
+                    },
+                }
+            },
+        }
+        webhook_resp = self.client.post(
+            reverse("stripe_webhook"),
+            data=b"payload",
+            content_type="application/json",
+            HTTP_STRIPE_SIGNATURE="sig",
+        )
+        self.assertEqual(webhook_resp.status_code, 200)
+        sale.refresh_from_db()
+        self.assertEqual(sale.status, PosSale.STATUS_COMPLETED)
+
+        # Also test action_failed webhook and expanded payment_intent object in action_succeeded
+        mock_construct.return_value = {
+            "id": "evt_reader_fail_1",
+            "type": "terminal.reader.action_failed",
+            "data": {
+                "object": {
+                    "id": "tmr_Gv4sDw0KkwPJMA",
+                    "action": {
+                        "type": "process_payment_intent",
+                        "status": "failed",
+                        "failure_code": "card_declined",
+                        "failure_message": "Card was declined",
+                    },
+                }
+            },
+        }
+        fail_resp = self.client.post(
+            reverse("stripe_webhook"),
+            data=b"payload",
+            content_type="application/json",
+            HTTP_STRIPE_SIGNATURE="sig",
+        )
+        self.assertEqual(fail_resp.status_code, 200)
+
+        # Non-process_payment_intent action is safely ignored
+        handle_terminal_reader_action_succeeded(
+            {"id": "tmr_Gv4sDw0KkwPJMA", "action": {"type": "set_reader_display"}}
+        )
+        # Expanded payment_intent dict is delegated to handle_payment_intent_succeeded
+        handle_terminal_reader_action_succeeded(
+            {
+                "id": "tmr_Gv4sDw0KkwPJMA",
+                "action": {
+                    "type": "process_payment_intent",
+                    "process_payment_intent": {
+                        "payment_intent": {"id": "pi_unmatched", "amount": 1000}
+                    },
+                },
+            }
+        )
+        handle_terminal_reader_action_failed(
+            {
+                "id": "tmr_Gv4sDw0KkwPJMA",
+                "action": {"failure_code": "timed_out", "failure_message": "Timed out"},
+            }
+        )

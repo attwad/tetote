@@ -404,6 +404,10 @@ class PosView(UserPassesTestMixin, TemplateView):
             .distinct()
             .order_by("name")
         )
+        context["pos_reader_id"] = (
+            getattr(settings, "STRIPE_POS_READER_ID", "tmr_Gv4sDw0KkwPJMA")
+            or "tmr_Gv4sDw0KkwPJMA"
+        )
         return context
 
 
@@ -422,7 +426,11 @@ class PosCreateSaleView(UserPassesTestMixin, View):
             return JsonResponse({"error": _("No items selected")}, status=400)
 
         payment_method = data.get("payment_method", PosSale.METHOD_TAP_TO_PAY)
-        if payment_method not in (PosSale.METHOD_TAP_TO_PAY, PosSale.METHOD_TWINT):
+        if payment_method not in (
+            PosSale.METHOD_TERMINAL,
+            PosSale.METHOD_TAP_TO_PAY,
+            PosSale.METHOD_TWINT,
+        ):
             return JsonResponse({"error": _("Invalid payment method")}, status=400)
 
         try:
@@ -515,13 +523,66 @@ class PosCreateSaleView(UserPassesTestMixin, View):
                     unit_price=unit_price,
                 )
 
-        if payment_method == PosSale.METHOD_TWINT:
+        reader_id = (
+            getattr(settings, "STRIPE_POS_READER_ID", "tmr_Gv4sDw0KkwPJMA")
+            or "tmr_Gv4sDw0KkwPJMA"
+        )
+
+        if payment_method == PosSale.METHOD_TERMINAL:
+            summary = sale.items_summary()
+            pi_kwargs: Dict[str, Any] = {
+                "amount": sale.total_amount,
+                "currency": "chf",
+                "payment_method_types": ["card_present"],
+                "capture_method": "automatic",
+                "description": summary,
+                "metadata": {
+                    "pos_sale_id": str(sale.id),
+                    "items": summary[:500],
+                    "subtotal_chf": f"{sale.subtotal_in_chf:.2f}",
+                    "discount_chf": f"{sale.discount_in_chf:.2f}",
+                    "total_chf": f"{sale.total_in_chf:.2f}",
+                },
+            }
+            if sale.customer_email:
+                pi_kwargs["receipt_email"] = sale.customer_email
+
+            pi_id: str | None = None
+            try:
+                pi = stripe.PaymentIntent.create(**pi_kwargs)
+                pi_id = get_attr_or_key(pi, "id")
+                sale.stripe_payment_intent_id = pi_id
+                sale.save(update_fields=["stripe_payment_intent_id"])
+
+                stripe.terminal.Reader.process_payment_intent(
+                    reader_id,
+                    payment_intent=pi_id,
+                )
+            except Exception as e:
+                logger.error(
+                    f"Error initiating Terminal Reader '{reader_id}' payment for POS Sale #{sale.id}: {e}"
+                )
+                if pi_id:
+                    try:
+                        stripe.PaymentIntent.cancel(pi_id)
+                    except Exception as cancel_err:
+                        logger.warning(
+                            f"Could not cancel PaymentIntent '{pi_id}' after reader failure: {cancel_err}"
+                        )
+                sale.status = PosSale.STATUS_CANCELED
+                sale.save(update_fields=["status"])
+                return JsonResponse(
+                    {"error": _("Failed to initiate card payment on POS reader")},
+                    status=500,
+                )
+
+        elif payment_method == PosSale.METHOD_TWINT:
             summary = sale.items_summary()
             return_url = (
                 request.build_absolute_uri(reverse("shop:pos"))
                 + f"?twint_sale={sale.id}"
             )
-            pi_kwargs: Dict[str, Any] = {
+            pi_kwargs = {
                 "amount": sale.total_amount,
                 "currency": "chf",
                 "payment_method_types": ["twint"],
@@ -575,6 +636,9 @@ class PosCreateSaleView(UserPassesTestMixin, View):
                 "discount_chf": f"{sale.discount_in_chf:.2f}",
                 "total_chf": f"{sale.total_in_chf:.2f}",
                 "twint_redirect_url": sale.twint_redirect_url,
+                "reader_id": reader_id
+                if sale.payment_method == PosSale.METHOD_TERMINAL
+                else "",
                 "customer_email": sale.customer_email,
             }
         )
@@ -608,7 +672,8 @@ class PosSaleStatusView(UserPassesTestMixin, View):
         if sale.status == PosSale.STATUS_PENDING:
             try:
                 if (
-                    sale.payment_method == PosSale.METHOD_TWINT
+                    sale.payment_method
+                    in (PosSale.METHOD_TWINT, PosSale.METHOD_TERMINAL)
                     and sale.stripe_payment_intent_id
                 ):
                     pi = stripe.PaymentIntent.retrieve(sale.stripe_payment_intent_id)
@@ -654,6 +719,17 @@ class PosSaleStatusView(UserPassesTestMixin, View):
             if sale.status == PosSale.STATUS_PENDING:
                 sale.status = PosSale.STATUS_CANCELED
                 sale.save(update_fields=["status"])
+                if sale.payment_method == PosSale.METHOD_TERMINAL:
+                    reader_id = (
+                        getattr(settings, "STRIPE_POS_READER_ID", "tmr_Gv4sDw0KkwPJMA")
+                        or "tmr_Gv4sDw0KkwPJMA"
+                    )
+                    try:
+                        stripe.terminal.Reader.cancel_action(reader_id)
+                    except Exception as e:
+                        logger.warning(
+                            f"Could not cancel action on Stripe Terminal Reader '{reader_id}': {e}"
+                        )
                 if sale.stripe_payment_intent_id:
                     try:
                         stripe.PaymentIntent.cancel(sale.stripe_payment_intent_id)

@@ -243,9 +243,11 @@ class PosSale(models.Model):
         (STATUS_CANCELED, _("Canceled")),
     ]
 
+    METHOD_TERMINAL = "terminal"
     METHOD_TAP_TO_PAY = "tap_to_pay"
     METHOD_TWINT = "twint"
     METHOD_CHOICES = [
+        (METHOD_TERMINAL, _("Card Reader (POS)")),
         (METHOD_TAP_TO_PAY, _("Tap to Pay (Card)")),
         (METHOD_TWINT, _("TWINT")),
     ]

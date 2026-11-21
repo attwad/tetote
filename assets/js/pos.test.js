@@ -208,12 +208,16 @@ describe('POS Logic & UI Tests', () => {
                         <span id="pos-subtotal-display"></span>
                         <div id="pos-discount-row" class="hidden"><span id="pos-discount-display"></span></div>
                         <span id="pos-total-display"></span>
+                        <button id="pos-btn-terminal"><span class="pos-btn-amount"></span></button>
                         <button id="pos-btn-tap-to-pay"><span class="pos-btn-amount"></span></button>
                         <button id="pos-btn-twint"><span class="pos-btn-amount"></span></button>
                     </section>
                     <div id="pos-payment-modal" class="hidden">
                         <div id="pos-waiting-view">
                             <span id="pos-waiting-amount"></span>
+                            <div id="pos-terminal-instructions" class="hidden">
+                                <span id="pos-terminal-reader-badge"></span>
+                            </div>
                             <div id="pos-tap-instructions">
                                 <button id="pos-copy-amount-btn"></button>
                             </div>
@@ -378,6 +382,61 @@ describe('POS Logic & UI Tests', () => {
             document.getElementById('pos-new-sale-btn').click();
             expect(document.getElementById('pos-payment-modal').classList.contains('hidden')).toBe(true);
             expect(document.getElementById('pos-bottom-count').textContent).toBe('0');
+            vi.useRealTimers();
+        });
+
+        it('handles physical POS Terminal Reader checkout, polling completion, and cancel', async () => {
+            vi.useFakeTimers();
+            initPosApp();
+
+            document.querySelectorAll('.pos-product-card')[0].click();
+            expect(document.querySelector('#pos-btn-terminal .pos-btn-amount').textContent).toBe('CHF 45.00');
+
+            global.fetch.mockResolvedValueOnce({
+                ok: true,
+                json: async () => ({
+                    sale_id: 77,
+                    status: 'pending',
+                    payment_method: 'terminal',
+                    total_chf: '45.00',
+                    reader_id: 'tmr_Gv4sDw0KkwPJMA',
+                    twint_redirect_url: '',
+                    customer_email: 'reader@example.com',
+                }),
+            });
+
+            document.getElementById('pos-btn-terminal').click();
+            await vi.advanceTimersByTimeAsync(50);
+
+            expect(global.fetch).toHaveBeenCalledWith(
+                '/pos/api/sales/',
+                expect.objectContaining({
+                    method: 'POST',
+                    body: expect.stringContaining('"payment_method":"terminal"'),
+                })
+            );
+            expect(document.getElementById('pos-terminal-instructions').classList.contains('hidden')).toBe(false);
+            expect(document.getElementById('pos-tap-instructions').classList.contains('hidden')).toBe(true);
+            expect(document.getElementById('pos-twint-qr-container').classList.contains('hidden')).toBe(true);
+            expect(document.getElementById('pos-terminal-reader-badge').textContent).toBe('tmr_Gv4sDw0KkwPJMA');
+
+            // Poll returns completed with receipt already sent
+            global.fetch.mockResolvedValueOnce({
+                ok: true,
+                json: async () => ({
+                    sale_id: 77,
+                    status: 'completed',
+                    payment_method: 'terminal',
+                    total_chf: '45.00',
+                    customer_email: 'reader@example.com',
+                    receipt_sent: true,
+                    updated_stocks: { 1: 2 },
+                }),
+            });
+
+            await vi.advanceTimersByTimeAsync(2000);
+            expect(document.getElementById('pos-completed-view').classList.contains('hidden')).toBe(false);
+            expect(document.getElementById('pos-late-receipt-sent').textContent).toContain('reader@example.com');
             vi.useRealTimers();
         });
 

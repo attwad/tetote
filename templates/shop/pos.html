@@ -240,8 +240,16 @@
             <div class="flex flex-col gap-2.5 pt-2">
                 <button
                     type="button"
-                    id="pos-btn-tap-to-pay"
+                    id="pos-btn-terminal"
                     class="w-full py-3.5 px-4 bg-brand-accent text-white border-none rounded-[4px] text-[1.1rem] font-semibold tracking-wider uppercase cursor-pointer flex items-center justify-between"
+                >
+                    <span>{% translate "Card Reader (POS)" %}</span>
+                    <span class="pos-btn-amount">CHF 0.00</span>
+                </button>
+                <button
+                    type="button"
+                    id="pos-btn-tap-to-pay"
+                    class="w-full py-3.5 px-4 bg-brand-accent/85 text-white border-none rounded-[4px] text-[1.1rem] font-semibold tracking-wider uppercase cursor-pointer flex items-center justify-between"
                 >
                     <span>{% translate "Tap to Pay (Stripe App)" %}</span>
                     <span class="pos-btn-amount">CHF 0.00</span>
@@ -270,6 +278,24 @@
                 <p id="pos-waiting-amount" class="text-[2.6rem] font-semibold m-0 mb-4 leading-none">
                     CHF 0.00
                 </p>
+
+                <!-- Physical POS Terminal Reader Instructions -->
+                <div id="pos-terminal-instructions" class="hidden bg-white border border-brand-border rounded-[6px] p-4 mb-6 text-left space-y-2.5">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[0.9rem] font-semibold uppercase tracking-wider text-brand-accent">
+                            {% translate "Card Reader Ready" %}
+                        </span>
+                        <span id="pos-terminal-reader-badge" class="text-[0.75rem] font-mono px-2 py-0.5 rounded border border-brand-border bg-brand-bg text-brand-muted">
+                            {{ pos_reader_id }}
+                        </span>
+                    </div>
+                    <p class="m-0 text-[0.95rem] text-brand-text">
+                        {% translate "Payment sent to the POS reader. Ask the customer to tap, insert, or swipe their card on the terminal." %}
+                    </p>
+                    <p class="m-0 pt-2 text-[0.85rem] text-brand-muted italic">
+                        {% translate "Waiting for reader confirmation... Stock and receipt will update automatically." %}
+                    </p>
+                </div>
 
                 <!-- Tap to Pay Instructions -->
                 <div id="pos-tap-instructions" class="bg-white border border-brand-border rounded-[6px] p-4 mb-6 text-left space-y-2.5">

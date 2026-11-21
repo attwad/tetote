@@ -82,6 +82,10 @@ def stripe_webhook(request: HttpRequest) -> HttpResponse:
             handle_checkout_completed(data_object)
         elif event_type == "payment_intent.succeeded":
             handle_payment_intent_succeeded(data_object)
+        elif event_type == "terminal.reader.action_succeeded":
+            handle_terminal_reader_action_succeeded(data_object)
+        elif event_type == "terminal.reader.action_failed":
+            handle_terminal_reader_action_failed(data_object)
         else:
             logger.info(f"Unhandled Stripe webhook event type: {event_type}")
     except Exception as e:
@@ -478,3 +482,43 @@ def handle_payment_intent_succeeded(payment_intent: StripePayload) -> None:
         logger.info(
             f"No matching pending PosSale found for PaymentIntent '{pi_id}' (ignoring)"
         )
+
+
+def handle_terminal_reader_action_succeeded(reader_data: StripePayload) -> None:
+    """
+    Handles terminal.reader.action_succeeded webhook events for server-driven POS reader payments.
+    """
+    reader_id: Optional[str] = get_attr_or_key(reader_data, "id")
+    action: StripePayload = get_attr_or_key(reader_data, "action", {}) or {}
+    action_type: Optional[str] = get_attr_or_key(action, "type")
+    process_pi: StripePayload = (
+        get_attr_or_key(action, "process_payment_intent", {}) or {}
+    )
+    pi_ref: Any = get_attr_or_key(process_pi, "payment_intent")
+
+    logger.info(
+        f"Handling terminal.reader.action_succeeded for reader '{reader_id}' (action: {action_type}, pi: {pi_ref})"
+    )
+
+    if action_type != "process_payment_intent" or not pi_ref:
+        return
+
+    if isinstance(pi_ref, str):
+        sale = PosSale.objects.filter(stripe_payment_intent_id=pi_ref).first()
+        if sale:
+            complete_pos_sale(sale.id, payment_intent={"id": pi_ref})
+    else:
+        handle_payment_intent_succeeded(pi_ref)
+
+
+def handle_terminal_reader_action_failed(reader_data: StripePayload) -> None:
+    """
+    Logs terminal.reader.action_failed webhook events from the POS reader.
+    """
+    reader_id: Optional[str] = get_attr_or_key(reader_data, "id")
+    action: StripePayload = get_attr_or_key(reader_data, "action", {}) or {}
+    failure_code: Optional[str] = get_attr_or_key(action, "failure_code")
+    failure_message: Optional[str] = get_attr_or_key(action, "failure_message")
+    logger.warning(
+        f"Terminal reader '{reader_id}' action failed (code: {failure_code}): {failure_message}"
+    )

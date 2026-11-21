@@ -196,6 +196,7 @@ export function initPosApp() {
     const receiptYesBtn = document.getElementById('pos-receipt-yes');
     const receiptEmailWrap = document.getElementById('pos-receipt-email-wrap');
     const receiptEmailInput = document.getElementById('pos-receipt-email-input');
+    const terminalBtn = document.getElementById('pos-btn-terminal');
     const tapToPayBtn = document.getElementById('pos-btn-tap-to-pay');
     const twintBtn = document.getElementById('pos-btn-twint');
 
@@ -204,6 +205,8 @@ export function initPosApp() {
     const waitingView = document.getElementById('pos-waiting-view');
     const completedView = document.getElementById('pos-completed-view');
     const waitingAmountEl = document.getElementById('pos-waiting-amount');
+    const terminalInstructionsEl = document.getElementById('pos-terminal-instructions');
+    const terminalReaderBadgeEl = document.getElementById('pos-terminal-reader-badge');
     const tapInstructionsEl = document.getElementById('pos-tap-instructions');
     const twintQrContainer = document.getElementById('pos-twint-qr-container');
     const twintSvgHolder = document.getElementById('pos-twint-svg');
@@ -489,6 +492,9 @@ export function initPosApp() {
             }
         }
 
+        if (terminalBtn) {
+            terminalBtn.querySelector('.pos-btn-amount').textContent = `CHF ${totals.totalChf}`;
+        }
         if (tapToPayBtn) {
             tapToPayBtn.querySelector('.pos-btn-amount').textContent = `CHF ${totals.totalChf}`;
         }
@@ -590,7 +596,15 @@ export function initPosApp() {
             if (completedView) completedView.classList.add('hidden');
             if (waitingAmountEl) waitingAmountEl.textContent = `CHF ${data.total_chf}`;
 
-            if (paymentMethod === 'tap_to_pay') {
+            if (paymentMethod === 'terminal') {
+                if (terminalInstructionsEl) terminalInstructionsEl.classList.remove('hidden');
+                if (terminalReaderBadgeEl && data.reader_id) {
+                    terminalReaderBadgeEl.textContent = data.reader_id;
+                }
+                if (tapInstructionsEl) tapInstructionsEl.classList.add('hidden');
+                if (twintQrContainer) twintQrContainer.classList.add('hidden');
+            } else if (paymentMethod === 'tap_to_pay') {
+                if (terminalInstructionsEl) terminalInstructionsEl.classList.add('hidden');
                 if (tapInstructionsEl) tapInstructionsEl.classList.remove('hidden');
                 if (twintQrContainer) twintQrContainer.classList.add('hidden');
                 if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -599,6 +613,7 @@ export function initPosApp() {
                     }).catch(() => {});
                 }
             } else if (paymentMethod === 'twint') {
+                if (terminalInstructionsEl) terminalInstructionsEl.classList.add('hidden');
                 if (tapInstructionsEl) tapInstructionsEl.classList.add('hidden');
                 if (twintQrContainer) twintQrContainer.classList.remove('hidden');
                 if (twintSvgHolder && data.twint_redirect_url) {
@@ -781,6 +796,9 @@ export function initPosApp() {
         });
     }
 
+    if (terminalBtn) {
+        terminalBtn.addEventListener('click', () => startCheckout('terminal'));
+    }
     if (tapToPayBtn) {
         tapToPayBtn.addEventListener('click', () => startCheckout('tap_to_pay'));
     }
